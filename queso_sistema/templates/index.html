@@ -1,0 +1,230 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>PROARCOL</title>
+    <link rel="icon" href="{% static 'imagenes/Icono.png' %}">
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="menu container">
+      <a href="#" class="logo"><img src="{% static 'imagenes/Logo.png' %}" alt="icono"></a>
+      <input type="checkbox" id="menu" />
+      <label for="menu">
+        <img src="{% static 'imagenes/Menu.png' %}" class="menu-icono" alt="">
+      </label>
+
+      <nav class="navbar">
+        <ul>
+          <li><a href="#">Inicio</a></li>
+          <li><a href="#general-nosotros">Nosotros</a></li>
+          <li><a href="{% url 'Tienda' %}">Productos</a></li>
+          <li><a href="#">Contacto</a></li>
+          <li class="icono-login"><a href="{% url 'login' %}">
+              <svg width="25px" height="25px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" version="1.1"
+                fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <g transform="translate(2, 1) scale()">
+                  <circle cx="8" cy="6" r="3.25" stroke="#FFF9D9" />
+                </g>
+                <g transform="translate(2.125, 3.5) scale()">
+                  <path d="M2.75 14.25c0 -2.5 2 -5 5.25 -5s5.25 2.5 5.25 5" stroke="#FFF9D9" />
+                </g>
+              </svg></a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="header-content container">
+      <h1>PROARCOL</h1>
+      <p>
+        ¡Bienvenidos a nuestra fábrica de queso, donde la excelencia y la
+        pasión por el queso se unen para crear una experiencia única en cada
+        bocado! Nos enorgullecemos de ser una industria que ha crecido y
+        evolucionado a lo largo del tiempo, llevando la tradición y el sabor
+        de nuestros quesos a nivel nacional.
+      </p>
+      <a href="#!" class="btn-1">Información</a>
+    </div>
+  </header>
+
+  <section class="quesos">
+    <div class="quesos-content container">
+      <h2>Nuestros quesos</h2>
+      <p class="txt-p">
+        Trabajamos con distintos tipos que quesos para darle
+        un gusto unico a tu paladar, nuestros productos estan
+        hechos con lo mejor del campo.
+      </p>
+      <div class="quesos-group">
+        <div class="quesos-1">
+          <img src="{% static 'imagenes/Queso1.png' %}" alt="queso bocadillo">
+          <h3>Quesadillo</h3>
+          <p>
+            ¡Delicioso queso relleno de bocadillo, una experiencia culinaria
+            irresistible que te sorprenderá!
+          </p>
+          <p><a href="#!" class="btn-1">Información</a></p>
+        </div>
+        <div class="quesos-1">
+          <img src="{% static 'imagenes/Queso2.png' %}" alt="queso con arequipe">
+          <h3>Arequipillo</h3>
+          <p>
+            Descubre el queso relleno de arequipe, una tentación inigualable
+            que te cautivará desde el primer bocado.
+          </p>
+          <p><a href="#!" class="btn-1">Información</a></p>
+        </div>
+        <div class="quesos-1">
+          <img src="{% static 'imagenes/Queso3.png' %}" alt="queso siete cueros">
+          <h3>Siete cueros</h3>
+          <p>
+            Descubre el queso siete cueros, una joya gastronómica que cautiva
+            con su sabor auténtico y su rica tradición.
+          </p>
+          <p><a href="#!" class="btn-1">Información</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="services">
+    <div class="services-content container">
+      <h2>Instalaciones</h2>
+      <div class="services-group">
+        <div class="services-1">
+          <img src="images/i1.svg" alt="">
+          <h3>Sala de pasteurización</h3>
+        </div>
+        <div class="services-1">
+          <img src="images/i2.svg" alt="">
+          <h3>Sala de moldeado y prensado</h3>
+        </div>
+        <div class="services-1">
+          <img src="images/i3.svg" alt="">
+          <h3>Área de empaque y etiquetado</h3>
+        </div>
+      </div>
+      <p>
+        Estas áreas son esenciales en una fábrica de quesos, y su correcto
+        funcionamiento y control son fundamentales para garantizar la producción
+        de quesos de alta calidad y seguridad alimentaria.
+      </p>
+      <a href="#!" class="btn-1">Información</a>
+    </div>
+  </main>
+
+  <section id="general-nosotros" class="general">
+    <div class="general-1">
+      <h2>Sabores Únicos</h2>
+      <p>
+        Explora sabores únicos con nuestra innovadora degustación de quesos rellenos. ¡Una experiencia deliciosa e
+        inolvidable para tu paladar!
+      </p>
+      <a href="#!" class="btn-1">Información</a>
+    </div>
+    <div class="general-2"></div>
+  </section>
+
+  <section class="general">
+    <div class="general-3"></div>
+    <div class="general-1">
+      <h2>Materia Prima</h2>
+      <p>
+        "El secreto detrás del sabor de nuestra materia prima gourmet. Seleccionamos cuidadosamente los mejores
+        proveedores
+        para ofrecerte quesos de calidad excepcional. Nuestros quesos provienen de leche fresca y natural. Desde la
+        granja a tu mesa, cada
+        bocado te deleitará con la autenticidad y la tradición de una experiencia única en sabores."
+      </p>
+      <a href="#!" class="btn-1">Información</a>
+    </div>
+  </section>
+
+  <section class="blog container">
+    <h2>El arte de crear delicias</h2>
+    <p>
+      ¡Bienvenidos a nuestro blog sobre el proceso de fabricación de quesos
+      rellenos! En esta ocasión, nos sumergiremos en la fascinante elaboración
+      de de nuestros queso. Descubre el arte y la dedicación que conlleva cada
+      uno de estos sabores únicos.
+    </p>
+    <div class="blog-content">
+      <div class="blog-1">
+        <img src="{% static 'imagenes/Queso4.png' %}" alt="">
+        <h3>Queso Relleno de Mora</h3>
+        <p>
+          Un exquisito queso relleno con la dulzura natural de las moras, una
+          combinación única y sorprendente que te transportará a una experiencia g
+          astronómica inolvidable. ¡Deleita tus sentidos con el sabor suave del queso y
+          el toque agridulce de las moras en cada bocado!
+        </p>
+      </div>
+      <div class="blog-1">
+        <img src="{% static 'imagenes/Queso5.png' %}" alt="">
+        <h3> Queso Relleno de Chocolate</h3>
+        <p>
+          El Queso relleno de chocolate es opción indulgente para amantes de lo dulce.
+          Se mezcla cacao con queso para una experiencia única que combina lo salado y
+          lo dulce, una verdadera experiencia culinaria inigualable.
+        </p>
+      </div>
+    </div>
+    <a href="#!" class="btn-1">Información</a>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content container">
+      <div class="link">
+        <h3>NUESTROS PRODUCTOS</h3>
+        <ul>
+          <li><a href="#">Quesos</a></li>
+          <li><a href="#">Suscripciones</a></li>
+          <li><a href="#">Métodos</a></li>
+          <li><a href="#">Kits & Regalos</a></li>
+          <li><a href="#">Otros</a></li>
+          <li><a href="#">Puntos</a></li>
+        </ul>
+      </div>
+      <div class="link">
+        <h3>APRENDE MÁS</h3>
+        <ul>
+          <li><a href="#">¿Cómo lo hacemos?</a></li>
+          <li><a href="#">Hecho en Colombia</a></li>
+          <li><a href="#">Ofertas</a></li>
+          <li><a href="#">Preguntas Frecuentes</a></li>
+          <li><a href="#">¿Cómo lo preparo?</a></li>
+          <li><a href="#">Términos y condiciones</a></li>
+        </ul>
+      </div>
+      <div class="link">
+        <h3>SUÍGUENOS</h3>
+        <ul>
+          <li><a href="{% static 'Error404.html' %}"><img src="{% static 'imagenes/Icon-Face.svg' %}" alt="facebook" width="30px"></a></li>
+          <li><a href="{% static 'Error404.html' %}"><img src="{% static 'imagenes/Icon-Twitt.svg' %}" alt="twitter" width="30px"></a></li>
+          <li><a href="{% static 'Error404.html' %}"><img src="{% static 'imagenes/Icon-Inst.svg' %}" alt="instagram" width="30px"></a></li>
+        </ul>
+        <h3>ENVÍOS</h3>
+        <ul>
+          <li><a href="{% static 'Error500.html' %}">Envíos a todo Bogotá</a></li>
+        </ul>
+      </div>
+      <div class="link">
+        <h3>DONDE ESTAMOS</h3>
+        <ul>
+          <li><a href="#">Cll 64 bis #108 77</li>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31811.199271558795!2d-74.13005304134471!3d4.700384805091729!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9caf2acfcfd5%3A0xa3a1da72c59786a1!2sCl.%2064%20Bis%20%23108-77%2C%20Bogot%C3%A1!5e0!3m2!1ses!2sco!4v1691529370503!5m2!1ses!2sco"
+            width="350px" height="178px" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body> 
+</html>

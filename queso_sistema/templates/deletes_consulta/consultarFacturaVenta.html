@@ -1,0 +1,87 @@
+{% extends "deletes_consulta/deletebase.html" %}
+{% block content %}
+{% if factura %}
+<div class="container mt-4">
+    
+    <!-- Detalle de Factura -->
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #4CAF50; color: white;">
+            <h2>Detalle de Factura</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Nombre:</strong> {{ factura.name }}</p>
+            <p><strong>Fecha:</strong> {{ factura.fecha_factura }}</p>
+            <p><strong>Subtotal:</strong> {{ factura.subtotal }}</p>
+            <p><strong>IVA:</strong> {{ factura.iva }}</p>
+            <p><strong>Total:</strong> {{ factura.total }}</p>
+        </div>
+    </div>
+
+    <!-- Facturas de Venta -->
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #2196F3; color: white;">
+            <h2>Facturas de Venta</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Factura</th>
+                        <th>Empleado</th>
+                        <th>Cliente</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venta in facturas_venta %}
+                    <tr>
+                        <td>{{ venta.factura.name }}</td>
+                        <td>{{ venta.empleado.user.email }}</td>
+                        <td>{{ venta.cliente.user.email }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Facturas de Producto -->
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #FF5722; color: white;">
+            <h2>Facturas de Producto</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Factura</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Valor de Productos</th>
+                        <th>Calificación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in facturas_producto %}
+                    <tr>
+                        <td>{{ producto.factura.name }}</td>
+                        <td>{{ producto.producto.nombre }}</td>
+                        <td>{{ producto.cantidad }}</td>
+                        <td>{{ producto.valor_productos }}</td>
+                        <td>{{ producto.calificacion_producto }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Botón para volver -->
+<div class="mb-3">
+    <a href="{% url 'factura_venta' %}" class="btn btn-danger">Volver</a>
+</div>
+{% endif %}
+{% endblock %}
+
+
+
+

@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>ERROR 500</title>
+  <link rel="icon" href="{% static 'imagenes/Icono.png' %}">
+  <link rel="stylesheet" href="{% static 'css/Error500.css' %}">
+</head>
+
+<body>
+  <nav>
+    <div class="logo">
+      <a href="{% static 'index.html' %}"><img src="{% static 'imagenes/Logo.png' %}" alt="Logo de la empresa"></a>
+    </div>
+    <ul>
+      <li><a href="#">Nosotros</a></li>
+      <li><a href="#">Productos</a></li>
+      <li><a href="#">Contacto</a></li>
+      <li class="icono-login"><a href="{% static 'login.html' %}">
+          <svg width="25px" height="25px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" version="1.1"
+            fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+            <g transform="translate(2, 1) scale()">
+              <circle cx="8" cy="6" r="3.25" stroke="#FFF9D9" />
+            </g>
+            <g transform="translate(2.125, 3.5) scale()">
+              <path d="M2.75 14.25c0 -2.5 2 -5 5.25 -5s5.25 2.5 5.25 5" stroke="#FFF9D9" />
+            </g>
+          </svg></a>
+      </li>
+    </ul>
+  </nav>
+  <div class="error-container">
+    <img src="{% static 'imagenes/Error500.png' %}"alt="Imagen de error">
+    <h1><b>Internal Server Error</b></h1>
+    <p>Lo sentimos, pero hubo un problema en el servidor al procesar tu solicitud. <br>
+      Nuestro equipo técnico está trabajando en resolverlo lo más pronto posible. </p>
+  </div>
+</body>
+
+</html>
