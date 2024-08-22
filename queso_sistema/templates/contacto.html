@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto-Proarcol</title>
+    <link rel="icon" href="{% static 'imagenes/Icono.png' %}">
+    <link rel="stylesheet" href="{% static 'css/contacto.css' %}">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fbfaf3;
+            margin: 0;
+            padding: 0;
+            padding-top: 100px; /* Ajusta este valor según la altura de tu barra de navegación */
+        }
+
+        .menu {
+            background-color: #006644; 
+            padding: 15px 30px; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            position: fixed; /* Fija la barra de navegación */
+            top: 0; /* Posición en la parte superior de la página */
+            width: 100%; /* Asegura que la barra ocupe todo el ancho de la página */
+            z-index: 1000; /* Asegura que la barra esté por encima de otros elementos */
+        }
+        .menu .logo img {
+            height: 100px; 
+        }
+
+        .menu .navbar {
+            flex-grow: 1;
+            display: flex;
+            justify-content: right; /* Centra los elementos de la barra de navegación */
+            padding-right: 60px; /* Añade un poco de espacio a la derecha */
+        }
+        
+
+        .contenido {
+            height: 2000px; /* Añade suficiente contenido para permitir el desplazamiento */
+        }
+    </style>
+
+</head>
+<body>
+    <div class="menu container">
+        <a href="#" class="logo"><img src="{% static 'imagenes/Logo.png' %}" alt="icono"></a>
+        <input type="checkbox" id="menu" />
+        <label for="menu">
+            <img src="{% static 'imagenes/Menu.png' %}" class="menu-icono" alt="">
+        </label>
+
+        <nav class="navbar">
+            <ul>
+                <li><a href="{% url 'index' %}">Inicio</a></li>
+                <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
+                <li><a href="{% url 'Tienda' %}">Productos</a></li>
+                <li><a href="{% url 'contacto' %}">Contacto</a></li>
+                <li class="icono-login"><a href="{% url 'login' %}">
+                    <svg width="25px" height="25px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" version="1.1"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                        <g transform="translate(2, 1) scale()">
+                            <circle cx="8" cy="6" r="3.25" stroke="#FFF9D9" />
+                        </g>
+                        <g transform="translate(2.125, 3.5) scale()">
+                            <path d="M2.75 14.25c0 -2.5 2 -5 5.25 -5s5.25 2.5 5.25 5" stroke="#FFF9D9" />
+                        </g>
+                    </svg></a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="contact-container">
+        <h1> 🧀 Formulario de Contacto</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.nombre.label_tag }}
+                {{ form.nombre }}
+            </div>
+            <div class="form-group">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+            <div class="form-group">
+                {{ form.mensaje.label_tag }}
+                {{ form.mensaje }}
+            </div>
+            <button type="submit">Enviar</button>
+        </form>
+        {% if mensaje_enviado %}
+        <p class="success-message">Mensaje enviado con éxito. Nos pondremos en contacto contigo pronto.</p>
+        {% endif %}
+    </div>  
+
+    <footer class="footer">
+        <div class="footer-content container">
+            <div class="link">
+                <h3>NUESTROS PRODUCTOS</h3>
+                <ul>
+                    <li><a href="#">Quesos</a></li>
+                    <li><a href="#">Suscripciones</a></li>
+                    <li><a href="#">Métodos</a></li>
+                    <li><a href="#">Kits & Regalos</a></li>
+                    <li><a href="#">Otros</a></li>
+                    <li><a href="#">Puntos</a></li>
+                </ul>
+            </div>
+            <div class="link">
+                <h3>APRENDE MÁS</h3>
+                <ul>
+                    <li><a href="#">¿Cómo lo hacemos?</a></li>
+                    <li><a href="#">Hecho en Colombia</a></li>
+                    <li><a href="#">Ofertas</a></li>
+                    <li><a href="#">Preguntas Frecuentes</a></li>
+                    <li><a href="#">¿Cómo lo preparo?</a></li>
+                    <li><a href="#">Términos y condiciones</a></li>
+                </ul>
+            </div>
+            <div class="link">
+                <h3>SUÍGUENOS</h3>
+                <ul>
+                    <li><a href="#"><img src="{% static 'imagenes/Icon-Face.svg' %}" alt="facebook" width="30px"></a></li>
+                    <li><a href="#"><img src="{% static 'imagenes/Icon-Twitt.svg' %}" alt="twitter" width="30px"></a></li>
+                    <li><a href="#"><img src="{% static 'imagenes/Icon-Inst.svg' %}" alt="instagram" width="30px"></a></li>
+                </ul>
+                <h3>ENVÍOS</h3>
+                <ul>
+                    <li><a href="#">Envíos a todo Bogotá</a></li>
+                </ul>
+            </div>
+            <div class="link">
+                <h3>DONDE ESTAMOS</h3>
+                <ul>
+                    <li><a href="#">Cll 64 bis #108 77</a></li>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31811.199271558795!2d-74.13005304134471!3d4.700384805091729!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9caf2acfcfd5%3A0xa3a1da72c59786a1!2sCl.%2064%20Bis%20%23108-77%2C%20Bogotá!5e0!3m2!1ses!2sco!4v1691529370503!5m2!1ses!2sco"
+                        width="350px" height="178px" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </ul>
+            </div>
+        </div>
+    </footer>  
+</body>
+</html>

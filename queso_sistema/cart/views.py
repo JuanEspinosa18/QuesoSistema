@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from cart.Carrito import Carrito
 from inventory.models import Producto
+from django.core.mail import send_mail
+from django.conf import settings
 
 def tienda(request):
     productos = Producto.objects.all()
@@ -30,3 +32,16 @@ def limpiar_carrito(request):
     carrito = Carrito(request)
     carrito.limpiar()
     return redirect("Tienda")
+
+#EJEMPLO ENVIO DE CORREO CLIENTE 
+'''
+def correo_pedido(request):
+    if request.method == 'POST':
+        subject = request.post['nombre']
+        message = request.post['cantidad'] + " "+ request.post ['total_carrito']+ " "+request.post ['email']
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = ['jadu.jair@gmail.com']
+        send_mail(subject,message,email_from,recipient_list)
+        return render(request, 'gracias.html')
+    return render(request, 'carrito.html')
+    '''

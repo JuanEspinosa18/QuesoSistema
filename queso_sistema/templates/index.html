@@ -22,10 +22,10 @@
 
       <nav class="navbar">
         <ul>
-          <li><a href="#">Inicio</a></li>
-          <li><a href="#general-nosotros">Nosotros</a></li>
+          <li><a href="{% url 'index' %}">Inicio</a></li>
+          <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
           <li><a href="{% url 'Tienda' %}">Productos</a></li>
-          <li><a href="#">Contacto</a></li>
+          <li><a href="{% url 'contacto' %}">Contacto</a></li>
           <li class="icono-login"><a href="{% url 'login' %}">
               <svg width="25px" height="25px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" version="1.1"
                 fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -49,7 +49,6 @@
         evolucionado a lo largo del tiempo, llevando la tradición y el sabor
         de nuestros quesos a nivel nacional.
       </p>
-      <a href="#!" class="btn-1">Información</a>
     </div>
   </header>
 
@@ -69,7 +68,6 @@
             ¡Delicioso queso relleno de bocadillo, una experiencia culinaria
             irresistible que te sorprenderá!
           </p>
-          <p><a href="#!" class="btn-1">Información</a></p>
         </div>
         <div class="quesos-1">
           <img src="{% static 'imagenes/Queso2.png' %}" alt="queso con arequipe">
@@ -78,16 +76,15 @@
             Descubre el queso relleno de arequipe, una tentación inigualable
             que te cautivará desde el primer bocado.
           </p>
-          <p><a href="#!" class="btn-1">Información</a></p>
+          <p><a href="{% url 'nuestros_quesos' %}" class="btn-1">Información</a></p>
         </div>
         <div class="quesos-1">
-          <img src="{% static 'imagenes/Queso3.png' %}" alt="queso siete cueros">
-          <h3>Siete cueros</h3>
+          <img src="{% static 'imagenes/Queso3.png' %}" alt="queso pera">
+          <h3>Queso pera</h3>
           <p>
-            Descubre el queso siete cueros, una joya gastronómica que cautiva
+            Descubre el queso pera, una joya gastronómica que cautiva
             con su sabor auténtico y su rica tradición.
           </p>
-          <p><a href="#!" class="btn-1">Información</a></p>
         </div>
       </div>
     </div>
@@ -115,7 +112,6 @@
         funcionamiento y control son fundamentales para garantizar la producción
         de quesos de alta calidad y seguridad alimentaria.
       </p>
-      <a href="#!" class="btn-1">Información</a>
     </div>
   </main>
 
@@ -126,7 +122,7 @@
         Explora sabores únicos con nuestra innovadora degustación de quesos rellenos. ¡Una experiencia deliciosa e
         inolvidable para tu paladar!
       </p>
-      <a href="#!" class="btn-1">Información</a>
+      <a href="{% url 'nuestros_quesos' %}" class="btn-1">Información</a>
     </div>
     <div class="general-2"></div>
   </section>
@@ -136,13 +132,13 @@
     <div class="general-1">
       <h2>Materia Prima</h2>
       <p>
-        "El secreto detrás del sabor de nuestra materia prima gourmet. Seleccionamos cuidadosamente los mejores
+        El secreto detrás del sabor de nuestra materia prima gourmet. Seleccionamos cuidadosamente los mejores
         proveedores
         para ofrecerte quesos de calidad excepcional. Nuestros quesos provienen de leche fresca y natural. Desde la
         granja a tu mesa, cada
-        bocado te deleitará con la autenticidad y la tradición de una experiencia única en sabores."
+        bocado te deleitará con la autenticidad y la tradición de una experiencia única en sabores.
       </p>
-      <a href="#!" class="btn-1">Información</a>
+      <a href="{% url 'nuestras_materias_prima' %}" class="btn-1">Información</a>
     </div>
   </section>
 
@@ -151,31 +147,26 @@
     <p>
       ¡Bienvenidos a nuestro blog sobre el proceso de fabricación de quesos
       rellenos! En esta ocasión, nos sumergiremos en la fascinante elaboración
-      de de nuestros queso. Descubre el arte y la dedicación que conlleva cada
+      de nuestros queso. Descubre el arte y la dedicación que conlleva cada
       uno de estos sabores únicos.
     </p>
     <div class="blog-content">
       <div class="blog-1">
-        <img src="{% static 'imagenes/Queso4.png' %}" alt="">
-        <h3>Queso Relleno de Mora</h3>
+        <img src="{% static 'imagenes/delicias.jpg' %}" alt="">
+        <h3>Recetas Innovadoras</h3>
         <p>
-          Un exquisito queso relleno con la dulzura natural de las moras, una
-          combinación única y sorprendente que te transportará a una experiencia g
-          astronómica inolvidable. ¡Deleita tus sentidos con el sabor suave del queso y
-          el toque agridulce de las moras en cada bocado!
+          Descubre recetas innovadoras en nuestro blog, con el queso como protagonista. Desde platos frescos hasta ideas creativas, cada receta está hecha para sorprender tu paladar. ¡Anímate a probar algo nuevo!
         </p>
       </div>
       <div class="blog-1">
-        <img src="{% static 'imagenes/Queso5.png' %}" alt="">
-        <h3> Queso Relleno de Chocolate</h3>
+        <img src="{% static 'imagenes/delicias2.jpg' %}" alt="">
+        <h3> Produccion de Quesos</h3>
         <p>
-          El Queso relleno de chocolate es opción indulgente para amantes de lo dulce.
-          Se mezcla cacao con queso para una experiencia única que combina lo salado y
-          lo dulce, una verdadera experiencia culinaria inigualable.
+          Descubre cómo transformamos el queso en postres irresistibles, combinando tradición y dulzura en cada creación. Visita nuestro blog para conocer más sobre estas deliciosas innovaciones. ¡Te encantarán!
         </p>
       </div>
     </div>
-    <a href="#!" class="btn-1">Información</a>
+    <a href="{% url 'blog_informativo' %}"class="btn-1">Blog Informativo</a>
   </section>
 
   <footer class="footer">

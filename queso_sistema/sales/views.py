@@ -8,6 +8,7 @@ from users.models import CustomUser, UserProfile
 from django.contrib import messages
 from users.utils import is_employee
 
+
 @login_required(login_url='/login')   
 @user_passes_test(is_employee, login_url='/login/')
 def DashVentas(request):
