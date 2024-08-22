@@ -4,34 +4,34 @@ from inventory.models import Producto
 from django.core.mail import send_mail
 from django.conf import settings
 
-def tienda(request):
+def carrito(request):
     productos = Producto.objects.all()
     carrito = Carrito(request)
     total_carrito = carrito.total_carrito()
-    return render(request, "tienda.html", {'productos': productos, 'total_carrito': total_carrito})
+    return render(request, "cart/carrito.html", {'productos': productos, 'total_carrito': total_carrito})
 
 def agregar_producto(request, producto_id):
     carrito = Carrito(request)
     producto = Producto.objects.get(id=producto_id)
     carrito.agregar(producto)
-    return redirect("Tienda")
+    return redirect("carrito")
 
 def eliminar_producto(request, producto_id):
     carrito = Carrito(request)
     producto = Producto.objects.get(id=producto_id)
     carrito.eliminar(producto)
-    return redirect("Tienda")
+    return redirect("carrito")
 
 def restar_producto(request, producto_id):
     carrito = Carrito(request)
     producto = Producto.objects.get(id=producto_id)
     carrito.restar(producto)
-    return redirect("Tienda")
+    return redirect("carrito")
 
 def limpiar_carrito(request):
     carrito = Carrito(request)
     carrito.limpiar()
-    return redirect("Tienda")
+    return redirect("carrito")
 
 #EJEMPLO ENVIO DE CORREO CLIENTE 
 '''

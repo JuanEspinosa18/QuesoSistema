@@ -7,7 +7,7 @@
   <title>PROARCOL</title>
     <link rel="icon" href="{% static 'imagenes/Icono.png' %}">
   <link rel="stylesheet" href="{% static 'css/index.css' %}">
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link src="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -24,18 +24,17 @@
         <ul>
           <li><a href="{% url 'index' %}">Inicio</a></li>
           <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
-          <li><a href="{% url 'Tienda' %}">Productos</a></li>
+          <li><a href="{% url 'carrito' %}">Productos</a></li>
           <li><a href="{% url 'contacto' %}">Contacto</a></li>
-          <li class="icono-login"><a href="{% url 'login' %}">
-              <svg width="25px" height="25px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" version="1.1"
-                fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                <g transform="translate(2, 1) scale()">
-                  <circle cx="8" cy="6" r="3.25" stroke="#FFF9D9" />
-                </g>
-                <g transform="translate(2.125, 3.5) scale()">
-                  <path d="M2.75 14.25c0 -2.5 2 -5 5.25 -5s5.25 2.5 5.25 5" stroke="#FFF9D9" />
-                </g>
-              </svg></a></li>
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'logout' %}">Salir</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'login' %}">Ingresar</a>
+              </li>
+            {% endif %}
         </ul>
       </nav>
     </div>
@@ -217,5 +216,6 @@
       </div>
     </div>
   </footer>
+
 </body> 
 </html>

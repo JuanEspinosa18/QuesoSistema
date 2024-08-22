@@ -58,7 +58,7 @@ def login_view(request):
             if user.is_superuser:
                 return redirect('admin:index')  # Redirige al panel de administrador si es superusuario
             elif user.profile.role.name == 'Cliente':
-                return redirect('cart')  # Redirige al carrito si es cliente
+                return redirect('carrito')  # Redirige al carrito si es cliente
             else:
                 return redirect('DashVentas')  # Redirige al dashboard de ventas si es empleado
         else:

@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import CustomUser, Role, UserProfile
-from django.contrib.admin import AdminSite
-from django.shortcuts import redirect
+
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
