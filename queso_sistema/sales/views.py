@@ -7,6 +7,10 @@ from sales.models import Factura, FacturaVenta, FacturaCompra, CalificacionProdu
 from users.models import CustomUser, UserProfile
 from django.contrib import messages
 from users.utils import is_employee
+from import_export.formats.base_formats import XLSX
+from import_export.admin import ExportActionModelAdmin
+from .resources import FacturaResource
+
 
 
 @login_required(login_url='/login')   
@@ -18,20 +22,32 @@ def DashVentas(request):
 @login_required(login_url='/login')
 @user_passes_test(is_employee, login_url='/login/')
 def export_facturas(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         file_format = request.POST.get('file_format')
-
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="facturas_export.csv"'
-
-        writer = csv.writer(response)
-        writer.writerow(['name', 'fecha_factura', 'subtotal', 'iva', 'total'])
-
-        facturas = Factura.objects.all().values_list('name', 'fecha_factura', 'subtotal', 'iva', 'total')
-        for Factura in facturas:
-            writer.writerow(Factura)
-
+        resource = FacturaResource()
+        dataset = resource.export()
+        
+        if file_format == 'xlsx':
+            export_format = XLSX()
+            export_data = export_format.export_data(dataset)
+            content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            extension = 'xlsx'
+        elif file_format == 'csv':
+            export_format = resource.get_export_format('csv')()
+            export_data = export_format.export_data(dataset)
+            content_type = 'text/csv'
+            extension = 'csv'
+        else:
+            # Por defecto CSV
+            export_format = resource.get_export_format('csv')()
+            export_data = export_format.export_data(dataset)
+            content_type = 'text/csv'
+            extension = 'csv'
+        
+        response = HttpResponse(export_data, content_type=content_type)
+        response['Content-Disposition'] = f'attachment; filename="facturas_export.{extension}"'
         return response
+
 
 @login_required(login_url='/login/')
 @user_passes_test(is_employee, login_url='/login/')
