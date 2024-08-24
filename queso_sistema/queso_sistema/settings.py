@@ -68,7 +68,6 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
             os.path.join(BASE_DIR, 'queso_sistema', 'templates'),
             os.path.join(BASE_DIR, 'users', 'templates'),
             os.path.join(BASE_DIR, 'inventory', 'templates'),
@@ -135,7 +134,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, 'queso_sistema', 'static'),
     os.path.join(BASE_DIR, 'users', 'static'),
     os.path.join(BASE_DIR, 'inventory', 'static'),
@@ -164,3 +162,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'jadu.jair@gmail.com'
 EMAIL_HOST_PASSWORD = 'thon djht juch kxue'
+DEFAULT_FROM_EMAIL = 'Soporte QuesoSistema <jadu.jair@gmail.com>'
+
+LOGIN_URL = '/user/login/'
+LOGOUT_REDIRECT_URL = '/user/logout/' # Ajusta según tu preferencia

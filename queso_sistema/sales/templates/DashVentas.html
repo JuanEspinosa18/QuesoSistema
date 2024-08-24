@@ -288,38 +288,33 @@
 </div>
 
 
-    <!-- Modal  Exportar Factura -->
-    <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exportModalLabel">Exportar Facturas</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Modal Exportar Factura -->
+<div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exportModalLabel">Exportar Facturas</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="exportForm" method="POST" action="{% url 'export_facturas' %}">
+          {% csrf_token %}
+          <p>Se exportará los siguientes campos: <code>nombre, fecha_factura, subtotal, iva, total</code></p>
+          <div class="mb-3">
+            <label for="file_format" class="form-label">Formato:</label>
+            <select name="file_format" required id="file_format" class="form-select">
+              <option value="" selected>---</option>
+              <option value="pdf">PDF</option>
+              <option value="xlsx">Excel (XLSX)</option>
+            </select>
           </div>
-          <div class="modal-body">
-            <form id="exportForm" method="POST">
-              <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-              <p>Este exportador exportarÃ¡ los siguientes campos: <code>name, fecha_factura, subtotal, iva, total</code></p>
-              <div class="mb-3">
-                <label for="file_format" class="form-label">Formato:</label>
-                <select name="file_format" required id="file_format" class="form-select">
-                  <option value="" selected>---</option>
-                  <option value="0">csv</option>
-                  <option value="1">xls</option>
-                  <option value="2">xlsx</option>
-                  <option value="3">tsv</option>
-                  <option value="4">ods</option>
-                  <option value="5">json</option>
-                  <option value="6">yaml</option>
-                  <option value="7">html</option>
-                </select>
-              </div>
-              <button type="submit" class="btn btn-primary">Enviar</button>
-            </form>
-          </div>
-        </div>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
       </div>
     </div>
+  </div>
+</div>
+
     <!-- Modal fin Exportar -->
 
     <!-- SCRIPTS -->
@@ -331,35 +326,6 @@
     <script src="{% static 'assets/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'assets/demo/chart-bar-demo.js' %}"></script>
     <!-- Scripts Exortacion-->
-    <script>
-      // Exportar factura script
-        document.addEventListener('DOMContentLoaded', function() {
-            const exportForm = document.getElementById('exportForm');
-    
-            exportForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-    
-                const formData = new FormData(exportForm);
-    
-                fetch('/export_facturas/', {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.blob())
-                .then(blob => {
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
-                    a.download = 'facturas_export.' + formData.get('file_format');
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        });
-    </script>
     <!-- Ajax y manejo de formularios -->
     <script>
       function calculateTotal() {

@@ -36,6 +36,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+    def grupo(self):
+        return ", ".join([group.name for group in self.groups.all()])
 
 class Role(models.Model):
     name = models.CharField(max_length=200, verbose_name='Nombre del Rol', unique=True)

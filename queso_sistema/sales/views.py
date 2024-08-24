@@ -1,16 +1,18 @@
-import csv
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import login_required, user_passes_test
 from sales.models import Factura, FacturaVenta, FacturaCompra, CalificacionProducto, FacturaProducto
-from users.models import CustomUser, UserProfile
+from users.models import UserProfile
 from django.contrib import messages
 from users.utils import is_employee
 from import_export.formats.base_formats import XLSX
-from import_export.admin import ExportActionModelAdmin
 from .resources import FacturaResource
-
+from django.http import HttpResponse, HttpResponseBadRequest
+from tablib import Dataset  # Usando tablib para la exportación en XLSX
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 
 @login_required(login_url='/login')   
@@ -19,35 +21,51 @@ def DashVentas(request):
     facturas = Factura.objects.all()
     return render(request, 'DashVentas.html', {'facturas': facturas})
 
+
+
 @login_required(login_url='/login')
 @user_passes_test(is_employee, login_url='/login/')
 def export_facturas(request):
     if request.method == 'POST':
         file_format = request.POST.get('file_format')
         resource = FacturaResource()
-        dataset = resource.export()
+        dataset = resource.export()  # Exporta los datos en el formato tablib
         
         if file_format == 'xlsx':
-            export_format = XLSX()
-            export_data = export_format.export_data(dataset)
-            content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            extension = 'xlsx'
-        elif file_format == 'csv':
-            export_format = resource.get_export_format('csv')()
-            export_data = export_format.export_data(dataset)
-            content_type = 'text/csv'
-            extension = 'csv'
-        else:
-            # Por defecto CSV
-            export_format = resource.get_export_format('csv')()
-            export_data = export_format.export_data(dataset)
-            content_type = 'text/csv'
-            extension = 'csv'
+            # Exportar como XLSX
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename="facturas_export.xlsx"'
+            response.write(dataset.export('xlsx'))
+            return response
         
-        response = HttpResponse(export_data, content_type=content_type)
-        response['Content-Disposition'] = f'attachment; filename="facturas_export.{extension}"'
-        return response
-
+        elif file_format == 'pdf':
+            # Generar PDF utilizando ReportLab
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="facturas_export.pdf"'
+            
+            buffer = BytesIO()
+            p = canvas.Canvas(buffer, pagesize=letter)
+            
+            # Agrega contenido al PDF
+            p.drawString(100, 750, "Reporte de Facturas")
+            
+            # Iteracion sobre el dataset y agregar filas al PDF
+            y = 700
+            for factura in dataset.dict:
+                p.drawString(100, y, f"{factura['name']} - {factura['fecha_factura']} - {factura['subtotal']}")
+                y -= 20  # Ajustar la altura según sea necesario
+            
+            p.showPage()
+            p.save()
+            
+            # Escribir el contenido del buffer en el response
+            pdf = buffer.getvalue()
+            buffer.close()
+            response.write(pdf)
+            return response
+        
+        else:
+            return HttpResponseBadRequest("Formato no soportado")
 
 @login_required(login_url='/login/')
 @user_passes_test(is_employee, login_url='/login/')
