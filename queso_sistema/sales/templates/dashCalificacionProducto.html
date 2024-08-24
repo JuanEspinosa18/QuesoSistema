@@ -1,0 +1,88 @@
+{% extends "basedashVentas.html" %} 
+{% block main%}
+<main>
+    <div class="container-fluid px-4">
+      <h1 class="mt-4">Ventas</h1>
+      <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">Panel</li>
+      </ol>
+      <div class="row">
+        <div class="col-xl-3 col-md-6">
+          <div class="card bg-warning text-white mb-4">
+            <div class="card-body">Pendientes</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+              <a class="small text-white stretched-link" href="#">Ver detalles</a>
+              <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card bg-success text-white mb-4">
+            <div class="card-body">Entregados</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+              <a class="small text-white stretched-link" href="#">Ver detalles</a>
+              <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card bg-danger text-white mb-4">
+            <div class="card-body">Eliminados</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+              <a class="small text-white stretched-link" href="#">Ver detalles</a>
+              <div class="small text-white"><i class="fas fa-angle-right" height="40"></i>
+                </canvas></div>
+            </div>
+          </div>
+        </div>
+        <div class="card mb-4">
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <i class="fas fa-table me-1"></i>
+                Calificaciones
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <table id="datatablesSimple">
+              <thead>
+                <tr>
+                  <th style="width: 8%;"><a href="#">Calificacion</a></th>
+                  <th style="width: 18.057720057720058%;"><a href="#">Descripcion</a></th>
+                  <th style="width: 2%;"><a href="#">Acciones</a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for calificacion_producto in calificacion_productos %}
+                <tr data-index ="0">
+                  <td>{{ calificacion_producto.valor_calificacion }}</td>
+                  <td>{{ calificacion_producto.des_calificacion }}</td>
+                  <!-- Dentro de la sección de facturas -->
+                    <td>
+                      <div class="btn-group">
+                        <a class="nav-link" href="">
+                          <button class="btn btn-warning">
+                            <i class="bi bi-pencil-square fa-lg" data-toggle="tooltip" style="color: #FFF9D9" title="Editar"></i>
+                          </button>
+                        </a>
+                        <a class="nav-link" href="">
+                          <button class="btn btn-primary" data-toggle="tooltip" title="Ver">
+                            <i  class="fa-regular fa-eye fa-lg" style="color: #FFF9D9" data-toggle="tooltip" title="Ver"></i>
+                          </button>
+                        </a>
+                        
+                      </div>
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+  </main>
+{% endblock %}
+{% block form%}
+
+{% endblock %}

@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informacion-Proarcol</title>
+    <link rel="icon" href="{% static 'imagenes/Icono.png' %}">
+    <link rel="stylesheet" href="{% static 'css/informacion.css' %}">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fbfaf3;
+            margin: 0;
+            padding: 0;
+            padding-top: 100px; 
+        }
+
+        .menu {
+            background-color: #006644; 
+            padding: 15px 30px; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
+        }
+        .menu .logo img {
+            height: 100px; 
+        }
+
+        .menu .navbar {
+            flex-grow: 1;
+            display: flex;
+            justify-content: right; 
+            padding-right: 60px; 
+        }
+
+        .contenido {
+            height: 2000px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="menu container">
+        <a href="#" class="logo"><img src="{% static 'imagenes/Logo.png' %}" alt="icono"></a>
+        <input type="checkbox" id="menu" />
+        <label for="menu">
+            <img src="{% static 'imagenes/Menu.png' %}" class="menu-icono" alt="">
+        </label>
+
+        <nav class="navbar">
+            <ul>
+              <li><a href="{% url 'index' %}">Inicio</a></li>
+              <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
+              <li><a href="{% url 'carrito' %}">Productos</a></li>
+              <li><a href="{% url 'contacto' %}">Contacto</a></li>
+                {% if user.is_authenticated %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'logout' %}">Salir</a>
+                  </li>
+                {% else %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'login' %}">Ingresar</a>
+                  </li>
+                {% endif %}
+            </ul>
+          </nav>
+    </div>
+
+    <main>
+        {% block main%}
+        {% endblock %}
+    </main>
+    <footer class="footer">
+        <div class="footer-content container">
+            <div class="link">
+                <h3>NUESTROS PRODUCTOS</h3>
+                <ul>
+                    <li><a href="#">Quesos</a></li>
+                    <li><a href="#">Suscripciones</a></li>
+                    <li><a href="#">Métodos</a></li>
+                    <li><a href="#">Kits & Regalos</a></li>
+                    <li><a href="#">Otros</a></li>
+                    <li><a href="#">Puntos</a></li>
+                </ul>
+            </div>
+            <div class="link">
+                <h3>APRENDE MÁS</h3>
+                <ul>
+                    <li><a href="#">¿Cómo lo hacemos?</a></li>
+                    <li><a href="#">Hecho en Colombia</a></li>
+                    <li><a href="#">Ofertas</a></li>
+                    <li><a href="#">Preguntas Frecuentes</a></li>
+                    <li><a href="#">¿Cómo lo preparo?</a></li>
+                    <li><a href="#">Términos y condiciones</a></li>
+                </ul>
+            </div>
+            <div class="link">
+                <h3>SUÍGUENOS</h3>
+                <ul>
+                    <li><a href="#"><img src="{% static 'imagenes/Icon-Face.svg' %}" alt="facebook" width="30px"></a></li>
+                    <li><a href="#"><img src="{% static 'imagenes/Icon-Twitt.svg' %}" alt="twitter" width="30px"></a></li>
+                    <li><a href="#"><img src="{% static 'imagenes/Icon-Inst.svg' %}" alt="instagram" width="30px"></a></li>
+                </ul>
+                <h3>ENVÍOS</h3>
+                <ul>
+                    <li><a href="#">Envíos a todo Bogotá</a></li>
+                </ul>
+            </div>
+            <div class="link">
+                <h3>DONDE ESTAMOS</h3>
+                <ul>
+                    <li><a href="#">Cll 64 bis #108 77</li>
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31811.199271558795!2d-74.13005304134471!3d4.700384805091729!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9caf2acfcfd5%3A0xa3a1da72c59786a1!2sCl.%2064%20Bis%20%23108-77%2C%20Bogot%C3%A1!5e0!3m2!1ses!2sco!4v1691529370503!5m2!1ses!2sco"
+                      width="350px" height="178px" style="border:0;" allowfullscreen="" loading="lazy"
+                      referrerpolicy="no-referrer-when-downgrade"></iframe>
+                  </ul>
+            </div>
+        </div>
+    </footer>  
+</body>
+</html>

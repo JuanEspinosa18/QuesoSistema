@@ -62,7 +62,7 @@ def eliminar_producto(request, id):
         eliminar_producto.delete()  
         return redirect('inventario')  
     else:
-        return render(request, 'inventory/deleteProducto.html', {'producto': eliminar_producto})
+        return render(request, 'deletes_edit/deleteProducto.html', {'producto': eliminar_producto})
     
 @login_required(login_url='/login')
 @user_passes_test(is_employee, login_url='/login/')
@@ -93,13 +93,13 @@ def editar_producto(request, id):
         # Redirige después de editar
         return redirect('inventario')
     
-    return render(request, 'inventory/editarProducto.html', {'Producto': factura_producto})
+    return render(request, 'deletes_edit/editarProducto.html', {'Producto': factura_producto})
 
 @login_required(login_url='/login/')
 @user_passes_test(is_employee, login_url='/login/')
 def MateriaPrima(request):
     materias_primas = materia_prima.objects.all()
-    return render(request, 'inventory/materiaPrima.html', {'materias_primas': materias_primas})
+    return render(request, 'materiaPrima.html', {'materias_primas': materias_primas})
 
 @login_required(login_url='/login/')
 @user_passes_test(is_employee, login_url='/login/')
@@ -133,7 +133,7 @@ def agregar_materia_prima(request):
             return JsonResponse({'success': True})
     
     materias_primas = materia_prima.objects.all()
-    return render(request, 'inventory/materiaPrima.html', {'materias_primas': materias_primas})
+    return render(request, 'materiaPrima.html', {'materias_primas': materias_primas})
 
 @login_required(login_url='/login')
 @user_passes_test(is_employee, login_url='/login/')
@@ -142,7 +142,7 @@ def eliminar_materia_prima(request, id):
     if request.method == 'POST':
         eliminar_materia.delete()
         return redirect('materia_prima')
-    return render(request, 'inventory/deleteMateriaPrima.html', {'materia_prima': eliminar_materia})
+    return render(request, 'deletes_edit/deleteMateriaPrima.html', {'materia_prima': eliminar_materia})
 
 @login_required(login_url='/login')
 @user_passes_test(is_employee, login_url='/login/')
@@ -162,7 +162,7 @@ def editar_materia_prima(request, id):
         editar_materia.save()
         return redirect('materia_prima')
 
-    return render(request, 'inventory/editarMateriaPrima.html', {'materia_prima': editar_materia})
+    return render(request, 'deletes_edit/editarMateriaPrima.html', {'materia_prima': editar_materia})
 
 @login_required(login_url='/login/')
 @user_passes_test(is_employee, login_url='/login/')
@@ -171,7 +171,7 @@ def mostrar_stock_bajo_productos(request):
     context = {
         'productos': productos_bajo_stock,
     }
-    return render(request, 'inventory/stock_bajo_productos.html', context)
+    return render(request, 'stock_bajo_productos.html', context)
 
 @login_required(login_url='/login/')
 @user_passes_test(is_employee, login_url='/login/')
@@ -180,4 +180,4 @@ def mostrar_stock_bajo_materias_primas(request):
     context = {
         'materias_primas': materias_primas_bajo_stock,
     }
-    return render(request, 'inventory/stock_bajo_materias_primas.html', context)
+    return render(request, 'stock_bajo_materias_primas.html', context)

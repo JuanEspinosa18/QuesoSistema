@@ -140,7 +140,7 @@ def dashFacturaVenta(request):
     facturas = Factura.objects.all()
     empleados = UserProfile.objects.filter(role__name='Empleado')
     clientes = UserProfile.objects.filter(role__name='Cliente')
-    return render(request, 'sales/dashFacturaVenta.html', {
+    return render(request, 'dashFacturaVenta.html', {
         'factura_ventas': facturas_ventas,
         'empleados': empleados,
         'clientes': clientes,
@@ -213,7 +213,7 @@ def dashFacturaCompra(request):
     proveedores = UserProfile.objects.filter(role__name='Proveedor')
     empleados = UserProfile.objects.filter(role__name='Empleado')
 
-    return render(request, 'sales/dashFacturaCompra.html', {
+    return render(request, 'dashFacturaCompra.html', {
         'factura_compras': factura_compras,
         'facturas': facturas,
         'proveedores': proveedores,
@@ -266,7 +266,7 @@ def agregar_factura_compra(request):
     proveedores = UserProfile.objects.filter(role__name='Proveedor')
     empleados = UserProfile.objects.filter(role__name='Empleado')
 
-    return render(request, 'sales/dashFacturaCompra.html', {
+    return render(request, 'dashFacturaCompra.html', {
         'facturas': facturas,
         'proveedores': proveedores,
         'empleados': empleados
@@ -276,4 +276,4 @@ def agregar_factura_compra(request):
 @user_passes_test(is_employee, login_url='/login/')   
 def dashCalificacionProducto(request):
     calificacion_productos = CalificacionProducto.objects.all()
-    return render(request, 'sales/dashCalificacionProducto.html', {'calificacion_productos': calificacion_productos})
+    return render(request, 'dashCalificacionProducto.html', {'calificacion_productos': calificacion_productos})

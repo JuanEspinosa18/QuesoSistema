@@ -1,0 +1,34 @@
+{% extends "deletes_edit/base_delete_edit.html" %} 
+{% block content %}
+<h2>Está seguro de eliminar el siguiente producto?</h2>
+<form method="POST">
+    {% csrf_token %}
+    <p>Nombre: {{ producto.name }}</p>
+    <p>Descripcion: {{ producto.descripcion }}</p>
+    <p>Valor: {{ producto.valor }}</p>
+    <p>Fecha: {{ producto.fecha_vencimiento }}</p>
+    <p>Cantidad: {{ producto.cantidad_existente }}</p>
+    <input class="btn btn-success" type="submit" value="Eliminar">
+    <a class="btn btn-danger" href="{% url 'inventario' %}">Cancelar</a>
+</form>
+  
+<script>  
+  $(document).ready(function(){
+    var csrftoken = document.querySelector('[name=csrf-token]').content
+
+    $(".btn-danger").click(function(){
+        var id = $(this).data('id');
+        $.ajax({
+            url: '/sales/eliminar_factura/' + id + '/',  
+            data: {
+                'factura_id': id,
+                'csrfmiddlewaretoken': csrftoken 
+            },
+            type: 'post',
+            success: function(response){
+            }
+        });
+    });
+});
+</script> 
+{% endblock %}

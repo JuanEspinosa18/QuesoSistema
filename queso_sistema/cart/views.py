@@ -8,7 +8,7 @@ def carrito(request):
     productos = Producto.objects.all()
     carrito = Carrito(request)
     total_carrito = carrito.total_carrito()
-    return render(request, "cart/carrito.html", {'productos': productos, 'total_carrito': total_carrito})
+    return render(request, "carrito.html", {'productos': productos, 'total_carrito': total_carrito})
 
 def agregar_producto(request, producto_id):
     carrito = Carrito(request)

@@ -3,6 +3,9 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .models import CustomUser, UserProfile, Role
 from django.db import IntegrityError
+from .forms import ContactForm
+from django.core.mail import send_mail
+from django.conf import settings
 
 def signup_view(request):
     if request.method == 'POST':
@@ -69,4 +72,28 @@ def logout_view(request):
     logout(request)
     messages.success(request, '¡Sesión finalizada con éxito!')
     return redirect('login')
+
+    #FOMULARIO CONTACTO
+def contacto(request):
+    mensaje_enviado = False
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            email = form.cleaned_data['email']
+            mensaje = form.cleaned_data['mensaje']
+            
+            # Enviar correo
+            send_mail(
+                f'Mensaje de {nombre} con el correo: {email}',
+                mensaje,
+                settings.EMAIL_HOST_USER,
+                [settings.EMAIL_HOST_USER],
+                fail_silently=False,
+            )
+            mensaje_enviado = True
+    else:
+        form = ContactForm()
+    
+    return render(request, 'contacto.html', {'form': form, 'mensaje_enviado': mensaje_enviado})
 

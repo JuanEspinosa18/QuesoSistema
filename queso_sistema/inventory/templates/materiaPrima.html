@@ -1,0 +1,139 @@
+{% extends 'basedashInventario.html' %}
+{% block main %}
+  <main>
+    <div class="container-fluid px-4">
+      <h1 class="mt-4">Inventario</h1>
+      <div class="row">
+        <div class="card mb-4">
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <i class="fas fa-table me-1"></i>
+                Materias primas
+              </div>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registroMateriaPrimaModal">Agregar Materia Prima</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <table id="datatablesSimple" class="table table-striped">
+              <thead>
+                <tr>
+                  <th style="width: 8%;">
+                    <a href="#">Nombre</a>
+                  </th>
+                  <th style="width: 18.057720057720058%;">
+                    <a href="#">Descripción</a>
+                  </th>
+                  <th style="width: 18.057720057720058%;">
+                    <a href="#">Fecha Vencimiento</a>
+                  </th>
+                  <th style="width: 18.057720057720058%;">
+                    <a href="#">Cantidad</a>
+                  </th>
+                  <th style="width: 1%;">
+                    <a href="#">Acciones</a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for materia in materias_primas %}
+                  <tr>
+                    <td>{{ materia.name }}</td>
+                    <td>{{ materia.descripcion }}</td>
+                    <td>{{ materia.fecha_ven }}</td>
+                    <td>{{ materia.cantidad }}</td>
+                    <td>
+                      <div class="btn-group">
+                        <a class="nav-link" href="{% url 'editar_materia_prima' materia.id %}"><button class="btn btn-warning"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Editar"></i></button></a>
+                        <a class="nav-link" href="{% url 'eliminar_materia_prima' materia.id %}"><button class="btn btn-danger" data-toggle="tooltip" title="Eliminar"><i class="bi bi-trash3-fill"></i></button></a>
+                      </div>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal de Registro de Materia Prima -->
+  <div class="modal fade" id="registroMateriaPrimaModal" tabindex="-1" aria-labelledby="registroMateriaPrimaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Cabecera del Modal -->
+        <div class="modal-header">
+          <h5 class="modal-title" id="registroMateriaPrimaModalLabel">Registro de Materia Prima</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <!-- Cuerpo del Modal -->
+        <div class="modal-body">
+          <form id="registroMateriaPrimaForm" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="nombre">Nombre:</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el nombre" />
+              <div class="invalid-feedback" id="error-nombre"></div>
+            </div>
+            <div class="form-group">
+              <label for="descripcion">Descripción:</label>
+              <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Ingrese la descripción"></textarea>
+              <div class="invalid-feedback" id="error-descripcion"></div>
+            </div>
+            <div class="form-group">
+              <label for="fecha_vencimiento">Fecha de Vencimiento:</label>
+              <input type="date" class="form-control" id="fecha_vencimiento" name="fecha_vencimiento" placeholder="Ingrese la fecha de vencimiento" />
+              <div class="invalid-feedback" id="error-fecha_vencimiento"></div>
+            </div>
+            <div class="form-group">
+              <label for="cantidad">Cantidad:</label>
+              <input type="number" step="1" min="0" class="form-control" id="cantidad" name="cantidad" placeholder="Ingrese la cantidad" />
+              <div class="invalid-feedback" id="error-cantidad"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Agregar Materia Prima</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS modal -->
+  <script>
+    $(document).ready(function () {
+      $('#registroMateriaPrimaForm').submit(function (event) {
+        event.preventDefault() // Evitar que el formulario se envíe normalmente
+    
+        $.ajax({
+          type: 'POST',
+          url: '{% url "agregar_materia_prima" %}',
+          data: $(this).serialize(),
+          dataType: 'json',
+          success: function (response) {
+            if (response.success) {
+              // Si se agregó la materia prima correctamente, cerrar el modal y actualizar la página si es necesario
+              $('#registroMateriaPrimaModal').modal('hide')
+              location.reload() // Ejemplo de recargar la página, puedes ajustarlo según tu flujo
+            } else {
+              // Limpiar mensajes de error anteriores
+              $('.form-control').removeClass('is-invalid')
+              $('.invalid-feedback').empty()
+    
+              // Mostrar errores específicos junto a cada campo
+              $.each(response.errors, function (field, message) {
+                $('#' + field).addClass('is-invalid')
+                $('#error-' + field).text(message)
+              })
+            }
+          },
+          error: function (error) {
+            console.log(error)
+            // Manejar errores de la solicitud Ajax si es necesario
+          }
+        })
+      })
+    })
+  </script>
+{% endblock %}

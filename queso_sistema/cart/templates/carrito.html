@@ -1,0 +1,160 @@
+{% extends 'tienda.html' %}
+
+{% block main %}
+  <div class="container-fluid px-4">
+    <div class="row">
+      <div class="col-md-8">
+        <h1 class="mt-4">Productos</h1>
+        <div class="row g-4 row-cols-lg-3 row-cols-2 row-cols-md-3">
+          {% for producto in productos %}
+            <div class="col">
+              <div class="card card-product">
+                <div class="card-body">
+                  <div class="text-center position-relative">
+                    <div class="position-absolute top-0 start-0">
+                      {% if producto.en_oferta %}
+                        <span class="badge bg-danger">Sale</span>
+                      {% endif %}
+                    </div>
+                    <a href="#!"><img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="mb-3 img-fluid" /></a>
+                    <div class="card-product-action">
+                      <a href="#!" class="btn-action" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="bi bi-eye" data-bs-toggle="tooltip" aria-label="Quick View"></i></a>
+                      <a href="#!" class="btn-action" data-bs-toggle="tooltip" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
+                      <a href="#!" class="btn-action" data-bs-toggle="tooltip" aria-label="Compare"><i class="bi bi-arrow-left-right"></i></a>
+                    </div>
+                  </div>
+                  <div class="text-small mb-1">
+                    <a href="#!" class="text-decoration-none text-muted"><small>{{ producto.categoria }}</small></a>
+                  </div>
+                  <h2 class="fs-6"><a href="#!" class="text-inherit text-decoration-none">{{ producto.nombre }}</a></h2>
+                  <div>
+                    <small class="text-warning">
+                      {% comment %}
+                      {% for i in 1|to:producto.estrellas %}
+                        <i class="bi bi-star-fill"></i>
+                      {% endfor %}
+                      {% if producto.estrellas < 5 %}
+                        <i class="bi bi-star"></i>
+                      {% endif %}
+                      {% endcomment %}
+                    </small>
+                    <span class="text-muted small">{{ producto.estrellas }} ({{ producto.reviews }})</span>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                      <span class="text-dark">${{ producto.valor }}</span>
+                      {% if producto.valor_original %}
+                        <span class="text-decoration-line-through text-muted">${{ producto.valor_original }}</span>
+                      {% endif %}
+                    </div>
+                    <div>
+                      <a href="{% url 'Add' producto.id %}" class="btn btn-primary btn-sm"><i class="feather feather-plus"></i> Añadir</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+          <div class="col">
+            <div class="card card-product">
+              <div class="card-body">
+                <div class="text-center position-relative">
+                  <div class="position-absolute top-0 start-0">
+                    <span class="badge bg-danger">Sale</span>
+                  </div>
+                  <a href="#!"><img src="assets/images/products/product-img-1.jpg" alt="Grocery Ecommerce Template" class="mb-3 img-fluid" /></a>
+
+                  <div class="card-product-action">
+                    <a href="#!" class="btn-action" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="bi bi-eye" data-bs-toggle="tooltip" data-bs-html="true" aria-label="Quick View" data-bs-original-title="Quick View"></i></a>
+                    <a href="#!" class="btn-action" data-bs-toggle="tooltip" data-bs-html="true" aria-label="Wishlist" data-bs-original-title="Wishlist"><i class="bi bi-heart"></i></a>
+                    <a href="#!" class="btn-action" data-bs-toggle="tooltip" data-bs-html="true" aria-label="Compare" data-bs-original-title="Compare"><i class="bi bi-arrow-left-right"></i></a>
+                  </div>
+                </div>
+                <div class="text-small mb-1">
+                  <a href="#!" class="text-decoration-none text-muted"><small>Snack &amp; Munchies</small></a>
+                </div>
+                <h2 class="fs-6"><a href="./pages/shop-single.html" class="text-inherit text-decoration-none">Haldiram's Sev Bhujia</a></h2>
+                <div>
+                  <small class="text-warning">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-half"></i>
+                  </small>
+                  <span class="text-muted small">4.5(149)</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  <div>
+                    <span class="text-dark">$18</span>
+                    <span class="text-decoration-line-through text-muted">$24</span>
+                  </div>
+                  <div>
+                    <a href="#!" class="btn btn-primary btn-sm">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                      </svg>Add
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mt-4">
+        <div class="sticky-top">
+          <div class="alert alert-primary" role="alert">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="row" colspan="3" class="text-center">CARRITO</th>
+                </tr>
+                <tr>
+                  <th scope="col">NOMBRE</th>
+                  <th scope="col">CANTIDAD</th>
+                  <th scope="col">ACUMULADO</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if request.session.carrito %}
+                  {% for key, value in request.session.carrito.items %}
+                    <tr>
+                      <td>{{ value.nombre }}</td>
+                      <td>{{ value.cantidad }}</td>
+                      <td>
+                        {{ value.acumulado }}
+                        <a href="{% url 'Add' value.producto_id %}" class="badge btn btn-dark badge-dark">+</a>
+                        <a href="{% url 'Sub' value.producto_id %}" class="badge btn btn-dark badge-dark">-</a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="3">
+                      <div class="alert alert-danger text-center">Sin Productos</div>
+                    </td>
+                  </tr>
+                {% endif %}
+                <tr>
+                  <th scope="row">Total:</th>
+                  <td colspan="2">$ {{ total_carrito }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <hr />
+          </div>
+          <div class="row text-center">
+            <div class="col-6">
+              <a href="{% url 'CLS' %}" class="btn btn-danger">Limpiar</a>
+            </div>
+            <div class="col-6">
+              <a href="#" class="btn btn-success">Guardar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

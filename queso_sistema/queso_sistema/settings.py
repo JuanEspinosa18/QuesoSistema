@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'sales',
     'import_export',
     'cart',
+    'blog',
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
@@ -66,7 +67,15 @@ ROOT_URLCONF = 'queso_sistema.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'queso_sistema', 'templates'),
+            os.path.join(BASE_DIR, 'users', 'templates'),
+            os.path.join(BASE_DIR, 'inventory', 'templates'),
+            os.path.join(BASE_DIR, 'sales', 'templates'),
+            os.path.join(BASE_DIR, 'cart', 'templates'),
+            os.path.join(BASE_DIR, 'blog', 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,6 +87,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'queso_sistema.wsgi.application'
 
@@ -124,10 +134,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-)
+    os.path.join(BASE_DIR, 'queso_sistema', 'static'),
+    os.path.join(BASE_DIR, 'users', 'static'),
+    os.path.join(BASE_DIR, 'inventory', 'static'),
+    os.path.join(BASE_DIR, 'sales', 'static'),
+    os.path.join(BASE_DIR, 'cart', 'static'),
+    os.path.join(BASE_DIR, 'blog', 'static'),
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 
 # Media files
