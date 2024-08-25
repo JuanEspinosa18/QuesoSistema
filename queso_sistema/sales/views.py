@@ -10,6 +10,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from django.contrib.auth.models import Group
 from users.views import group_required
+from inventory.models import Producto
 
 @group_required('Empleados')   
 def DashVentas(request):

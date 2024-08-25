@@ -19,7 +19,7 @@ def group_required(*group_names):
         return False
 
     def decorator(view_func):
-        @login_required(login_url='/login')
+        @login_required(login_url='/user/login/')
         def _wrapped_view(request, *args, **kwargs):
             if in_groups(request.user):
                 return view_func(request, *args, **kwargs)
