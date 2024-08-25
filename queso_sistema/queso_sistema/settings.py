@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-5$yqcl^nxf(2e)m)!b7nkf=-$qdc#otf#^$c9op=k2mrc)j-nc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -165,3 +165,5 @@ EMAIL_HOST_PASSWORD = 'thon djht juch kxue'
 DEFAULT_FROM_EMAIL = 'Soporte QuesoSistema <jadu.jair@gmail.com>'
 
 LOGOUT_REDIRECT_URL = '/user/logout/' 
+
+LOGIN_URL = '/user/login/' 
