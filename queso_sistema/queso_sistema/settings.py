@@ -164,5 +164,4 @@ EMAIL_HOST_USER = 'jadu.jair@gmail.com'
 EMAIL_HOST_PASSWORD = 'thon djht juch kxue'
 DEFAULT_FROM_EMAIL = 'Soporte QuesoSistema <jadu.jair@gmail.com>'
 
-LOGIN_URL = '/user/login/'
-LOGOUT_REDIRECT_URL = '/user/logout/' # Ajusta según tu preferencia
+LOGOUT_REDIRECT_URL = '/user/logout/' 

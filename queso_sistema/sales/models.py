@@ -1,5 +1,5 @@
+from django.conf import settings
 from django.db import models
-from users.models import UserProfile
 from inventory.models import Producto
 
 class Factura(models.Model):
@@ -20,11 +20,11 @@ class Factura(models.Model):
 
 class FacturaVenta(models.Model):
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='ventas_factura')
-    empleado = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='ventas_empleado', limit_choices_to={'role__name': 'Empleado'})
-    cliente = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='ventas_cliente', limit_choices_to={'role__name': 'Cliente'})
+    empleado = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ventas_empleado')
+    cliente = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ventas_cliente')
 
     def __str__(self):
-        return f"Factura Venta - Empleado: {self.empleado.user.email} - Cliente: {self.cliente.user.email}"
+        return f"Factura Venta - Empleado: {self.empleado.email} - Cliente: {self.cliente.email}"
 
     class Meta:
         verbose_name = 'Factura venta'
@@ -34,11 +34,11 @@ class FacturaVenta(models.Model):
 
 class FacturaCompra(models.Model):
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='compras_factura')
-    proveedor = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='compras_proveedor', limit_choices_to={'role__name': 'Proveedor'})
-    empleado = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='compras_empleado', limit_choices_to={'role__name': 'Empleado'})
+    proveedor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='compras_proveedor')
+    empleado = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='compras_empleado')
 
     def __str__(self):
-        return f"Factura Compra - Proveedor: {self.proveedor.user.email} - Empleado: {self.empleado.user.email}"
+        return f"Factura Compra - Proveedor: {self.proveedor.email} - Empleado: {self.empleado.email}"
 
     class Meta:
         verbose_name = 'Factura de compra'

@@ -1,11 +1,32 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .models import CustomUser, UserProfile, Role
+from .models import CustomUser
 from django.db import IntegrityError
 from .forms import ContactForm
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth.models import Group
+from django.core.exceptions import ValidationError
+from django.http import HttpResponseForbidden
+from django.contrib.auth.decorators import login_required
+
+def group_required(*group_names):
+    def in_groups(user):
+        if user.is_authenticated:
+            if user.groups.filter(name__in=group_names).exists():
+                return True
+        return False
+
+    def decorator(view_func):
+        @login_required(login_url='/login')
+        def _wrapped_view(request, *args, **kwargs):
+            if in_groups(request.user):
+                return view_func(request, *args, **kwargs)
+            else:
+                return HttpResponseForbidden("No tienes permiso para acceder a esta página")
+        return _wrapped_view
+    return decorator
 
 def signup_view(request):
     if request.method == 'POST':
@@ -18,37 +39,55 @@ def signup_view(request):
         telefono = request.POST['telefono']
         password = request.POST['password']
         password2 = request.POST['password2']
-        
+
         if password != password2:
             messages.error(request, 'Las contraseñas no coinciden')
-        else:
-            # Verificar si el correo electrónico ya está en uso
+            return redirect('signup')
+        
+        try:
+            user = CustomUser(
+                email=email,
+                documento=documento,
+                primer_nombre=primer_nombre,
+                segundo_nombre=segundo_nombre,
+                primer_apellido=primer_apellido,
+                segundo_apellido=segundo_apellido,
+                telefono=telefono
+            )
+            user.set_password(password)
+            user.full_clean()  # Valida los datos del usuario
+
             if CustomUser.objects.filter(email=email).exists():
                 messages.error(request, 'El correo electrónico ingresado ya está registrado. Por favor, elija otro.')
-            else:
-                try:
-                    # Crear el usuario personalizado
-                    user = CustomUser.objects.create_user(email=email, 
-                                                        documento=documento,
-                                                        primer_nombre=primer_nombre,
-                                                        segundo_nombre=segundo_nombre,
-                                                        primer_apellido=primer_apellido,
-                                                        segundo_apellido=segundo_apellido,
-                                                        telefono=telefono,
-                                                        password=password)
-                    
-                    # Asignar el rol de cliente al perfil del usuario
-                    cliente_role = Role.objects.get(name='Cliente')  # Asegúrate de tener el rol correcto en tu base de datos
-                    UserProfile.objects.create(user=user, role=cliente_role)
+                return redirect('signup')
 
-                    # Iniciar sesión después de registrar con éxito
-                    login(request, user)
+            user.save()
 
-                    messages.success(request, '¡Usuario creado con éxito!')
-                    return redirect('login')  # Redirigir a la página de inicio de sesión después de registrar con éxito
-                except IntegrityError:
-                    messages.error(request, 'Hubo un error al crear el usuario. Por favor, inténtalo de nuevo.')
-    
+            try:
+                grupo_clientes = Group.objects.get(name='Clientes')
+                user.groups.add(grupo_clientes)
+            except Group.DoesNotExist:
+                messages.error(request, 'El grupo "Clientes" no existe en la base de datos.')
+                user.delete()
+                return redirect('signup')
+
+            login(request, user)
+            messages.success(request, '¡Usuario creado con éxito!')
+            return redirect('login')
+
+        except ValidationError as e:
+            for field_errors in e.message_dict.values():
+                if isinstance(field_errors, list):
+                    for error in field_errors:
+                        messages.error(request, error)
+                else:
+                    messages.error(request, field_errors)
+
+            return redirect('signup')
+
+        except IntegrityError:
+            messages.error(request, 'Hubo un error al crear el usuario. Por favor, inténtalo de nuevo.')
+
     return render(request, 'signup.html')
 
 def login_view(request):
@@ -56,14 +95,14 @@ def login_view(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
-        if user:
+        if user is not None:
             login(request, user)
             if user.is_superuser:
                 return redirect('admin:index')  # Redirige al panel de administrador si es superusuario
-            elif user.profile.role.name == 'Cliente':
-                return redirect('carrito')  # Redirige al carrito si es cliente
-            else:
-                return redirect('DashVentas')  # Redirige al dashboard de ventas si es empleado
+            elif user.groups.filter(name='Empleados').exists():
+                return redirect('DashVentas') # Redirige al carrito si es Empleado
+            elif user.groups.filter(name='Clientes').exists():
+                return redirect('carrito') # Redirige al carrito si es cliente
         else:
             messages.error(request, 'Usuario o contraseña incorrectos')
     return render(request, 'login.html')
@@ -74,6 +113,7 @@ def logout_view(request):
     return redirect('login')
 
     #FOMULARIO CONTACTO
+
 def contacto(request):
     mensaje_enviado = False
     if request.method == 'POST':

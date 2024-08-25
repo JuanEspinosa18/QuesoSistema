@@ -24,17 +24,20 @@
         padding: 0;
         overflow: hidden;
         animation: gradientAnimation 10s linear infinite;
-        background-size: 600% 600%;
-        background-image: linear-gradient(45deg, #fff9d9, #00563f, #8b5a2b, #fff9d9, #00563f, #8b5a2b);
+        background: linear-gradient(225deg, #8b5a2b, #00664b);
+        background-size: 400% 400%;
+        animation: AnimationName 8s ease infinite;
       }
       
-      @keyframes gradientAnimation {
+      @keyframes AnimationName {
         0% {
-          background-position: 0% 50%;
+          background-position: 50% 0%;
         }
-      
+        50% {
+          background-position: 50% 100%;
+        }
         100% {
-          background-position: 100% 50%;
+          background-position: 50% 0%;
         }
       }
       
@@ -57,7 +60,6 @@
         <div class="container h-100">
           <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-12 col-md-9 col-lg-7 col-xl-6">
-              <!-- Agregar la clase "scrollable-container" al div que envuelve al formulario -->
               <div class="card scrollable-container" style="border-radius: 15px;">
                 <div class="card-body p-5">
                   <h2 class="text-uppercase text-center mb-5" style="color: #00563F;">Crear Cuenta 🧀</h2>
@@ -65,7 +67,7 @@
                   <form method="POST">
                     {% csrf_token %}
                     <div class="form-outline mb-4">
-                      <input name="documento" type="number" id="form3Example0cg" class="form-control form-control-lg" required />
+                      <input name="documento" type="text" id="form3Example0cg" class="form-control form-control-lg" required />
                       <label class="form-label" for="form3Example0cg" style="color: #006400;">Documento*</label>
                     </div>
                     <div class="form-outline mb-4">

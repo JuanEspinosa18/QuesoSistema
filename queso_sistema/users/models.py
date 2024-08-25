@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.core.exceptions import ValidationError
+import re
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -16,10 +18,19 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
 
         return self.create_user(email, password, **extra_fields)
+    
+    
+def validar_documento_identidad(value):
+    # Verifica que solo contenga números
+    if not re.match(r'^\d+$', value):
+        raise ValidationError('El documento de identidad solo puede contener números.')
+    # Verifica la longitud
+    if len(value) < 8 or len(value) > 10:
+        raise ValidationError('El documento de identidad debe tener entre 8 y 10 caracteres.')
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, verbose_name='Correo Electrónico')
-    documento = models.IntegerField(verbose_name='Número de Documento')
+    documento = models.CharField(max_length=10, validators=[validar_documento_identidad],unique=True, verbose_name='documento identidad')
     primer_nombre = models.CharField(max_length=200, verbose_name='Primer Nombre')
     segundo_nombre = models.CharField(max_length=200, verbose_name='Segundo Nombre', blank=True, null=True)
     primer_apellido = models.CharField(max_length=200, verbose_name='Primer Apellido')
@@ -39,17 +50,3 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
     def grupo(self):
         return ", ".join([group.name for group in self.groups.all()])
-
-class Role(models.Model):
-    name = models.CharField(max_length=200, verbose_name='Nombre del Rol', unique=True)
-    description = models.TextField(verbose_name='Descripción del Rol')
-
-    def __str__(self):
-        return self.name
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile')
-    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Rol')
-
-    def __str__(self):
-        return f"Perfil de {self.user.email}"

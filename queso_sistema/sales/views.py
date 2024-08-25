@@ -1,30 +1,22 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import login_required, user_passes_test
 from sales.models import Factura, FacturaVenta, FacturaCompra, CalificacionProducto, FacturaProducto
-from users.models import UserProfile
 from django.contrib import messages
-from users.utils import is_employee
 from import_export.formats.base_formats import XLSX
 from .resources import FacturaResource
-from django.http import HttpResponse, HttpResponseBadRequest
-from tablib import Dataset  # Usando tablib para la exportación en XLSX
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from django.contrib.auth.models import Group
+from users.views import group_required
 
-
-@login_required(login_url='/login')   
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')   
 def DashVentas(request):
     facturas = Factura.objects.all()
     return render(request, 'DashVentas.html', {'facturas': facturas})
 
-
-
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def export_facturas(request):
     if request.method == 'POST':
         file_format = request.POST.get('file_format')
@@ -67,8 +59,7 @@ def export_facturas(request):
         else:
             return HttpResponseBadRequest("Formato no soportado")
 
-@login_required(login_url='/login/')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def editar_factura(request, id):
     factura_editar = get_object_or_404(Factura, id=id)
     
@@ -99,8 +90,7 @@ def editar_factura(request, id):
 
     return render(request, 'edits/editarFactura.html', {'factura': factura_editar})
 
-@login_required(login_url='/login/')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def agregar_factura(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -140,8 +130,7 @@ def agregar_factura(request):
     facturas = Factura.objects.all()
     return render(request, 'DashVentas.html', {'facturas': facturas})
 
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def eliminar_factura(request, id):  # Añade 'id' como argumento
     factura_eliminar = get_object_or_404(Factura, id=id)  # Usa 'id' para obtener la factura
     if request.method == 'POST':
@@ -151,13 +140,12 @@ def eliminar_factura(request, id):  # Añade 'id' como argumento
         # Si el método de la solicitud no es POST, muestra el formulario de confirmación
         return render(request, 'deletes_consulta/deleteFactura.html', {'factura': factura_eliminar})
     
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')   
+@group_required('Empleados')   
 def dashFacturaVenta(request):
     facturas_ventas = FacturaVenta.objects.all()
     facturas = Factura.objects.all()
-    empleados = UserProfile.objects.filter(role__name='Empleado')
-    clientes = UserProfile.objects.filter(role__name='Cliente')
+    empleados = Group.objects.get(name='Empleados').user_set.all()
+    clientes = Group.objects.get(name='Clientes').user_set.all()
     return render(request, 'dashFacturaVenta.html', {
         'factura_ventas': facturas_ventas,
         'empleados': empleados,
@@ -165,9 +153,7 @@ def dashFacturaVenta(request):
         'facturas': facturas,
     })
 
-
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def consultar_factura_venta(request, id):
     factura_instance = get_object_or_404(Factura, id=id)
     facturas_venta = FacturaVenta.objects.filter(factura=factura_instance)
@@ -180,8 +166,7 @@ def consultar_factura_venta(request, id):
     }
     return render(request, 'deletes_consulta/consultarFacturaVenta.html', context)
 
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def agregar_factura_venta(request):
     if request.method == 'POST':
         factura_id = request.POST.get('factura')
@@ -190,14 +175,14 @@ def agregar_factura_venta(request):
 
         try:
             factura_instance = Factura.objects.get(id=factura_id)
-            empleado_profile = UserProfile.objects.get(user_id=empleado_id)
-            cliente_profile = UserProfile.objects.get(user_id=cliente_id)
+            empleado = Group.objects.get(name='Empleado').user_set.get(id=empleado_id)
+            cliente = Group.objects.get(name='Cliente').user_set.get(id=cliente_id)
 
             # Crear la instancia de FacturaVenta
             FacturaVenta.objects.create(
                 factura=factura_instance,
-                empleado=empleado_profile,
-                cliente=cliente_profile
+                empleado=empleado,
+                cliente=cliente
             )
 
             # Mensaje de éxito
@@ -208,13 +193,13 @@ def agregar_factura_venta(request):
 
         except Factura.DoesNotExist:
             messages.error(request, 'La factura especificada no existe.')
-        except UserProfile.DoesNotExist:
+        except Group.DoesNotExist:
             messages.error(request, 'El empleado o cliente especificado no existe.')
 
     # Obtener las listas de facturas, empleados y clientes para el formulario
     facturas = Factura.objects.all()
-    empleados = UserProfile.objects.filter(role__name='Empleado')
-    clientes = UserProfile.objects.filter(role__name='Cliente')
+    empleados = Group.objects.get(name='Empleado').user_set.all()
+    clientes = Group.objects.get(name='Cliente').user_set.all()
 
     return render(request, 'dashFacturaVenta.html', {
         'facturas': facturas,
@@ -222,25 +207,21 @@ def agregar_factura_venta(request):
         'clientes': clientes
     })
 
-
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def dashFacturaCompra(request):
     factura_compras = FacturaCompra.objects.all()
     facturas = Factura.objects.all()
-    proveedores = UserProfile.objects.filter(role__name='Proveedor')
-    empleados = UserProfile.objects.filter(role__name='Empleado')
+    proveedores = Group.objects.get(name='Proveedores').user_set.all()
+    empleados = Group.objects.get(name='Empleados').user_set.all()
 
     return render(request, 'dashFacturaCompra.html', {
         'factura_compras': factura_compras,
         'facturas': facturas,
         'proveedores': proveedores,
-        'empleados': empleados,
+        'empleados': empleados
     })
 
-    
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def consultar_factura_compra(request, id):
     factura_instance = get_object_or_404(Factura, id=id)
     facturas_compra = FacturaCompra.objects.filter(factura=factura_instance)
@@ -253,8 +234,7 @@ def consultar_factura_compra(request, id):
     }
     return render(request, 'deletes_consulta/consultarFacturaCompra.html', context)
 
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def agregar_factura_compra(request):
     if request.method == 'POST':
         factura_id = request.POST.get('factura')
@@ -263,26 +243,31 @@ def agregar_factura_compra(request):
 
         try:
             factura_instance = Factura.objects.get(id=factura_id)
-            proveedor_profile = UserProfile.objects.get(id=proveedor_id, role__name='Proveedor')
-            empleado_profile = UserProfile.objects.get(id=empleado_id, role__name='Empleado')
+            proveedor = Group.objects.get(name='Proveedor').user_set.get(id=proveedor_id)
+            empleado = Group.objects.get(name='Empleado').user_set.get(id=empleado_id)
 
+            # Crear la instancia de FacturaCompra
             FacturaCompra.objects.create(
                 factura=factura_instance,
-                proveedor=proveedor_profile,
-                empleado=empleado_profile
+                proveedor=proveedor,
+                empleado=empleado
             )
 
+            # Mensaje de éxito
             messages.success(request, 'La factura de compra se ha creado correctamente.')
+
+            # Redirigir a una vista específica después de agregar la factura
             return redirect('factura_compra')
 
         except Factura.DoesNotExist:
             messages.error(request, 'La factura especificada no existe.')
-        except UserProfile.DoesNotExist:
+        except Group.DoesNotExist:
             messages.error(request, 'El proveedor o empleado especificado no existe.')
 
+    # Obtener las listas de facturas, empleados y proveedores para el formulario
     facturas = Factura.objects.all()
-    proveedores = UserProfile.objects.filter(role__name='Proveedor')
-    empleados = UserProfile.objects.filter(role__name='Empleado')
+    proveedores = Group.objects.get(name='Proveedor').user_set.all()
+    empleados = Group.objects.get(name='Empleado').user_set.all()
 
     return render(request, 'dashFacturaCompra.html', {
         'facturas': facturas,
@@ -290,8 +275,56 @@ def agregar_factura_compra(request):
         'empleados': empleados
     })
 
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')   
+@group_required('Empleados')
+def consultar_factura_producto(request, id):
+    factura_instance = get_object_or_404(Factura, id=id)
+    facturas_producto = FacturaProducto.objects.filter(factura=factura_instance)
+    
+    context = {
+        'factura': factura_instance,
+        'facturas_producto': facturas_producto
+    }
+    return render(request, 'deletes_consulta/consultarFacturaProducto.html', context)
+
+@group_required('Empleados')
+def agregar_factura_producto(request):
+    if request.method == 'POST':
+        factura_id = request.POST.get('factura')
+        producto_id = request.POST.get('producto')
+        cantidad = request.POST.get('cantidad')
+
+        try:
+            factura_instance = Factura.objects.get(id=factura_id)
+            producto = Producto.objects.get(id=producto_id)
+
+            # Crear la instancia de FacturaProducto
+            FacturaProducto.objects.create(
+                factura=factura_instance,
+                producto=producto,
+                cantidad=cantidad
+            )
+
+            # Mensaje de éxito
+            messages.success(request, 'El producto se ha agregado a la factura correctamente.')
+
+            # Redirigir a una vista específica después de agregar el producto
+            return redirect('factura_producto')
+
+        except Factura.DoesNotExist:
+            messages.error(request, 'La factura especificada no existe.')
+        except Producto.DoesNotExist:
+            messages.error(request, 'El producto especificado no existe.')
+
+    # Obtener las listas de facturas y productos para el formulario
+    facturas = Factura.objects.all()
+    productos = Producto.objects.all()
+
+    return render(request, 'dashFacturaProducto.html', {
+        'facturas': facturas,
+        'productos': productos
+    })
+
+@group_required('Empleados')   
 def dashCalificacionProducto(request):
     calificacion_productos = CalificacionProducto.objects.all()
     return render(request, 'dashCalificacionProducto.html', {'calificacion_productos': calificacion_productos})

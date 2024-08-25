@@ -4,15 +4,14 @@ from users.utils import is_employee
 from .models import Producto, materia_prima
 from django.contrib import messages
 from django.http import JsonResponse
+from users.views import group_required
 
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def DashInventario(request):
     productos = Producto.objects.all()
     return render(request, 'DashInventario.html', {'productos': productos})
 
-@login_required(login_url='/login/')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def agregar_producto(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -54,8 +53,7 @@ def agregar_producto(request):
     productos = Producto.objects.all()
     return render(request, 'DashInventario.html', {'productos': productos})
 
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def eliminar_producto(request, id):  
     eliminar_producto = get_object_or_404(Producto, id=id)  
     if request.method == 'POST':
@@ -64,8 +62,7 @@ def eliminar_producto(request, id):
     else:
         return render(request, 'deletes_edit/deleteProducto.html', {'producto': eliminar_producto})
     
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def editar_producto(request, id):
     factura_producto = get_object_or_404(Producto, id=id)
     
@@ -95,14 +92,12 @@ def editar_producto(request, id):
     
     return render(request, 'deletes_edit/editarProducto.html', {'Producto': factura_producto})
 
-@login_required(login_url='/login/')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def MateriaPrima(request):
     materias_primas = materia_prima.objects.all()
     return render(request, 'materiaPrima.html', {'materias_primas': materias_primas})
 
-@login_required(login_url='/login/')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def agregar_materia_prima(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -135,8 +130,7 @@ def agregar_materia_prima(request):
     materias_primas = materia_prima.objects.all()
     return render(request, 'materiaPrima.html', {'materias_primas': materias_primas})
 
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def eliminar_materia_prima(request, id):
     eliminar_materia = get_object_or_404(materia_prima, id=id)
     if request.method == 'POST':
@@ -144,8 +138,7 @@ def eliminar_materia_prima(request, id):
         return redirect('materia_prima')
     return render(request, 'deletes_edit/deleteMateriaPrima.html', {'materia_prima': eliminar_materia})
 
-@login_required(login_url='/login')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def editar_materia_prima(request, id):
     editar_materia = get_object_or_404(materia_prima, id=id)
     if request.method == 'POST':
@@ -164,8 +157,7 @@ def editar_materia_prima(request, id):
 
     return render(request, 'deletes_edit/editarMateriaPrima.html', {'materia_prima': editar_materia})
 
-@login_required(login_url='/login/')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def mostrar_stock_bajo_productos(request):
     productos_bajo_stock = Producto.objects.filter(cantidad_existente__lt=10)
     context = {
@@ -173,8 +165,7 @@ def mostrar_stock_bajo_productos(request):
     }
     return render(request, 'stock_bajo_productos.html', context)
 
-@login_required(login_url='/login/')
-@user_passes_test(is_employee, login_url='/login/')
+@group_required('Empleados')
 def mostrar_stock_bajo_materias_primas(request):
     materias_primas_bajo_stock = materia_prima.objects.filter(cantidad__lt=10)
     context = {
