@@ -197,7 +197,7 @@
                     <tbody>
                       {% for factura in facturas %}
                       <tr data-index ="0">
-                        <td>{{ factura.name }}</td>
+                        <td>{{ factura.pedido.usuario.email }}</td>
                         <td>{{ factura.fecha_factura }}</td>
                         <td>{{ factura.subtotal }}</td>
                         <td>{{ factura.iva }}</td>

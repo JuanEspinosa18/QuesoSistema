@@ -1,16 +1,95 @@
 from django.conf import settings
 from django.db import models
-from inventory.models import Producto
+from decimal import Decimal
 
-class Factura(models.Model):
-    name = models.CharField(max_length=200, verbose_name='Nombre', unique=True)
-    fecha_factura = models.DateTimeField(verbose_name='Fecha de factura')
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Subtotal')
-    iva = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='IVA')
-    total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Total')
+class Pedido(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    fecha_pedido = models.DateTimeField(auto_now_add=True)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), editable=False)
+
+    def calcular_subtotal(self):
+        # Calcula el subtotal solo si el pedido ya tiene una clave primaria
+        if self.pk:
+            return sum(item.precio * item.cantidad for item in self.productos.all())
+        return Decimal('0.00')
+
+    def save(self, *args, **kwargs):
+        # Calcula el subtotal al guardar el pedido
+        self.subtotal = self.calcular_subtotal()
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return f"Pedido #{self.id} - Usuario: {self.usuario.email} - Subtotal: {self.subtotal}"
+
+    class Meta:
+        verbose_name = 'Pedido'
+        verbose_name_plural = 'Pedidos'
+        db_table = 'pedido'
+        ordering = ['id']
+
+class PedidoProducto(models.Model):
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name='productos')
+    producto = models.ForeignKey('inventory.Producto', on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Nueva instancia
+            if self.producto.cantidad_existente >= self.cantidad:
+                self.producto.cantidad_existente -= self.cantidad
+                self.producto.save()
+            else:
+                raise ValueError(f"No hay suficiente stock de {self.producto.nombre} para realizar el pedido.")
+        else:  # Actualización
+            original = PedidoProducto.objects.get(pk=self.pk)
+            diferencia_cantidad = self.cantidad - original.cantidad
+
+            if diferencia_cantidad > 0:
+                if self.producto.cantidad_existente >= diferencia_cantidad:
+                    self.producto.cantidad_existente -= diferencia_cantidad
+                else:
+                    raise ValueError(f"No hay suficiente stock de {self.producto.nombre} para actualizar el pedido.")
+            elif diferencia_cantidad < 0:
+                self.producto.cantidad_existente += abs(diferencia_cantidad)
+
+            self.producto.save()
+
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.producto.cantidad_existente += self.cantidad
+        self.producto.save()
+        super().delete(*args, **kwargs)
+
+    def __str__(self):
+        return f"Pedido #{self.pedido.id} - Producto: {self.producto.nombre} - Cantidad: {self.cantidad}"
+
+    class Meta:
+        verbose_name = 'Pedido Producto'
+        verbose_name_plural = 'Pedidos Productos'
+        db_table = 'pedido_producto'
+        ordering = ['id']
+
+# Modelo de Factura (relaciona un pedido con una factura)
+from decimal import Decimal
+
+class Factura(models.Model):
+    pedido = models.OneToOneField(Pedido, on_delete=models.CASCADE, related_name='factura')
+    fecha_factura = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de factura')
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Subtotal', default=Decimal('0.00'))
+    iva = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='IVA', default=Decimal('0.00'))
+    total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Total', default=Decimal('0.00'))
+
+    def save(self, *args, **kwargs):
+        # Calcular el subtotal sumando el precio * cantidad de cada producto en el pedido
+        self.subtotal = self.pedido.subtotal
+        iva_rate = Decimal('0.12')  # IVA del 12%
+        self.iva = self.subtotal * iva_rate
+        self.total = self.subtotal + self.iva
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Factura #{self.id} - Pedido #{self.pedido.id} - Total: {self.total}"
 
     class Meta:
         verbose_name = 'Factura'
@@ -44,33 +123,4 @@ class FacturaCompra(models.Model):
         verbose_name = 'Factura de compra'
         verbose_name_plural = 'Facturas de compras'
         db_table = 'factura_compra'
-        ordering = ['id']
-
-class CalificacionProducto(models.Model):
-    valor_calificacion = models.IntegerField(verbose_name='Valor')
-    des_calificacion = models.TextField(verbose_name='Descripción')
-
-    def __str__(self):
-        return str(self.valor_calificacion)
-
-    class Meta:
-        verbose_name = 'Calificación Producto'
-        verbose_name_plural = 'Calificaciones de Productos'
-        db_table = 'calificacion_producto'
-        ordering = ['id']
-
-class FacturaProducto(models.Model):
-    cantidad = models.IntegerField(verbose_name='Cantidad')
-    valor_productos = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Valor de los productos')
-    calificacion_producto = models.ForeignKey(CalificacionProducto, on_delete=models.CASCADE)
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    factura = models.ForeignKey(Factura, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"Factura Producto - Cantidad: {self.cantidad} - Producto: {self.producto.nombre}"
-
-    class Meta:
-        verbose_name = 'Factura Producto'
-        verbose_name_plural = 'Facturas de Productos'
-        db_table = 'factura_producto'
         ordering = ['id']

@@ -24,7 +24,7 @@ class Producto(models.Model):
     imagen = models.ImageField(upload_to='productos/', null=True, blank=True)
     
     def __str__(self):
-        return f'{self.nombre} -> {self.precio}'
+        return f'{self.nombre} -> {self.valor}'
     
     class Meta:
         verbose_name = 'producto'

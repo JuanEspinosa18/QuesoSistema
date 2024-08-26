@@ -59,6 +59,7 @@
               <tbody>
                   {% for factura_venta in factura_ventas %}
                   <tr>
+                      <td>{{ factura_venta.factura.pedido.usuario.email }}</td>
                       <td>{{ factura_venta.factura.fecha_factura }}</td>
                       <td>{{ factura_venta.factura.subtotal }}</td>
                       <td>{{ factura_venta.factura.iva }}</td>
@@ -106,7 +107,7 @@
                       <select class="form-control" id="empleadoSelect" name="empleado" required>
                           <option value="" disabled selected>Seleccione un empleado</option>
                           {% for empleado in empleados %}
-                              <option value="{{ empleado.user.id }}">{{ empleado.user.email }}</option>
+                              <option value="{{ user.id }}">{{ empleado.user.email }}</option>
                           {% endfor %}
                       </select>
                   </div>

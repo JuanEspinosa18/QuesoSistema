@@ -1,7 +1,7 @@
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from sales.models import Factura, FacturaVenta, FacturaCompra, CalificacionProducto, FacturaProducto
+from sales.models import Factura, FacturaVenta, FacturaCompra, Pedido, PedidoProducto
 from django.contrib import messages
 from import_export.formats.base_formats import XLSX
 from .resources import FacturaResource
@@ -19,6 +19,54 @@ def DashVentas(request):
 
 @group_required('Empleados')
 def export_facturas(request):
+    if request.method == 'POST':
+        file_format = request.POST.get('file_format')
+        resource = FacturaResource()
+        
+        # Exportar los datos en el formato tablib
+        dataset = resource.export()
+        
+        if file_format == 'xlsx':
+            # Exportar como XLSX
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename="facturas_export.xlsx"'
+            response.write(dataset.xlsx)
+            return response
+        
+        elif file_format == 'pdf':
+            # Generar PDF utilizando ReportLab
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="facturas_export.pdf"'
+            
+            buffer = BytesIO()
+            p = canvas.Canvas(buffer, pagesize=letter)
+            
+            # Agrega contenido al PDF
+            p.drawString(100, 750, "Reporte de Facturas")
+            
+            # Iteracion sobre el dataset y agregar filas al PDF
+            y = 700
+            for factura in dataset.dict:
+                # Asegúrate de que los datos sean accesibles de la forma correcta
+                email = factura['pedido__usuario__email']
+                fecha_factura = factura['fecha_factura']
+                subtotal = factura['subtotal']
+                iva = factura['iva']
+                total = factura['total']
+                p.drawString(100, y, f"{email} - {fecha_factura} - {subtotal} - {iva} - {total}")
+                y -= 20  # Ajustar la altura según sea necesario
+            
+            p.showPage()
+            p.save()
+            
+            # Escribir el contenido del buffer en el response
+            pdf = buffer.getvalue()
+            buffer.close()
+            response.write(pdf)
+            return response
+        
+        else:
+            return HttpResponseBadRequest("Formato no soportado")
     if request.method == 'POST':
         file_format = request.POST.get('file_format')
         resource = FacturaResource()
@@ -45,7 +93,7 @@ def export_facturas(request):
             # Iteracion sobre el dataset y agregar filas al PDF
             y = 700
             for factura in dataset.dict:
-                p.drawString(100, y, f"{factura['name']} - {factura['fecha_factura']} - {factura['subtotal']}")
+                p.drawString(100, y, f"{factura.pedido.usuario ['email']} - {factura['fecha_factura']} - {factura['subtotal']}")
                 y -= 20  # Ajustar la altura según sea necesario
             
             p.showPage()
@@ -158,12 +206,11 @@ def dashFacturaVenta(request):
 def consultar_factura_venta(request, id):
     factura_instance = get_object_or_404(Factura, id=id)
     facturas_venta = FacturaVenta.objects.filter(factura=factura_instance)
-    facturas_producto = FacturaProducto.objects.filter(factura=factura_instance)
+    
 
     context = {
         'factura': factura_instance,
         'facturas_venta': facturas_venta,
-        'facturas_producto': facturas_producto,
     }
     return render(request, 'deletes_consulta/consultarFacturaVenta.html', context)
 
@@ -226,12 +273,10 @@ def dashFacturaCompra(request):
 def consultar_factura_compra(request, id):
     factura_instance = get_object_or_404(Factura, id=id)
     facturas_compra = FacturaCompra.objects.filter(factura=factura_instance)
-    facturas_producto = FacturaProducto.objects.filter(factura=factura_instance)
 
     context = {
         'factura': factura_instance,
         'facturas_compra': facturas_compra,
-        'facturas_producto': facturas_producto,
     }
     return render(request, 'deletes_consulta/consultarFacturaCompra.html', context)
 
@@ -274,55 +319,6 @@ def agregar_factura_compra(request):
         'facturas': facturas,
         'proveedores': proveedores,
         'empleados': empleados
-    })
-
-@group_required('Empleados')
-def consultar_factura_producto(request, id):
-    factura_instance = get_object_or_404(Factura, id=id)
-    facturas_producto = FacturaProducto.objects.filter(factura=factura_instance)
-    
-    context = {
-        'factura': factura_instance,
-        'facturas_producto': facturas_producto
-    }
-    return render(request, 'deletes_consulta/consultarFacturaProducto.html', context)
-
-@group_required('Empleados')
-def agregar_factura_producto(request):
-    if request.method == 'POST':
-        factura_id = request.POST.get('factura')
-        producto_id = request.POST.get('producto')
-        cantidad = request.POST.get('cantidad')
-
-        try:
-            factura_instance = Factura.objects.get(id=factura_id)
-            producto = Producto.objects.get(id=producto_id)
-
-            # Crear la instancia de FacturaProducto
-            FacturaProducto.objects.create(
-                factura=factura_instance,
-                producto=producto,
-                cantidad=cantidad
-            )
-
-            # Mensaje de éxito
-            messages.success(request, 'El producto se ha agregado a la factura correctamente.')
-
-            # Redirigir a una vista específica después de agregar el producto
-            return redirect('factura_producto')
-
-        except Factura.DoesNotExist:
-            messages.error(request, 'La factura especificada no existe.')
-        except Producto.DoesNotExist:
-            messages.error(request, 'El producto especificado no existe.')
-
-    # Obtener las listas de facturas y productos para el formulario
-    facturas = Factura.objects.all()
-    productos = Producto.objects.all()
-
-    return render(request, 'dashFacturaProducto.html', {
-        'facturas': facturas,
-        'productos': productos
     })
 
 @group_required('Empleados')   
