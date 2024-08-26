@@ -1,6 +1,6 @@
 from django.db import models
 
-class materia_prima(models.Model):
+class MateriaPrima(models.Model):
     name = models.CharField(max_length=200, verbose_name='Nombre')
     descripcion = models.TextField(verbose_name='Descripción de materia prima')
     fecha_ven = models.DateField(verbose_name='Fecha de vencimiento')
@@ -15,38 +15,50 @@ class materia_prima(models.Model):
         db_table = 'materia_prima'
         ordering = ['id']
 
+
 class Producto(models.Model):
-    nombre = models.CharField(max_length=200, verbose_name='Nombre')
-    descripcion = models.TextField(verbose_name='Descripcion de producto')
-    valor = models.IntegerField(verbose_name='Valor')
-    fecha_vencimiento = models.DateField(verbose_name='Fecha de vencimiento')
-    cantidad_existente = models.IntegerField(verbose_name='Cantidad existente')
+    nombre = models.CharField(unique=True, max_length=200, verbose_name='Nombre')
+    descripcion = models.TextField(verbose_name='Descripción de producto')
+    valor = models.IntegerField(verbose_name='Valor', blank=True)
+    stock = models.IntegerField(verbose_name='Stock')
     imagen = models.ImageField(upload_to='productos/', null=True, blank=True)
     
     def __str__(self):
         return f'{self.nombre} -> {self.valor}'
     
     class Meta:
-        verbose_name = 'producto'
-        verbose_name_plural = 'productos'
+        verbose_name = 'Producto'
+        verbose_name_plural = 'Productos'
         db_table = 'producto'
         ordering = ['id']
 
-class orden_produccion(models.Model):
-    cantidad = models.IntegerField(verbose_name='Cantidad')
-    cantidad_materia_utilizada = models.IntegerField(verbose_name='Cantidad utilizada')
-    fecha_orden = models.DateField(verbose_name='Fecha de orden')
-    materia_prima = models.ForeignKey(materia_prima, on_delete=models.CASCADE)
+
+class LoteProducto(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad_producto = models.IntegerField(verbose_name='Cantidad producida')
+    fecha_produccion = models.DateField(verbose_name='Fecha de producción')
+    fecha_vencimiento = models.DateField(verbose_name='Fecha de vencimiento')
 
     def __str__(self):
-        return f"Orden #{self.id} - Producto: {self.producto.nombre} - Cantidad: {self.cantidad}"
-
+        return f'Lote de {self.producto.nombre} - Cantidad producida: {self.cantidad_producto}'
     
     class Meta:
-        verbose_name = 'orden produccion'
-        verbose_name_plural = 'ordenes produccion'
-        db_table = 'orden_produccion'
+        verbose_name = 'Lote de producción'
+        verbose_name_plural = 'Lotes de producción'
+        db_table = 'lote_produccion'
         ordering = ['id']
 
-        
+
+class MateriaPrimaLote(models.Model):
+    lote = models.ForeignKey(LoteProducto, on_delete=models.CASCADE, related_name='materias_primas')
+    materia_prima = models.ForeignKey(MateriaPrima, on_delete=models.CASCADE)
+    cantidad_utilizada = models.IntegerField(verbose_name='Cantidad utilizada')
+
+    def __str__(self):
+        return f'{self.materia_prima.name} - Cantidad utilizada: {self.cantidad_utilizada}'
+    
+    class Meta:
+        verbose_name = 'Materia prima del lote'
+        verbose_name_plural = 'Materias primas del lote'
+        db_table = 'materia_prima_lote'
+        ordering = ['id']

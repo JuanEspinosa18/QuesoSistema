@@ -1,7 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, user_passes_test
-from users.utils import is_employee
-from .models import Producto, materia_prima
+from .models import Producto, MateriaPrima
 from django.contrib import messages
 from django.http import JsonResponse
 from users.views import group_required
@@ -94,11 +92,11 @@ def editar_producto(request, id):
 
 @group_required('Empleados')
 def MateriaPrima(request):
-    materias_primas = materia_prima.objects.all()
+    materias_primas = MateriaPrima.objects.all()
     return render(request, 'materiaPrima.html', {'materias_primas': materias_primas})
 
 @group_required('Empleados')
-def agregar_materia_prima(request):
+def agregar_MateriaPrima(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         descripcion = request.POST.get('descripcion')
@@ -118,7 +116,7 @@ def agregar_materia_prima(request):
         if errors:
             return JsonResponse({'success': False, 'errors': errors})
         else:
-            materia_nueva = materia_prima(
+            materia_nueva = MateriaPrima(
                 name=nombre,
                 descripcion=descripcion,
                 fecha_ven=fecha_vencimiento,
@@ -127,20 +125,20 @@ def agregar_materia_prima(request):
             materia_nueva.save()
             return JsonResponse({'success': True})
     
-    materias_primas = materia_prima.objects.all()
+    materias_primas = MateriaPrima.objects.all()
     return render(request, 'materiaPrima.html', {'materias_primas': materias_primas})
 
 @group_required('Empleados')
-def eliminar_materia_prima(request, id):
-    eliminar_materia = get_object_or_404(materia_prima, id=id)
+def eliminar_MateriaPrima(request, id):
+    eliminar_materia = get_object_or_404(MateriaPrima, id=id)
     if request.method == 'POST':
         eliminar_materia.delete()
-        return redirect('materia_prima')
-    return render(request, 'deletes_edit/deleteMateriaPrima.html', {'materia_prima': eliminar_materia})
+        return redirect('MateriaPrima')
+    return render(request, 'deletes_edit/deleteMateriaPrima.html', {'MateriaPrima': eliminar_materia})
 
 @group_required('Empleados')
-def editar_materia_prima(request, id):
-    editar_materia = get_object_or_404(materia_prima, id=id)
+def editar_MateriaPrima(request, id):
+    editar_materia = get_object_or_404(MateriaPrima, id=id)
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         descripcion = request.POST.get('descripcion')
@@ -153,9 +151,9 @@ def editar_materia_prima(request, id):
         editar_materia.cantidad = cantidad
 
         editar_materia.save()
-        return redirect('materia_prima')
+        return redirect('MateriaPrima')
 
-    return render(request, 'deletes_edit/editarMateriaPrima.html', {'materia_prima': editar_materia})
+    return render(request, 'deletes_edit/editarMateriaPrima.html', {'MateriaPrima': editar_materia})
 
 @group_required('Empleados')
 def mostrar_stock_bajo_productos(request):
@@ -167,7 +165,7 @@ def mostrar_stock_bajo_productos(request):
 
 @group_required('Empleados')
 def mostrar_stock_bajo_materias_primas(request):
-    materias_primas_bajo_stock = materia_prima.objects.filter(cantidad__lt=10)
+    materias_primas_bajo_stock = MateriaPrima.objects.filter(cantidad__lt=10)
     context = {
         'materias_primas': materias_primas_bajo_stock,
     }

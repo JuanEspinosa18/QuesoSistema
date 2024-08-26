@@ -1,18 +1,8 @@
 from django.contrib import admin
-from .models import materia_prima, Producto,orden_produccion 
-from import_export import resources
-from import_export.admin import ImportExportModelAdmin
-# Register your models here.
+from .models import MateriaPrima, Producto, LoteProducto, MateriaPrimaLote
 
-admin.site.register(materia_prima)
+admin.site.register(MateriaPrima)
 admin.site.register(Producto)
+admin.site.register(LoteProducto)
+admin.site.register(MateriaPrimaLote)
 
-
-@admin.register(orden_produccion)
-class OrdenAdmin(ImportExportModelAdmin):
-    list_display = ['fecha_orden'] 
-
-class OrdenResource(resources.ModelResource):
-    class Meta:
-        model = orden_produccion
-        fields = ('cantidad')

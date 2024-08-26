@@ -35,8 +35,8 @@ class PedidoProducto(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:  # Nueva instancia
-            if self.producto.cantidad_existente >= self.cantidad:
-                self.producto.cantidad_existente -= self.cantidad
+            if self.producto.stock >= self.cantidad:
+                self.producto.stock -= self.cantidad
                 self.producto.save()
             else:
                 raise ValueError(f"No hay suficiente stock de {self.producto.nombre} para realizar el pedido.")
@@ -45,19 +45,19 @@ class PedidoProducto(models.Model):
             diferencia_cantidad = self.cantidad - original.cantidad
 
             if diferencia_cantidad > 0:
-                if self.producto.cantidad_existente >= diferencia_cantidad:
-                    self.producto.cantidad_existente -= diferencia_cantidad
+                if self.producto.stock >= diferencia_cantidad:
+                    self.producto.stock -= diferencia_cantidad
                 else:
                     raise ValueError(f"No hay suficiente stock de {self.producto.nombre} para actualizar el pedido.")
             elif diferencia_cantidad < 0:
-                self.producto.cantidad_existente += abs(diferencia_cantidad)
+                self.producto.stock += abs(diferencia_cantidad)
 
             self.producto.save()
 
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        self.producto.cantidad_existente += self.cantidad
+        self.producto.stock += self.cantidad
         self.producto.save()
         super().delete(*args, **kwargs)
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .models import CustomUser
+from .models import Usuario
 from django.db import IntegrityError
 from .forms import ContactForm
 from django.core.mail import send_mail
@@ -45,7 +45,7 @@ def signup_view(request):
             return redirect('signup')
         
         try:
-            user = CustomUser(
+            user = Usuario(
                 email=email,
                 documento=documento,
                 primer_nombre=primer_nombre,
@@ -55,9 +55,9 @@ def signup_view(request):
                 telefono=telefono
             )
             user.set_password(password)
-            user.full_clean()  # Valida los datos del usuario
+            user.full_clean()
 
-            if CustomUser.objects.filter(email=email).exists():
+            if Usuario.objects.filter(email=email).exists():
                 messages.error(request, 'El correo electrónico ingresado ya está registrado. Por favor, elija otro.')
                 return redirect('signup')
 
@@ -97,7 +97,7 @@ def login_view(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            if user.is_superuser:
+            if Usuario.usuario_administrador:
                 return redirect('admin:index')  # Redirige al panel de administrador si es superusuario
             elif user.groups.filter(name='Empleados').exists():
                 return redirect('DashVentas') # Redirige al carrito si es Empleado
