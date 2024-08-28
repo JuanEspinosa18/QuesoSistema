@@ -1,35 +1,31 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group
 
-class UsuarioManager(BaseUserManager):
-    def create_user(self, email, documento, primer_nombre, primer_apellido, password=None):
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, documento, primer_nombre, primer_apellido, password=None, **extra_fields):
+        if not email:
+            raise ValueError('El usuario debe tener un correo electrónico.')
         if not documento:
-            raise ValueError('El usuario debe tener un documento')
+            raise ValueError('El usuario debe tener un documento de identidad.')
         
-        usuario = self.model(
-            email=self.normalize_email(email),
-            documento=documento, 
-            primer_nombre=primer_nombre, 
-            primer_apellido=primer_apellido
-        )
-        usuario.set_password(password)
-        usuario.save()
-        return usuario
+        email = self.normalize_email(email)
+        user = self.model(email=email, documento=documento, primer_nombre=primer_nombre, primer_apellido=primer_apellido, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
-    def create_superuser(self, email, documento, primer_nombre, primer_apellido, password=None):
-        usuario = self.create_user(
-            email,
-            documento=documento, 
-            primer_nombre=primer_nombre, 
-            primer_apellido=primer_apellido,
-            password=password
-        )
-        usuario.usuario_administrador = True
-        usuario.usuario_activo = True
-        usuario.save()
-        return usuario
-    
-class Usuario(AbstractBaseUser):
+    def create_superuser(self, email, documento, primer_nombre, primer_apellido, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('El superusuario debe tener is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('El superusuario debe tener is_superuser=True.')
+
+        return self.create_user(email, documento, primer_nombre, primer_apellido, password, **extra_fields)
+
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     documento = models.CharField(max_length=10, unique=True, verbose_name='Documento identidad')
     email = models.EmailField(unique=True, verbose_name='Correo Electrónico', max_length=50)
     primer_nombre = models.CharField(max_length=20, verbose_name='Primer Nombre')
@@ -38,35 +34,17 @@ class Usuario(AbstractBaseUser):
     segundo_apellido = models.CharField(max_length=20, verbose_name='Segundo Apellido', blank=True, null=True)
     telefono = models.CharField(max_length=10, verbose_name='Teléfono', blank=True, null=True)
     imagen = models.ImageField(upload_to='perfil/', max_length=50, verbose_name='Imagen de perfil', blank=True, null=True)
-    usuario_activo = models.BooleanField(default=True)
-    usuario_administrador = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     
-    # Relación con los grupos
-    groups = models.ManyToManyField(Group, related_name='usuarios', blank=True)
-    
-    objects = UsuarioManager()
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['documento', 'primer_nombre', 'primer_apellido']
+
+    objects = CustomUserManager()
 
     def __str__(self):
         return self.email
 
-    def has_perm(self, perm, obj=None):
-        # Se puede ajustar la lógica aquí según sea necesario
-        return True
-
-    def has_module_perms(self, app_label):
-        # Se puede ajustar la lógica aquí según sea necesario
-        return True
-
-    @property
-    def is_staff(self):
-        return self.usuario_activo
-
-    @property
-    def is_superuser(self):
-        return self.usuario_administrador
-
-    def grupo(self):
-        return ", ".join([group.name for group in self.groups.all()])
+    class Meta:
+        verbose_name = 'usuario'
+        verbose_name_plural = 'usuarios'

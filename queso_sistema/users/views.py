@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .models import Usuario
+from .models import CustomUser
 from django.db import IntegrityError
 from .forms import ContactForm
 from django.core.mail import send_mail
@@ -45,7 +45,7 @@ def signup_view(request):
             return redirect('signup')
         
         try:
-            user = Usuario(
+            usuario = CustomUser(
                 email=email,
                 documento=documento,
                 primer_nombre=primer_nombre,
@@ -54,24 +54,24 @@ def signup_view(request):
                 segundo_apellido=segundo_apellido,
                 telefono=telefono
             )
-            user.set_password(password)
-            user.full_clean()
+            usuario.set_password(password)
+            usuario.full_clean()
 
-            if Usuario.objects.filter(email=email).exists():
+            if CustomUser.objects.filter(email=email).exists():
                 messages.error(request, 'El correo electrónico ingresado ya está registrado. Por favor, elija otro.')
                 return redirect('signup')
 
-            user.save()
+            usuario.save()
 
             try:
                 grupo_clientes = Group.objects.get(name='Clientes')
-                user.groups.add(grupo_clientes)
+                usuario.groups.add(grupo_clientes)
             except Group.DoesNotExist:
                 messages.error(request, 'El grupo "Clientes" no existe en la base de datos.')
-                user.delete()
+                usuario.delete()
                 return redirect('signup')
 
-            login(request, user)
+            login(request, usuario)
             messages.success(request, '¡Usuario creado con éxito!')
             return redirect('login')
 
@@ -92,17 +92,17 @@ def signup_view(request):
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST.get('email')  # Cambiar 'username' a 'email' para autenticación
         password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            if Usuario.usuario_administrador:
+            if user.is_superuser:
                 return redirect('admin:index')  # Redirige al panel de administrador si es superusuario
             elif user.groups.filter(name='Empleados').exists():
-                return redirect('DashVentas') # Redirige al carrito si es Empleado
+                return redirect('DashVentas')  # Redirige al dashboard de ventas si es empleado
             elif user.groups.filter(name='Clientes').exists():
-                return redirect('carrito') # Redirige al carrito si es cliente
+                return redirect('carrito')  # Redirige al carrito si es cliente
         else:
             messages.error(request, 'Usuario o contraseña incorrectos')
     return render(request, 'login.html')
@@ -136,4 +136,3 @@ def contacto(request):
         form = ContactForm()
     
     return render(request, 'contacto.html', {'form': form, 'mensaje_enviado': mensaje_enviado})
-
