@@ -104,7 +104,7 @@ def login_view(request):
             elif user.groups.filter(name='Clientes').exists():
                 return redirect('carrito')  # Redirige al carrito si es cliente
         else:
-            messages.error(request, 'Usuario o contraseña incorrectos')
+            messages.error(request, 'Correo o contraseña incorrectos')
     return render(request, 'login.html')
 
 def logout_view(request):
