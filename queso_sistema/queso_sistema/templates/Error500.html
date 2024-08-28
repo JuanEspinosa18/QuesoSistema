@@ -8,6 +8,97 @@
   <title>ERROR 500</title>
   <link rel="icon" href="{% static 'imagenes/Icono.png' %}">
   <link rel="stylesheet" href="{% static 'css/Error500.css' %}">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #F8E7AF;
+  overflow: hidden;
+}
+
+nav {
+  background-color: #00563F;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+nav ul li {
+  margin: 0 15px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #FFF9D9;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+nav ul li a:hover {
+  color: #0D8265;
+}
+
+.logo img {
+  height: 50px;
+}
+
+.icono-login:hover svg circle,
+.icono-login:hover svg path {
+  stroke: #0D8265;
+}
+
+.error-container {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: 50px;
+  padding-bottom: 50px;
+}
+
+.error-container img {
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+
+.error-container h1 {
+  font-size: 55px;
+  color: #00563F;
+  margin: 0;
+}
+
+.error-container p {
+  font-size: 23px;
+  color: #00563F;
+  margin: 0;
+}
+
+@media screen and (max-width: 630px) {
+  h1 {
+    font-size: 16px;
+  }
+}
+
+@keyframes fadeAnimation {
+  to {
+    opacity: 1;
+  }
+}
+
+  </style>
 </head>
 
 <body>
@@ -19,21 +110,9 @@
       <li><a href="#">Nosotros</a></li>
       <li><a href="#">Productos</a></li>
       <li><a href="#">Contacto</a></li>
-      <li class="icono-login"><a href="{% static 'login.html' %}">
-          <svg width="25px" height="25px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" version="1.1"
-            fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-            <g transform="translate(2, 1) scale()">
-              <circle cx="8" cy="6" r="3.25" stroke="#FFF9D9" />
-            </g>
-            <g transform="translate(2.125, 3.5) scale()">
-              <path d="M2.75 14.25c0 -2.5 2 -5 5.25 -5s5.25 2.5 5.25 5" stroke="#FFF9D9" />
-            </g>
-          </svg></a>
-      </li>
     </ul>
   </nav>
   <div class="error-container">
-    <img src="{% static 'imagenes/Error500.png' %}"alt="Imagen de error">
     <h1><b>Internal Server Error</b></h1>
     <p>Lo sentimos, pero hubo un problema en el servidor al procesar tu solicitud. <br>
       Nuestro equipo técnico está trabajando en resolverlo lo más pronto posible. </p>

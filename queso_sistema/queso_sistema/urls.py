@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from django.conf.urls import handler404
 from django.conf.urls import handler500
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
@@ -22,5 +23,6 @@ urlpatterns = [
 # Llamado a las vistas del error 404 y 500
 handler404 = views.error_404_view
 handler500 = views.error_500_view
+
 
 

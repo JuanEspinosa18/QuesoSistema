@@ -13,7 +13,6 @@
             background-color: #fbfaf3;
             margin: 0;
             padding: 0;
-            padding-top: 100px; 
         }
 
         .menu {
@@ -42,34 +41,67 @@
         .contenido {
             height: 2000px; 
         }
+
+        
+nav {
+    background-color: #00563F;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #FFF9D9;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    color: #0D8265;
+}
+
+.logo img {
+    height: 50px;
+}
+
     </style>
 </head>
 <body>
-    <div class="menu container">
-        <a href="#" class="logo"><img src="{% static 'imagenes/Logo.png' %}" alt="icono"></a>
-        <input type="checkbox" id="menu" />
-        <label for="menu">
-            <img src="{% static 'imagenes/Menu.png' %}" class="menu-icono" alt="">
-        </label>
-
-        <nav class="navbar">
-            <ul>
-              <li><a href="{% url 'index' %}">Inicio</a></li>
-              <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
-              <li><a href="{% url 'carrito' %}">Productos</a></li>
-              <li><a href="{% url 'contacto' %}">Contacto</a></li>
-                {% if user.is_authenticated %}
-                  <li class="nav-item">
-                      <a class="nav-link" href="{% url 'logout' %}">Salir</a>
-                  </li>
-                {% else %}
-                  <li class="nav-item">
-                      <a class="nav-link" href="{% url 'login' %}">Ingresar</a>
-                  </li>
-                {% endif %}
-            </ul>
-          </nav>
-    </div>
+    <nav>
+        <div class="logo">
+          <a href="{% static 'index.html' %}"><img src="{% static 'imagenes/Logo.png' %}" alt="Logo de la empresa"></a>
+        </div>
+        <ul>
+          <li><a href="{% url 'index' %}">Inicio</a></li>
+          <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
+          <li><a href="{% url 'carrito' %}">Productos</a></li>
+          <li><a href="{% url 'blog_informativo' %}">Blog</a></li>
+          <li><a href="{% url 'contacto' %}">Contacto</a></li>
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'logout' %}">Salir</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'login' %}">Ingresar</a>
+              </li>
+            {% endif %}
+        </ul>
+      </nav>
 
     <main>
         {% block main%}
