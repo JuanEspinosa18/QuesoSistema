@@ -48,3 +48,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'usuario'
         verbose_name_plural = 'usuarios'
+
+class Proveedor(models.Model):
+    nombre = models.CharField(max_length=200, verbose_name='Nombre')
+    direccion = models.CharField(max_length=255, verbose_name='Dirección')
+    telefono = models.CharField(max_length=15, verbose_name='Teléfono')
+    email = models.EmailField(verbose_name='Email', blank=True, null=True)
+    contacto = models.CharField(max_length=200, verbose_name='Contacto', blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name = 'Proveedor'
+        verbose_name_plural = 'Proveedores'
+        db_table = 'proveedor'
+        ordering = ['nombre']

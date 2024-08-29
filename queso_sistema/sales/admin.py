@@ -1,82 +1,34 @@
 from django.contrib import admin
-from .models import Factura, FacturaVenta, FacturaCompra, Pedido, PedidoProducto, FacturaCompraDetalle
-from import_export.admin import ImportExportModelAdmin
+from .models import FacturaVenta, FacturaCompra, FacturaDetalle
+from .models import Pedido, PedidoProducto
 
-# Inline Admin para FacturaCompraDetalle
-class FacturaCompraDetalleInline(admin.TabularInline):
-    model = FacturaCompraDetalle
+
+class FacturaDetalleInline(admin.TabularInline):
+    model = FacturaDetalle
     extra = 1
-    fields = ('materia_prima', 'cantidad', 'precio')
+    fields = ('materia_prima', 'producto', 'cantidad', 'precio')
+    readonly_fields = ('materia_prima', 'producto', 'cantidad', 'precio')
 
-# Inline Admin para FacturaVenta (si tiene detalles específicos para mostrar)
-class FacturaVentaInline(admin.TabularInline):
-    model = FacturaVenta
-    extra = 1
-    fields = ('empleado', 'cliente', 'subtotal', 'iva', 'total')
-
-# Admin para Factura
-class FacturaAdmin(admin.ModelAdmin):
-    model = Factura
-    list_display = ['fecha_factura', 'subtotal', 'iva', 'total']
-    list_filter = ['tipo_factura']
-    readonly_fields = ['fecha_factura', 'subtotal', 'iva', 'total']  # Fecha no editable
-    ordering = ['fecha_factura']
-
-    def get_inlines(self, request, obj=None):
-        if obj and obj.tipo_factura == 'compra':
-            return [FacturaCompraDetalleInline]
-        elif obj and obj.tipo_factura == 'venta':
-            return [FacturaVentaInline]
-        return []
-
-    def get_fieldsets(self, request, obj=None):
-        if obj:
-            if obj.tipo_factura == 'compra':
-                return [
-                    (None, {'fields': ['fecha_factura', 'subtotal', 'iva', 'total']}),
-                    ('Detalles de Compra', {'fields': ['factura_compra_detalles']}),
-                ]
-            elif obj.tipo_factura == 'venta':
-                return [
-                    (None, {'fields': ['fecha_factura', 'subtotal', 'iva', 'total']}),
-                    ('Detalles de Venta', {'fields': ['empleado', 'cliente', 'pedido']}),
-                ]
-        return [
-            (None, {'fields': ['subtotal', 'iva', 'total']}),
-        ]
-
-# Registro del admin para Factura
-admin.site.register(Factura, FacturaAdmin)
-
-# Admin para FacturaVenta
-@admin.register(FacturaVenta)
 class FacturaVentaAdmin(admin.ModelAdmin):
-    list_display = ['id', 'fecha_factura', 'empleado', 'cliente', 'subtotal', 'iva', 'total']
-    fields = ['tipo_factura', 'pedido', 'empleado', 'cliente', 'subtotal', 'iva', 'total']
-    readonly_fields = ['fecha_factura', 'subtotal', 'iva', 'total']
+    list_display = ('id', 'tipo_factura', 'fecha_factura', 'subtotal', 'iva', 'total', 'empleado', 'cliente')
+    inlines = [FacturaDetalleInline]
 
-# Admin para FacturaCompra
-@admin.register(FacturaCompra)
 class FacturaCompraAdmin(admin.ModelAdmin):
-    list_display = ['id', 'fecha_factura', 'proveedor', 'empleado', 'subtotal', 'iva', 'total']
-    fields = ['tipo_factura', 'proveedor', 'empleado', 'factura_compra_detalles', 'subtotal', 'iva', 'total']
-    readonly_fields = ['fecha_factura', 'subtotal', 'iva', 'total']
-    inlines = [FacturaCompraDetalleInline]  # Agrega el inline aquí
+    list_display = ('id', 'tipo_factura', 'fecha_factura', 'subtotal', 'iva', 'total', 'proveedor', 'empleado')
+    inlines = [FacturaDetalleInline]
 
-# Admin para PedidoProducto (inline en PedidoAdmin)
+admin.site.register(FacturaVenta, FacturaVentaAdmin)
+admin.site.register(FacturaCompra, FacturaCompraAdmin)
+
 class PedidoProductoInline(admin.TabularInline):
     model = PedidoProducto
     extra = 1
-    fields = ['producto', 'cantidad', 'precio']
+    fields = ('producto', 'cantidad', 'precio')
+    readonly_fields = ('producto', 'cantidad', 'precio')
 
-# Admin para Pedido
-@admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'usuario', 'fecha_pedido', 'subtotal')
     inlines = [PedidoProductoInline]
-    list_display = ['id', 'usuario', 'fecha_pedido', 'subtotal']
-    readonly_fields = ['subtotal']
 
-# Admin para PedidoProducto
-@admin.register(PedidoProducto)
-class PedidoProductoAdmin(admin.ModelAdmin):
-    list_display = ['pedido', 'producto', 'cantidad', 'precio']
+admin.site.register(Pedido, PedidoAdmin)
+admin.site.register(FacturaDetalle)

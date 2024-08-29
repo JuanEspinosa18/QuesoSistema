@@ -1,13 +1,13 @@
 from django.db import models
 
 class MateriaPrima(models.Model):
-    name = models.CharField(max_length=200, verbose_name='Nombre')
+    nombre = models.CharField(max_length=200, verbose_name='Nombre')
     descripcion = models.TextField(verbose_name='Descripción de materia prima')
     fecha_ven = models.DateField(verbose_name='Fecha de vencimiento')
     cantidad = models.IntegerField(default=0, verbose_name='Cantidad')
 
     def __str__(self):
-        return self.name
+        return self.nombre
     
     class Meta:
         verbose_name = 'Materia prima'
@@ -55,7 +55,7 @@ class MateriaPrimaLote(models.Model):
     cantidad_utilizada = models.IntegerField(verbose_name='Cantidad utilizada')
 
     def __str__(self):
-        return f'{self.materia_prima.name} - Cantidad utilizada: {self.cantidad_utilizada}'
+        return f'{self.materia_prima.nombre} - Cantidad utilizada: {self.cantidad_utilizada}'
     
     class Meta:
         verbose_name = 'Materia prima del lote'

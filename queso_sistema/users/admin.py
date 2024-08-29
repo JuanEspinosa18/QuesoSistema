@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import CustomUser, Proveedor
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -25,3 +25,4 @@ class CustomUserAdmin(UserAdmin):
     list_groups.short_description = 'Grupos'
 
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Proveedor)
