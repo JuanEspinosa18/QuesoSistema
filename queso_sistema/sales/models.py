@@ -9,7 +9,7 @@ class Factura(models.Model):
         ('venta', 'Venta'),
         ('compra', 'Compra'),
     ]
-    tipo_factura = models.CharField(max_length=10, choices=TIPO_FACTURA_CHOICES, default='venta')
+    tipo_factura = models.CharField(max_length=10, choices=TIPO_FACTURA_CHOICES)
     fecha_factura = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de factura')
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Subtotal', default=Decimal('0.00'))
     iva = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='IVA', default=Decimal('0.00'))
@@ -24,12 +24,14 @@ class Factura(models.Model):
         db_table = 'factura'
         ordering = ['id']
 
+
 class FacturaVenta(Factura):
     pedido = models.OneToOneField('Pedido', on_delete=models.CASCADE, related_name='factura', null=True, blank=True)
     empleado = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ventas_empleado', limit_choices_to={'groups__name': 'Empleados'})
     cliente = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ventas_cliente', limit_choices_to={'groups__name': 'Clientes'})
 
     def save(self, *args, **kwargs):
+        self.tipo_factura = 'venta'  # Establece el tipo de factura como "venta"
         self.subtotal = sum(item.precio * item.cantidad for item in self.pedido.productos.all())
         self.iva = self.subtotal * Decimal('0.19')
         self.total = self.subtotal + self.iva
@@ -41,25 +43,34 @@ class FacturaVenta(Factura):
         db_table = 'factura_venta'
         ordering = ['id']
 
+
 class FacturaCompra(Factura):
-    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='compras_proveedor')
-    empleado = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='compras_empleado', limit_choices_to={'groups__name': 'Empleados'})
+    proveedor = models.ForeignKey(
+        Proveedor, 
+        on_delete=models.CASCADE,
+        related_name='compras_proveedor'
+    )
+    empleado = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='compras_empleado',
+        limit_choices_to={'groups__name': 'Empleados'}
+    )
     factura_compra_detalles = models.ManyToManyField('FacturaDetalle', related_name='facturas', blank=True)
 
     def save(self, *args, **kwargs):
+        # Solo actualiza tipo_factura si es una nueva instancia
         if not self.pk:
-            super().save(*args, **kwargs)
-        
+            self.tipo_factura = 'compra'
+        super().save(*args, **kwargs)
+
+    def actualizar_totales(self):
+        # No redefinir subtotal, iva, total aquí si ya están en Factura
         self.subtotal = sum(item.precio * item.cantidad for item in self.factura_compra_detalles.all())
         self.iva = self.subtotal * Decimal('0.19')
         self.total = self.subtotal + self.iva
-        super().save(*args, **kwargs)
+        self.save(update_fields=['subtotal', 'iva', 'total'])
 
-    class Meta:
-        verbose_name = 'Factura de Compra'
-        verbose_name_plural = 'Facturas de Compra'
-        db_table = 'factura_compra'
-        ordering = ['id']
 
 class FacturaDetalle(models.Model):
     factura = models.ForeignKey('Factura', on_delete=models.CASCADE, related_name='detalles', null=True, blank=True)
@@ -128,14 +139,15 @@ class FacturaDetalle(models.Model):
         db_table = 'factura_detalle'
         ordering = ['id']
 
+
 class Pedido(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='pedidos')
     fecha_pedido = models.DateTimeField(auto_now_add=True, verbose_name='Fecha del pedido')
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Subtotal', default=Decimal('0.00'))
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Subtotal', default=Decimal('0.00'), editable=False)
 
-    def save(self, *args, **kwargs):
+    def actualizar_subtotal(self):
         self.subtotal = sum(item.precio * item.cantidad for item in self.productos.all())
-        super().save(*args, **kwargs)
+        self.save()
 
     def __str__(self):
         return f"Pedido #{self.id} - Fecha: {self.fecha_pedido} - Subtotal: {self.subtotal}"
@@ -145,6 +157,7 @@ class Pedido(models.Model):
         verbose_name_plural = 'Pedidos'
         db_table = 'pedido'
         ordering = ['-fecha_pedido']
+
 
 class PedidoProducto(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name='productos')
