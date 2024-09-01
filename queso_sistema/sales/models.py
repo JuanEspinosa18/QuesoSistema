@@ -21,10 +21,6 @@ class Pedido(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente', verbose_name='Estado del pedido')
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Subtotal', default=0.00, editable=False)
 
-    def actualizar_subtotal(self):
-        self.subtotal = sum(item.precio * item.cantidad for item in self.detalles.all())
-        self.save()
-
     def __str__(self):
         return f"Pedido #{self.id} - Estado: {self.get_estado_display()} - Subtotal: {self.subtotal}"
 

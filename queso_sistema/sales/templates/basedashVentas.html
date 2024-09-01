@@ -10,6 +10,8 @@
     <title>Dashboard - Admin</title>
     <link rel="icon" href="{% static 'imagenes/Icono.png' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/dashboards.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -74,7 +76,7 @@
                 </nav>
               </div>
                <!-- Sección items interfaz Ventas -->
-            <div class="sb-sidenav-menu-heading">Interfaz Ventas</div>
+            <div class="sb-sidenav-menu-heading">Interfaz Pedidos</div>
             <a class="nav-link" href="{% url 'DashVentas' %}">
               <div class="sb-nav-link-icon"></div>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -86,37 +88,7 @@
               </svg>
               Facturas
             </a>
-              <!-- Movimientos de facturas -->
-              <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                data-bs-target="#collapseInventoryMovements" aria-expanded="false"
-                aria-controls="collapseInventoryMovements">
-                <div class="sb-nav-link-icon"></div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                  style="fill: rgba(255, 249, 217, 1);transform: ;msFilter:;">
-                  <path
-                    d="M19.924 10.383a1 1 0 0 0-.217-1.09l-5-5-1.414 1.414L16.586 9H4v2h15a1 1 0 0 0 .924-.617zM4.076 13.617a1 1 0 0 0 .217 1.09l5 5 1.414-1.414L7.414 15H20v-2H5a.999.999 0 0 0-.924.617z">
-                  </path>
-                </svg>
-                Gestion de Transacciones
-              </a>
-              <div class="collapse" id="collapseInventoryMovements" aria-labelledby="headingInventoryMovements"
-                data-bs-parent="#sidenavAccordion">
-                <nav class="sb-sidenav-menu-nested nav">
-                  <a class="nav-link" href="{% url 'factura_venta' %}">Factura de Ventas</a>
-                  <a class="nav-link" href="{% url 'factura_compra' %}">Factura de Compras</a>
-                </nav>
-              </div>
-              <!-- Calificaciones -->
-              <a class="nav-link" href="{% url 'calificacion' %}">
-                <div class="sb-nav-link-icon"></div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                  style="fill: rgba(255, 249, 217, 1);transform: ;msFilter:;">
-                  <path
-                    d="m20 8-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM9 19H7v-9h2v9zm4 0h-2v-6h2v6zm4 0h-2v-3h2v3zM14 9h-1V4l5 5h-4z">
-                  </path>
-                </svg>
-                Calificaciones
-              </a>
+        
               <!-- Logueo -->
             </div>
           </div>
@@ -140,7 +112,7 @@
         <footer class="py-4 bg-light mt-auto">
           <div class="container-fluid px-4">
             <div class="d-flex align-items-center justify-content-between small">
-              <div class="text-muted" style="color: #00563F;">Copyright &copy; Your Website 2023</div>
+              <div class="text-muted" style="color: #00563F;">Copyright &copy; Tu sitio web desde 2023</div>
               <div>
                 <a href="#" style="color: #00563F;">Politicas de privacidad</a>
                 &middot;

@@ -1,0 +1,104 @@
+{% extends "deletes_consulta/deletebaseVentas.html" %}
+
+{% block content %}
+<style>
+    /* archivo de estilos CSS */
+
+    .container {
+        padding: 30px;
+        background-color: #f4f4f4;
+    }
+
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: #ffffff;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .card-body {
+        background-color: #ffffff;
+        padding: 20px;
+    }
+
+    .table {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table thead th {
+        background-color: #f8f9fa;
+        color: #495057;
+    }
+
+    .table tbody tr:nth-child(odd) {
+        background-color: #ffffff;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    .table tbody tr:hover {
+        background-color: #e9ecef;
+    }
+
+    .table-bordered th, .table-bordered td {
+        border: 1px solid #dee2e6;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+</style>
+<div class="container my-5">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h1 class="h4 mb-0">Detalles del Pedido</h1>
+        </div>
+        <div class="card-body">
+            <p><strong>ID del pedido:</strong> {{ pedido.id }}</p>
+            <p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+            <p><strong>Subtotal:</strong> ${{ pedido.subtotal }}</p>
+            <p><strong>Cliente:</strong> {{ pedido.cliente }}</p>
+            <p><strong>Fecha del pedido:</strong> {{ pedido.fecha_pedido }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Detalles del Pedido</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detalle in detalles_pedido %}
+                    <tr>
+                        <td>{{ detalle.producto.nombre }}</td>
+                        <td>{{ detalle.cantidad }}</td>
+                        <td>${{ detalle.precio }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">No hay detalles disponibles.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+   
+</div>
+<a href="{% url 'DashVentas' %}" class="btn btn-lg second_btn-custom" type="submit" style="color: #000000; background-color: #dfd688;">Volver</a>
+{% endblock %}

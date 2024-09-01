@@ -41,7 +41,6 @@
                 <i class="fas fa-table me-1"></i>
                 Facturas de Compras
               </div>
-              <button class="btn btn-primary" id="btnAgregarPedido">Agregar Factura de Compra</button>
             </div>
           </div>
           <div class="card-body">
@@ -63,7 +62,7 @@
                       <td>{{ factura_compra.factura.iva }}</td>
                       <td>{{ factura_compra.factura.total }}</td>
                       <td>
-                        <a class="nav-link" href="{% url 'consultar_factura_compra' factura_compra.factura.id %}">
+                        <a class="nav-link" href="{% url 'consultar_pedido_pendiente' factura_compra.factura.id %}">
                             <button class="btn btn-primary" data-toggle="tooltip" title="Ver">
                               <i class="fa-regular fa-eye fa-lg" style="color: #FFF9D9" data-toggle="tooltip" title="Ver"></i>
                             </button>
@@ -79,54 +78,6 @@
   </main>
 {% endblock %}
 {% block form %}
-<div class="modal fade" id="registroPedidoModal" tabindex="-1" aria-labelledby="registroFacturaCompraModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <!-- Cabecera del Modal -->
-          <div class="modal-header">
-              <h4 class="modal-title">Agregar Factura Compra</h4>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-
-          <!-- Cuerpo del Modal -->
-          <div class="modal-body">
-              <form method="POST" action="{% url 'agregar_factura_compra' %}">
-                  {% csrf_token %}
-                  <div class="form-group">
-                      <label for="facturaSelect">Factura:</label>
-                      <select class="form-control" id="facturaSelect" name="factura" required>
-                          <option value="" disabled selected>Seleccione una factura</option>
-                          {% for factura in facturas %}
-                              <option value="{{ factura.id }}">{{ factura.id }}</option>
-                          {% endfor %}
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="proveedorSelect">Proveedor:</label>
-                      <select class="form-control" id="proveedorSelect" name="proveedor" required>
-                          <option value="" disabled selected>Seleccione un proveedor</option>
-                          {% for proveedor in proveedores %}
-                              <option value="{{ proveedor.id }}">{{ proveedor.user.email }}</option>
-                          {% endfor %}
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="empleadoSelect">Empleado:</label>
-                      <select class="form-control" id="empleadoSelect" name="empleado" required>
-                          <option value="" disabled selected>Seleccione un empleado</option>
-                          {% for empleado in empleados %}
-                              <option value="{{ empleado.id }}">{{ empleado.user.email }}</option>
-                          {% endfor %}
-                      </select>
-                  </div>
-                  <div class="modal-footer">
-                      <button type="submit" name="crear_factura_compra" class="btn btn-primary">Agregar</button>
-                  </div>
-              </form>
-          </div>
-      </div>
-  </div>
-</div>
 {% endblock %}
 
 

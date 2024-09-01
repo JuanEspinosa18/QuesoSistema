@@ -8,6 +8,8 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Dashboard - Admin</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="icon" href="{% static 'imagenes/Icono.png' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
@@ -74,7 +76,7 @@
                 </nav>
               </div>
               <!-- Sección items interfaz Ventas -->
-            <div class="sb-sidenav-menu-heading">Interfaz Ventas</div>
+            <div class="sb-sidenav-menu-heading">Interfaz Pedidos</div>
             <a class="nav-link" href="{% url 'DashVentas' %}">
               <div class="sb-nav-link-icon"></div>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -84,7 +86,7 @@
                 </path>
                 <path d="M8 12h8v2H8zm0 4h8v2H8zm0-8h2v2H8z"></path>
               </svg>
-              Facturas
+              Pedidos
             </a>
               <!-- Movimientos de facturas -->
               <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
@@ -97,26 +99,17 @@
                     d="M19.924 10.383a1 1 0 0 0-.217-1.09l-5-5-1.414 1.414L16.586 9H4v2h15a1 1 0 0 0 .924-.617zM4.076 13.617a1 1 0 0 0 .217 1.09l5 5 1.414-1.414L7.414 15H20v-2H5a.999.999 0 0 0-.924.617z">
                   </path>
                 </svg>
-                Gestion de Transacciones
+                Gestion de Pedidos
               </a>
               <div class="collapse" id="collapseInventoryMovements" aria-labelledby="headingInventoryMovements"
                 data-bs-parent="#sidenavAccordion">
                 <nav class="sb-sidenav-menu-nested nav">
-                  <a class="nav-link" href="{% url 'factura_venta' %}">Factura de Ventas</a>
-                  <a class="nav-link" href="{% url 'factura_compra' %}">Factura de Compras</a>
+                  <a class="nav-link" href="{% url 'pedidos_pendientes' %}">Pendientes</a>
+                  <a class="nav-link" href="{% url 'pedidos_proceso' %}">En proceso</a>
+                  <a class="nav-link" href="{% url 'pedidos_completados' %}">Completados</a>
+                  <a class="nav-link" href="{% url 'pedidos_cancelados' %}">Cancelados</a>
                 </nav>
               </div>
-              <!-- Calificaciones -->
-              <a class="nav-link" href="{% url 'calificacion' %}">
-                <div class="sb-nav-link-icon"></div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                  style="fill: rgba(255, 249, 217, 1);transform: ;msFilter:;">
-                  <path
-                    d="m20 8-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM9 19H7v-9h2v9zm4 0h-2v-6h2v6zm4 0h-2v-3h2v3zM14 9h-1V4l5 5h-4z">
-                  </path>
-                </svg>
-                Calificaciones
-              </a>
               <!-- Configuración -->
             </div>
           </div>
@@ -135,7 +128,7 @@
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
-            <h1 class="mt-4">Ventas</h1>
+            <h1 class="mt-4">Pedidos</h1>
             <ol class="breadcrumb mb-4">
               <li class="breadcrumb-item active">Panel</li>
             </ol>
@@ -144,7 +137,16 @@
                 <div class="card bg-warning text-white mb-4">
                   <div class="card-body">Pendientes</div>
                   <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">Ver detalles</a>
+                    <a class="small text-white stretched-link" href="{% url 'pedidos_pendientes' %}">Ver detalles</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-6">
+                <div class="card bg-primary text-white mb-4">
+                  <div class="card-body">En Proceso</div>
+                  <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="{% url 'pedidos_proceso' %}">Ver detalles</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                   </div>
                 </div>
@@ -153,7 +155,7 @@
                 <div class="card bg-success text-white mb-4">
                   <div class="card-body">Entregados</div>
                   <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">Ver detalles</a>
+                    <a class="small text-white stretched-link" href="{% url 'pedidos_completados' %}">Ver detalles</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                   </div>
                 </div>
@@ -162,7 +164,7 @@
                 <div class="card bg-danger text-white mb-4">
                   <div class="card-body">Eliminados</div>
                   <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">Ver detalles</a>
+                    <a class="small text-white stretched-link" href="{% url 'pedidos_cancelados' %}">Ver detalles</a>
                     <div class="small text-white"><i class="fas fa-angle-right" height="40"></i>
                       </canvas></div>
                   </div>
@@ -177,51 +179,27 @@
                     </div>
                     <div class="btn-group">
                       <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exportModal">Exportar</button>
-                      <button class="btn btn-primary" id="btnAgregarFactura">Agregar factura</button>
                     </div>
                   </div>
                 </div>
                 <div class="card-body">
                   <table id="datatablesSimple">
                     <thead>
-                      <tr>
-                        <th style="width: 8%;"><a href="#">Nombre</a></th>
-                        <th style="width: 18.057720057720058%;"><a href="#">Fecha</a></th>
-                        <th style="width: 16.738816738816737%;"><a href="#">Subtotal</a></th>
-                        <th style="width: 10.738816738816737%;"><a href="#">Iva</a></th>
-                        <th style="width: 16.305916305916305%;"><a href="#">Total</a></th>
-                        <th style="width: 2%;"><a href="#">Acciones</a>
-                        </th>
-                      </tr>
+                        <tr>
+                            <th style="width: 8%;"><a href="#">Fecha</a></th>
+                            <th style="width: 18.057720057720058%;"><a href="#">Subtotal</a></th>
+                        </tr>
                     </thead>
                     <tbody>
-                      {% for factura in facturas %}
-                      <tr data-index ="0">
-                        <td>{{ factura.pedido.usuario.email }}</td>
-                        <td>{{ factura.fecha_factura }}</td>
-                        <td>{{ factura.subtotal }}</td>
-                        <td>{{ factura.iva }}</td>
-                        <td>{{ factura.total }}</td>
-                        <!-- Dentro de la sección de facturas -->
-                          <td>
-                            <div class="btn-group">
-                              <a class="nav-link" href="{% url 'editar_factura' factura.id %}">
-                                <button class="btn btn-warning">
-                                  <i class="bi bi-pencil-square" data-toggle="tooltip" title="Editar"></i>
-                                </button>
-                              </a>
-                              <a class="nav-link" href="{% url 'eliminar_factura' factura.id %}">
-                                <button class="btn btn-danger delete-factura" data-toggle="tooltip" title="Eliminar">
-                                  <i class="bi bi-trash3-fill"></i>
-                                </button>
-                              </a>
-                              
-                            </div>
-                          </td>
-                      </tr>
-                      {% endfor %}
+                        {% for pedido in pedidos %}
+                        <tr>
+                            <td>{{ pedido.fecha_pedido }}</td>
+                            <td>{{ pedido.subtotal }}</td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
-                  </table>
+                </table>
+                
                 </div>
               </div>
         </main>
@@ -239,81 +217,34 @@
         </footer>
       </div>
     </div>
-   <!-- Modal de Registro de Factura -->
-<div class="modal fade" id="registroFacturaModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <!-- Cabecera del Modal -->
-      <div class="modal-header">
-        <h4 class="modal-title">Registro de Factura</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <!-- Cuerpo del Modal -->
-      <div class="modal-body">
-        <form id="registroFacturaForm" method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el nombre">
-            <div class="invalid-feedback" id="error-nombre"></div>
-          </div>
-          <div class="form-group">
-            <label for="fecha_factura">Fecha y Hora:</label>
-            <input type="datetime-local" class="form-control" id="fecha_factura" name="fecha_factura">
-            <div class="invalid-feedback" id="error-fecha_factura"></div>
-          </div>
-          <div class="form-group">
-            <label for="subtotal">Subtotal:</label>
-            <input type="number" step="0.01" min="0" class="form-control" id="subtotal" name="subtotal" placeholder="Ingrese el valor Subtotal" oninput="calculateTotal()">
-            <div class="invalid-feedback" id="error-subtotal"></div>
-          </div>
-          <div class="form-group">
-            <label for="iva">IVA:</label>
-            <input type="number" step="0.01" min="0" class="form-control" id="iva" name="iva" placeholder="Ingrese el valor IVA" oninput="calculateTotal()">
-            <div class="invalid-feedback" id="error-iva"></div>
-          </div>
-          <div class="form-group">
-            <label for="total">Total:</label>
-            <input type="number" step="0.01" min="0" class="form-control" id="total" name="total" placeholder="Ingrese el valor total" readonly>
-            <div class="invalid-feedback" id="error-total"></div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Agregar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 
     <!-- Modal Exportar Factura -->
-<div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exportModalLabel">Exportar Facturas</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="exportForm" method="POST" action="{% url 'export_facturas' %}">
-          {% csrf_token %}
-          <p>Se exportará los siguientes campos: <code>nombre, fecha_factura, subtotal, iva, total</code></p>
-          <div class="mb-3">
-            <label for="file_format" class="form-label">Formato:</label>
-            <select name="file_format" required id="file_format" class="form-select">
-              <option value="" selected>---</option>
-              <option value="pdf">PDF</option>
-              <option value="xlsx">Excel (XLSX)</option>
-            </select>
+    <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exportModalLabel">Exportar Pedidos</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <button type="submit" class="btn btn-primary">Enviar</button>
-        </form>
+          <div class="modal-body">
+            <form id="exportForm" method="POST" action="{% url 'export_pedidos' %}">
+              {% csrf_token %}
+              <p>Se exportarán los siguientes campos: <code>cliente, fecha_pedido, estado, subtotal</code></p>
+              <div class="mb-3">
+                <label for="file_format" class="form-label">Formato:</label>
+                <select name="file_format" required id="file_format" class="form-select">
+                  <option value="" selected>---</option>
+                  <option value="pdf">PDF</option>
+                  <option value="xlsx">Excel (XLSX)</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Exportar</button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+    
 
     <!-- Modal fin Exportar -->
 
@@ -327,62 +258,11 @@
     <script src="{% static 'assets/demo/chart-bar-demo.js' %}"></script>
     <!-- Scripts Exortacion-->
     <!-- Ajax y manejo de formularios -->
-    <script>
-      function calculateTotal() {
-          var subtotal = parseFloat(document.getElementById('subtotal').value) || 0;
-          var iva = parseFloat(document.getElementById('iva').value) || 0;
-          var total = subtotal + iva;
-    
-          document.getElementById('total').value = total.toFixed(2); // Muestra el total con dos decimales
-      }
-    
-      $(document).ready(function () {
-          $('#registroFacturaForm').submit(function (event) {
-              event.preventDefault(); // Evitar que el formulario se envíe normalmente
-      
-              $.ajax({
-                  type: 'POST',
-                  url: '{% url "agregar_factura" %}',
-                  data: new FormData(this),
-                  processData: false,
-                  contentType: false,
-                  success: function (response) {
-                      if (response.success) {
-                          // Si se agregó la factura correctamente, cerrar el modal
-                          $('#registroFacturaModal').modal('hide');
-                          // Opcional: recargar la página o actualizar la vista
-                          location.reload();
-                      } else {
-                          // Limpiar mensajes de error anteriores
-                          $('.form-control').removeClass('is-invalid');
-                          $('.invalid-feedback').empty();
-      
-                          // Mostrar errores específicos junto a cada campo
-                          $.each(response.errors, function (field, message) {
-                              $('#' + field).addClass('is-invalid');
-                              $('#error-' + field).text(message);
-                          });
-                      }
-                  },
-                  error: function (error) {
-                      console.log(error);
-                      // Manejar errores de la solicitud Ajax si es necesario
-                  }
-              });
-          });
-      });
-    </script>
       
     <!-- Scripts de DataTables -->
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script src="{% static 'js/datatables-simple-demo.js' %}"></script>
     <!-- Scripts modal -->
-    <script>
-      // JavaScript para abrir el modal cuando se hace clic en el botón "Agregar Pedido"
-      document.getElementById("btnAgregarFactura").addEventListener("click", function () {
-        $("#registroFacturaModal").modal("show");
-      });
-    </script>
 
   </body>
 </html>

@@ -3,9 +3,16 @@ from . import views
 
 urlpatterns = [
     path('facturas/', views.DashVentas, name='DashVentas'),
+    path('pendientes/', views.pedidos_pendientes, name='pedidos_pendientes'),
+    path('proceso/', views.pedidos_proceso, name='pedidos_proceso'),
+    path('completados/', views.pedidos_completados, name='pedidos_completados'),
+    path('cancelados/', views.pedidos_cancelados, name='pedidos_cancelados'),
+    path('export_pedidos/', views.export_pedidos, name='export_pedidos'),
+    path('consultar_pedido/<int:id>/', views.consultar_pedido, name='consultar_pedido'),
+    path('editar_pedido_pendiente/<int:id>/', views.editar_pedido_pendiente, name='editar_pedido_pendiente'),
 ]
 
-""" path('export_facturas/', views.export_facturas, name='export_facturas'),
+""" 
 path('agregar_factura/', views.agregar_factura, name='agregar_factura'),
 path('eliminar_factura/<int:id>/', views.eliminar_factura, name='eliminar_factura'),
 path('editar_factura/<int:id>/', views.editar_factura, name='editar_factura'),
