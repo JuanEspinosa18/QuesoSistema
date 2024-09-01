@@ -39,6 +39,12 @@
   stroke: #0D8265;
 }
 
+.nav-item.active a {
+    color: #0c8460; /* Cambia el color para resaltar el elemento activo */
+    font-weight: bold; /* O cualquier otro estilo que desees */
+}
+
+
 /* Footer Styles */
 .footer {
     padding-top: 50px;

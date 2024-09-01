@@ -20,7 +20,7 @@ def update_pedido_subtotal_on_delete(sender, instance, **kwargs):
     pedido.subtotal = pedido.calcular_subtotal()
     pedido.save()  """
 
-@receiver(post_save, sender=PedidoProducto)
+""" @receiver(post_save, sender=PedidoProducto)
 def actualizar_subtotal_despues_de_guardar(sender, instance, **kwargs):
     instance.pedido.actualizar_subtotal()
 
@@ -38,4 +38,4 @@ def actualizar_totales_despues_de_guardar(sender, instance, **kwargs):
 def actualizar_totales_despues_de_eliminar(sender, instance, **kwargs):
     if instance.factura:  # Verifica si el detalle tiene una factura asociada
         factura_compra = instance.factura
-        factura_compra.actualizar_totales()
+        factura_compra.actualizar_totales() """

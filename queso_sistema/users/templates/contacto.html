@@ -13,7 +13,6 @@
             background-color: #fbfaf3;
             margin: 0;
             padding: 0;
-            padding-top: 100px; /* Ajusta este valor según la altura de tu barra de navegación */
         }
 
         .menu {
@@ -23,10 +22,10 @@
             display: flex;
             justify-content: space-between; 
             align-items: center;
-            position: fixed; /* Fija la barra de navegación */
-            top: 0; /* Posición en la parte superior de la página */
-            width: 100%; /* Asegura que la barra ocupe todo el ancho de la página */
-            z-index: 1000; /* Asegura que la barra esté por encima de otros elementos */
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
         }
         .menu .logo img {
             height: 100px; 
@@ -35,30 +34,63 @@
         .menu .navbar {
             flex-grow: 1;
             display: flex;
-            justify-content: right; /* Centra los elementos de la barra de navegación */
-            padding-right: 60px; /* Añade un poco de espacio a la derecha */
+            justify-content: right; 
+            padding-right: 60px; 
         }
-        
 
         .contenido {
-            height: 2000px; /* Añade suficiente contenido para permitir el desplazamiento */
+            height: 2000px; 
+        }
+
+        
+        nav {
+            background-color: #00563F;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #FFF9D9;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        nav ul li a:hover {
+            color: #0D8265;
+        }
+
+        .logo img {
+            height: 50px;
         }
     </style>
 
 </head>
 <body>
-    <div class="menu container">
-        <a href="#" class="logo"><img src="{% static 'imagenes/Logo.png' %}" alt="icono"></a>
-        <input type="checkbox" id="menu" />
-        <label for="menu">
-            <img src="{% static 'imagenes/Menu.png' %}" class="menu-icono" alt="">
-        </label>
-
-        <nav class="navbar">
+    
+        <nav>
+            <div class="logo">
+              <a href="{% static 'index.html' %}"><img src="{% static 'imagenes/Logo.png' %}" alt="Logo de la empresa"></a>
+            </div>
             <ul>
-              <li><a href="{% url 'index' %}">Inicio</a></li>
+              <li class="nav-item {%if request.path == '/' %}active {% endif %} px-lg-4"><a href="{% url 'index' %}">Inicio</a></li>
               <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
               <li><a href="{% url 'carrito' %}">Productos</a></li>
+              <li><a href="{% url 'blog_informativo' %}">Blog</a></li>
               <li><a href="{% url 'contacto' %}">Contacto</a></li>
                 {% if user.is_authenticated %}
                   <li class="nav-item">
@@ -71,7 +103,6 @@
                 {% endif %}
             </ul>
           </nav>
-    </div>
 
     <div class="contact-container">
         <h1> 🧀 Formulario de Contacto</h1>

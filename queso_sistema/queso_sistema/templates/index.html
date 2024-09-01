@@ -10,6 +10,12 @@
   <link src="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 
+<style>
+  .nav-item.active a {
+    color: #0c8460; /* Cambia el color para resaltar el elemento activo */
+    font-weight: bold; /* O cualquier otro estilo que desees */
+}
+</style>
 <body>
 
   <header class="header">
@@ -22,11 +28,11 @@
 
       <nav class="navbar">
         <ul>
-          <li><a href="{% url 'index' %}">Inicio</a></li>
-          <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
-          <li><a href="{% url 'carrito' %}">Productos</a></li>
-          <li><a href="{% url 'blog_informativo' %}">Blog</a></li>
-          <li><a href="{% url 'contacto' %}">Contacto</a></li>
+          <li class="nav-item {%if request.path == '/' %}active {% endif %}" ><a href="{% url 'index' %}">Inicio</a></li>
+          <li class="nav-item {%if '/blog/' in request.path %}active {% endif %}"><a href="{% url 'nosotros' %}">Nosotros</a></li>
+          <li class="nav-item {%if request.path == '' %}active {% endif %}"><a href="{% url 'carrito' %}">Productos</a></li>
+          <li class="nav-item {%if '/blog/' in request.path %}active {% endif %}"><a href="{% url 'blog_informativo' %}">Blog</a></li>
+          <li class="nav-item {%if '/user/' in request.path %}active {% endif %}"><a href="{% url 'contacto' %}">Contacto</a></li>
             {% if user.is_authenticated %}
               <li class="nav-item">
                   <a class="nav-link" href="{% url 'logout' %}">Salir</a>
