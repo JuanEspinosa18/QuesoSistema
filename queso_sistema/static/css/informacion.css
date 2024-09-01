@@ -4,6 +4,16 @@
     display: none;
 }
 
+nav {
+    position: fixed; /* Fija la barra en la parte superior */
+    top: 0; /* Alinea la barra al borde superior de la ventana */
+    left: 0; /* Alinea la barra al borde izquierdo de la ventana */
+    width: 100%; /* Asegura que la barra ocupe todo el ancho de la ventana */
+    background-color: #333; /* Color de fondo de la barra de navegación */
+    z-index: 1000; /* Asegura que la barra esté por encima de otros elementos */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Añade una sombra sutil para darle profundidad */
+}
+
 .menu label {
     display: none;
 }
