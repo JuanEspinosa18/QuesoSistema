@@ -1,9 +1,15 @@
 from django.shortcuts import render
+from inventory.models import Producto 
 
 # Create your views here.
 def nosotros(request):
     return render(request, 'nosotros.html', {
     })
+    
+def catalogo(request):
+    productos = Producto.objects.all()  
+    return render(request, 'catalogo.html', {'productos': productos})
+ 
     
 def nuestros_quesos(request):
     return render(request, 'nuestros_quesos.html', {
@@ -33,3 +39,4 @@ def blog3(request):
 def blog4(request):
     return render(request, 'blog4.html', {
     })
+    

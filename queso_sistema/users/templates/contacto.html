@@ -89,7 +89,7 @@
             <ul>
               <li class="nav-item {%if request.path == '/' %}active {% endif %} px-lg-4"><a href="{% url 'index' %}">Inicio</a></li>
               <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
-              <li><a href="{% url 'carrito' %}">Productos</a></li>
+              <li><a href="{% url 'catalogo' %}">Productos</a></li>
               <li><a href="{% url 'blog_informativo' %}">Blog</a></li>
               <li><a href="{% url 'contacto' %}">Contacto</a></li>
                 {% if user.is_authenticated %}

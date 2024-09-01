@@ -3,11 +3,20 @@
 <main>
       <div class="row">
         <div class="container-fluid px-4">
-          <h1 class="mt-4">Pedidos Pendientes</h1>
+          <h1 class="mt-4">Pedidos Cancelados</h1>
           <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Panel</li>
           </ol>
           <div class="row">
+            <div class="col-xl-3 col-md-6">
+              <div class="card bg-warning text-white mb-4">
+                <div class="card-body">Pendientes</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                  <a class="small text-white stretched-link" href="{% url 'pedidos_pendientes'%}">Ver detalles</a>
+                  <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+              </div>
+            </div>
             <div class="col-xl-3 col-md-6">
               <div class="card bg-primary text-white mb-4">
                 <div class="card-body">En Proceso</div>
@@ -22,25 +31,15 @@
                 <div class="card-body">Completados</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
                   <a class="small text-white stretched-link" href="{% url 'pedidos_completados'%}">Ver detalles</a>
-                  <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-              <div class="card bg-danger text-white mb-4">
-                <div class="card-body">Cancelados</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                  <a class="small text-white stretched-link" href="{% url 'pedidos_cancelados'%}">Ver detalles</a>
                   <div class="small text-white"><i class="fas fa-angle-right" height="40"></i></div>
                 </div>
               </div>
-            </div>        
-        <div class="card mb-4">
+            </div>        <div class="card mb-4">
           <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
               <div>
                 <i class="fas fa-table me-1"></i>
-                Pendientes
+                Cancelados
               </div>
             </div>
           </div>
@@ -94,19 +93,18 @@
               </button>
           </div>
           <div class="modal-body">
-              <form method="post" action="{% url 'editar_pedido_pendiente' 0 %}" id="editarForm">
+              <form method="post" action="{% url 'editar_pedido_cancelado' 0 %}" id="editarForm">
                   {% csrf_token %}
                   <input type="hidden" name="pedido_id" id="pedido_id" value="">
                   <label for="nuevo_estado">Selecciona el nuevo estado:</label>
                   <select name="nuevo_estado" id="nuevo_estado" class="form-control">
                     <optgroup label="Seleccionar estado">
+                        <option value="pendiente">Pendiente</option>
                         <option value="en_proceso">En Proceso</option>
                         <option value="completado">Completado</option>
-                        <option value="cancelado">Cancelado</option>
                         <!-- Agrega más opciones según tus necesidades -->
                     </optgroup>
                 </select>
-                                               
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -128,7 +126,7 @@
     modal.find('.modal-body #nuevo_estado').val(estado);
 
     // Construct the URL for the form action
-    var action = "{% url 'editar_pedido_pendiente' id=0 %}".replace('0', id);
+    var action = "{% url 'editar_pedido_cancelado' id=0 %}".replace('0', id);
     modal.find('form').attr('action', action);
   });
 

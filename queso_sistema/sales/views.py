@@ -20,7 +20,7 @@ def DashVentas(request):
 def export_pedidos(request):
     if request.method == 'POST':
         file_format = request.POST.get('file_format')
-        resource = PedidoResource()  # Asegúrate de que PedidoResource está correctamente implementado
+        resource = PedidoResource()
         dataset = resource.export()  # Exporta los datos en el formato tablib
         
         if file_format == 'xlsx':
@@ -44,7 +44,7 @@ def export_pedidos(request):
             # Iteración sobre el dataset y agregar filas al PDF
             y = 700
             for pedido in dataset.dict:
-                cliente = pedido['cliente']  # Ajusta según los campos en tu dataset
+                cliente = pedido['cliente']  # Ajusta según los campos en dataset
                 fecha_pedido = pedido['fecha_pedido']
                 estado = pedido['estado']
                 subtotal = pedido['subtotal']
@@ -70,33 +70,12 @@ def pedidos_pendientes(request):
     pedidos = Pedido.objects.filter(estado='pendiente')
     return render(request, 'DashPendientes.html', {'pedidos': pedidos})
 
-@group_required('Empleados')   
-def pedidos_proceso(request):
-    pedidos = Pedido.objects.filter(estado='en_proceso')
-    return render(request, 'DashEnProceso.html', {'pedidos': pedidos})
-
-@group_required('Empleados')   
-def pedidos_completados(request):
-    pedidos = Pedido.objects.filter(estado='completado')
-    return render(request, 'DashCompletados.html', {'pedidos': pedidos})
-
-@group_required('Empleados')   
-def pedidos_cancelados(request):
-    pedidos = Pedido.objects.filter(estado='cancelado')
-    return render(request, 'DashCancelados.html', {'pedidos': pedidos})
-
-def consultar_pedido(request,id):
-    pedido = get_object_or_404(Pedido, id=id)
-    detalles_pedido = DetallePedido.objects.filter(pedido=pedido)
-    # Otras lógicas que puedas necesitar
-    return render(request, 'deletes_consulta/consultar_pedido.html', {'pedido': pedido, 'detalles_pedido': detalles_pedido})
-
 @group_required('Empleados')
 def editar_pedido_pendiente(request, id):
     pedido = get_object_or_404(Pedido, id=id)
 
     if request.method == 'POST':
-        # Procesar el formulario aquí (actualizar el estado del pedido)
+        # Procesar el formulario(actualizar el estado del pedido)
         nuevo_estado = request.POST.get('nuevo_estado')
         pedido.estado = nuevo_estado
         pedido.save()
@@ -105,6 +84,79 @@ def editar_pedido_pendiente(request, id):
                 'estado': pedido.get_estado_display(),
             }
             return JsonResponse(data)
-        # Redirigir a la página de detalles del pedido o donde desees
 
     return render(request, 'DashPendientes.html', {'pedido': pedido})
+
+@group_required('Empleados')   
+def pedidos_proceso(request):
+    pedidos = Pedido.objects.filter(estado='en_proceso')
+    return render(request, 'DashEnProceso.html', {'pedidos': pedidos})
+
+@group_required('Empleados')
+def editar_pedido_proceso(request, id):
+    pedido = get_object_or_404(Pedido, id=id)
+
+    if request.method == 'POST':
+        # Procesar el formulario(actualizar el estado del pedido)
+        nuevo_estado = request.POST.get('nuevo_estado')
+        pedido.estado = nuevo_estado
+        pedido.save()
+        if request.is_ajax():
+            data = {
+                'estado': pedido.get_estado_display(),
+            }
+            return JsonResponse(data)
+
+    return render(request, 'DashEnProceso.html', {'pedido': pedido})
+
+@group_required('Empleados')   
+def pedidos_completados(request):
+    pedidos = Pedido.objects.filter(estado='completado')
+    return render(request, 'DashCompletados.html', {'pedidos': pedidos})
+
+@group_required('Empleados')
+def editar_pedido_completado(request, id):
+    pedido = get_object_or_404(Pedido, id=id)
+
+    if request.method == 'POST':
+        # Procesar el formulario(actualizar el estado del pedido)
+        nuevo_estado = request.POST.get('nuevo_estado')
+        pedido.estado = nuevo_estado
+        pedido.save()
+        if request.is_ajax():
+            data = {
+                'estado': pedido.get_estado_display(),
+            }
+            return JsonResponse(data)
+
+    return render(request, 'DashCompletados.html', {'pedido': pedido})
+
+@group_required('Empleados')   
+def pedidos_cancelados(request):
+    pedidos = Pedido.objects.filter(estado='cancelado')
+    return render(request, 'dashCancelados.html', {'pedidos': pedidos})
+
+@group_required('Empleados')
+def editar_pedido_cancelado(request, id):
+    pedido = get_object_or_404(Pedido, id=id)
+
+    if request.method == 'POST':
+        # Procesar el formulario (actualizar el estado del pedido)
+        nuevo_estado = request.POST.get('nuevo_estado')
+        pedido.estado = nuevo_estado
+        pedido.save()
+        if request.is_ajax():
+            data = {
+                'estado': pedido.get_estado_display(),
+            }
+            return JsonResponse(data)
+        
+
+    return render(request, 'dashCancelados.html', {'pedido': pedido})
+
+def consultar_pedido(request,id):
+    pedido = get_object_or_404(Pedido, id=id)
+    detalles_pedido = DetallePedido.objects.filter(pedido=pedido)
+    
+    return render(request, 'consultas/consultar_pedido.html', {'pedido': pedido, 'detalles_pedido': detalles_pedido})
+

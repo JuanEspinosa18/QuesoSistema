@@ -10,16 +10,8 @@ urlpatterns = [
     path('export_pedidos/', views.export_pedidos, name='export_pedidos'),
     path('consultar_pedido/<int:id>/', views.consultar_pedido, name='consultar_pedido'),
     path('editar_pedido_pendiente/<int:id>/', views.editar_pedido_pendiente, name='editar_pedido_pendiente'),
+    path('editar_pedido_proceso/<int:id>/', views.editar_pedido_proceso, name='editar_pedido_proceso'),
+    path('editar_pedido_completado/<int:id>/', views.editar_pedido_completado, name='editar_pedido_completado'),
+    path('editar_pedido_cancelado/<int:id>/', views.editar_pedido_cancelado, name='editar_pedido_cancelado'),
+    
 ]
-
-""" 
-path('agregar_factura/', views.agregar_factura, name='agregar_factura'),
-path('eliminar_factura/<int:id>/', views.eliminar_factura, name='eliminar_factura'),
-path('editar_factura/<int:id>/', views.editar_factura, name='editar_factura'),
-path('factura_venta/', views.dashFacturaVenta, name='factura_venta'),
-path('consultar_factura_venta/<int:id>/', views.consultar_factura_venta, name='consultar_factura_venta'),
-path('agregar_factura_venta/', views.agregar_factura_venta, name='agregar_factura_venta'),
-path('factura_compra/', views.dashFacturaCompra, name='factura_compra'),
-path('consultar_factura_compra/<int:id>/', views.consultar_factura_compra, name='consultar_factura_compra'),
-path('agregar_factura_compra/', views.agregar_factura_compra, name='agregar_factura_compra'),     
-path('calificacion/', views.dashCalificacionProducto, name='calificacion'), """
