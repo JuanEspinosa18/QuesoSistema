@@ -134,12 +134,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'queso_sistema', 'static'),
-    os.path.join(BASE_DIR, 'users', 'static'),
-    os.path.join(BASE_DIR, 'inventory', 'static'),
-    os.path.join(BASE_DIR, 'sales', 'static'),
-    os.path.join(BASE_DIR, 'cart', 'static'),
-    os.path.join(BASE_DIR, 'blog', 'static'),
+     os.path.join(BASE_DIR, 'static'),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
