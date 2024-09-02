@@ -1,64 +1,156 @@
 {% extends 'tienda.html' %}
 
 {% block main %}
-<div class="sticky-top">
-  <div class="alert alert-primary" role="alert">
-      <table class="table table-bordered">
-          <thead>
-              <tr>
-                  <th scope="row" colspan="3" class="text-center">CARRITO DE PEDIDOS</th>
-              </tr>
-              <tr>
-                  <th scope="col">NOMBRE</th>
-                  <th scope="col">CANTIDAD</th>
-                  <th scope="col">ACUMULADO</th>
-              </tr>
-          </thead>
-          <tbody>
-              {% if request.session.carrito %}
-                  {% for key, value in request.session.carrito.items %}
-                      <tr>
-                          <td>{{ value.nombre }}</td>
-                          <td>{{ value.cantidad }}</td>
-                          <td>
-                              ${{ value.acumulado }}
-                              <a href="{% url 'Add' value.producto_id %}" class="badge btn btn-dark badge-dark">+</a>
-                              <a href="{% url 'Sub' value.producto_id %}" class="badge btn btn-dark badge-dark">-</a>
-                          </td>
-                      </tr>
-                  {% endfor %}
-              {% else %}
-                  <tr>
-                      <td colspan="3">
-                          <div class="alert alert-danger text-center">Sin Productos</div>
-                      </td>
-                  </tr>
-              {% endif %}
-              <tr>
-                  <th scope="row">Total:</th>
-                  <td colspan="2">$ {{ total_carrito }}</td>
-              </tr>
-          </tbody>
-      </table>
-      <hr />
-  </div>
-  <div class="row text-center">
-      <div class="col-6">
-          <a href="{% url 'CLS' %}" class="btn btn-danger">Limpiar</a>
-      </div>
-      <div class="col-6">
-        <a href="{% url 'procesar_pedido' %}" class="btn btn-success">Realizar Pedido</a>
-      </div>
-  </div>
+<style>
+    .carrito-container {
+        background-color: #fff9f0;
+        border-radius: 12px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 900px;
+    }
+
+    .carrito-alert {
+        background-color: #f9e8d4;
+        color: #4a3b2a;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+
+    .carrito-table {
+        background-color: #fefcf9;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .carrito-table thead {
+        background-color: #f5c6a1;
+        color: #4a3b2a;
+    }
+
+    .carrito-table tbody tr {
+        vertical-align: middle;
+    }
+
+    .carrito-table tbody td {
+        padding: 10px;
+    }
+
+    .btn-custom {
+        border-radius: 50%;
+        color: white;
+        padding: 0.5em;
+        font-size: 1.2em;
+        text-align: center;
+        line-height: 1;
+    }
+
+    .btn-add {
+        background-color: #f4a261;
+    }
+
+    .btn-sub {
+        background-color: #e76f51;
+    }
+
+    .btn-clean {
+        background-color: #f4a261;
+        border-radius: 25px;
+        color: white;
+        font-weight: bold;
+    }
+
+    .btn-checkout {
+        background-color: #2a9d8f;
+        border-radius: 25px;
+        color: white;
+        font-weight: bold;
+    }
+
+    .alert-custom {
+        border-radius: 8px;
+        background-color: #f9e8d4;
+        color: #4a3b2a;
+        padding: 10px;
+    }
+
+    .alert-custom .btn-close {
+        color: #4a3b2a;
+    }
+
+    .alert-custom .btn-close:hover {
+        background-color: #f9e8d4;
+    }
+
+    .text-primary {
+        color: #2a9d8f;
+    }
+</style>
+
+<div class="carrito-container">
+    <div class="alert alert-primary carrito-alert" role="alert">
+        <h4>Carrito de Pedidos</h4>
+    </div>
+    <table class="table table-bordered carrito-table">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Acumulado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if request.session.carrito %}
+                {% for key, value in request.session.carrito.items %}
+                    <tr>
+                        <td>{{ value.nombre }}</td>
+                        <td>{{ value.cantidad }}</td>
+                        <td>
+                            ${{ value.acumulado }}
+                            <div class="d-inline-block ms-3">
+                                <a href="{% url 'Add' value.producto_id %}" class="badge btn btn-custom btn-add">+</a>
+                                <a href="{% url 'Sub' value.producto_id %}" class="badge btn btn-custom btn-sub">-</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">
+                        <div class="alert alert-danger text-center carrito-alert">Sin Productos</div>
+                    </td>
+                </tr>
+            {% endif %}
+            <tr style="background-color: #f5c6a1; color: #4a3b2a;">
+                <th scope="row">Total:</th>
+                <td colspan="2">${{ total_carrito }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr />
+    <div class="row text-center">
+        <div class="col-6">
+            <a href="{% url 'CLS' %}" class="btn btn-clean">Limpiar</a>
+        </div>
+        <div class="col-6">
+            <a href="{% url 'procesar_pedido' %}" class="btn btn-checkout">Realizar Pedido</a>
+        </div>
+    </div>
 </div>
+
 {% if messages %}
-  <div class="alert alert-dismissible fade show" role="alert">
-    {% for message in messages %}
-      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
-  </div>
+    <div class="mt-4">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-custom alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
 {% endif %}
 {% endblock %}
