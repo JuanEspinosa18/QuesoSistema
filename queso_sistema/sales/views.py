@@ -11,11 +11,6 @@ from reportlab.pdfgen import canvas
 from django.contrib.auth.models import Group
 from users.views import group_required
 
-@group_required('Empleados')   
-def DashVentas(request):
-    pedidos = Pedido.objects.all()
-    return render(request, 'DashVentas.html', {'pedidos': pedidos})
-
 @user_passes_test(lambda u: u.groups.filter(name='Empleados').exists())
 def export_pedidos(request):
     if request.method == 'POST':
@@ -64,6 +59,11 @@ def export_pedidos(request):
             return HttpResponseBadRequest("Formato no soportado")
     else:
         return HttpResponseBadRequest("Método no permitido")
+
+@group_required('Empleados')   
+def DashVentas(request):
+    pedidos = Pedido.objects.all()
+    return render(request, 'DashVentas.html', {'pedidos': pedidos})
 
 @group_required('Empleados')   
 def pedidos_pendientes(request):
