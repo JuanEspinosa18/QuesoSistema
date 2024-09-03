@@ -94,7 +94,9 @@ def mis_pedidos(request):
     pedidos = Pedido.objects.filter(cliente=request.user).order_by('-fecha_pedido')
     return render(request, 'pedidosCliente.html', {'pedidos': pedidos})
 
-
+def perfil_cliente(request):
+    return render(request, 'perfilCliente.html', {
+    })
 #EJEMPLO ENVIO DE CORREO CLIENTE 
 '''
 def correo_pedido(request):

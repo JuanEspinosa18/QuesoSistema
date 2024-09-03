@@ -40,7 +40,7 @@
           <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
             aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#!">Perfil</a></li>
+            <li><a class="dropdown-item" href="{% url 'perfil_empleado' %}">Perfil</a></li>
             <li><a class="dropdown-item" href="{% url 'prueba' %}"> Configuraciones</a></li>
             <li>
               <hr class="dropdown-divider" />
@@ -76,40 +76,7 @@
                 </nav>
               </div>
               <!-- Sección items interfaz Ventas -->
-            <div class="sb-sidenav-menu-heading">Interfaz Pedidos</div>
-            <a class="nav-link" href="{% url 'DashVentas' %}">
-              <div class="sb-nav-link-icon"></div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                style="fill: rgba(255, 249, 217, 1);transform: ;msFilter:;">
-                <path
-                  d="M19.903 8.586a.997.997 0 0 0-.196-.293l-6-6a.997.997 0 0 0-.293-.196c-.03-.014-.062-.022-.094-.033a.991.991 0 0 0-.259-.051C13.04 2.011 13.021 2 13 2H6c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V9c0-.021-.011-.04-.013-.062a.952.952 0 0 0-.051-.259c-.01-.032-.019-.063-.033-.093zM16.586 8H14V5.414L16.586 8zM6 20V4h6v5a1 1 0 0 0 1 1h5l.002 10H6z">
-                </path>
-                <path d="M8 12h8v2H8zm0 4h8v2H8zm0-8h2v2H8z"></path>
-              </svg>
-              Pedidos
-            </a>
-              <!-- Movimientos de facturas -->
-              <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                data-bs-target="#collapseInventoryMovements" aria-expanded="false"
-                aria-controls="collapseInventoryMovements">
-                <div class="sb-nav-link-icon"></div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                  style="fill: rgba(255, 249, 217, 1);transform: ;msFilter:;">
-                  <path
-                    d="M19.924 10.383a1 1 0 0 0-.217-1.09l-5-5-1.414 1.414L16.586 9H4v2h15a1 1 0 0 0 .924-.617zM4.076 13.617a1 1 0 0 0 .217 1.09l5 5 1.414-1.414L7.414 15H20v-2H5a.999.999 0 0 0-.924.617z">
-                  </path>
-                </svg>
-                Gestion de Pedidos
-              </a>
-              <div class="collapse" id="collapseInventoryMovements" aria-labelledby="headingInventoryMovements"
-                data-bs-parent="#sidenavAccordion">
-                <nav class="sb-sidenav-menu-nested nav">
-                  <a class="nav-link" href="{% url 'pedidos_pendientes' %}">Pendientes</a>
-                  <a class="nav-link" href="{% url 'pedidos_proceso' %}">En proceso</a>
-                  <a class="nav-link" href="{% url 'pedidos_completados' %}">Completados</a>
-                  <a class="nav-link" href="{% url 'pedidos_cancelados' %}">Cancelados</a>
-                </nav>
-              </div>
+
               <!-- Configuración -->
             </div>
           </div>
