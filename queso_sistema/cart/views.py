@@ -7,6 +7,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.db import transaction
 from sales.models import Pedido, DetallePedido
+from django.contrib import messages
+from .forms import ClienteProfileForm
+
 
 def carrito(request):
     carrito = request.session.get('carrito', {})
@@ -94,8 +97,24 @@ def mis_pedidos(request):
     pedidos = Pedido.objects.filter(cliente=request.user).order_by('-fecha_pedido')
     return render(request, 'pedidosCliente.html', {'pedidos': pedidos})
 
+@login_required
 def perfil_cliente(request):
+    if request.method == 'POST':
+        form = ClienteProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Tu perfil ha sido actualizado con éxito.')
+            return redirect('perfil_cliente')
+        else:
+            print(form.errors)  # Esto imprimirá los errores del formulario en la consola
+            messages.error(request, 'Por favor corrige los errores a continuación.')
+
+    else:
+        form = ClienteProfileForm(instance=request.user)
+
     return render(request, 'perfilCliente.html', {
+        'form': form,
+        'user': request.user,
     })
 #EJEMPLO ENVIO DE CORREO CLIENTE 
 '''
