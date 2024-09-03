@@ -28,6 +28,30 @@ def group_required(*group_names):
         return _wrapped_view
     return decorator
 
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')  # Cambiar 'username' a 'email' para autenticación
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            if user.is_superuser:
+                return redirect('admin:index')  # Redirige al panel de administrador si es superusuario
+            elif user.groups.filter(name='Empleados').exists():
+                return redirect('DashVentas')  # Redirige al dashboard de ventas si es empleado
+            elif user.groups.filter(name='Clientes').exists():
+                return redirect('carrito')  # Redirige al carrito si es cliente
+        else:
+            messages.error(request, 'Correo o contraseña incorrectos')
+    return render(request, 'login.html')
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, '¡Sesión finalizada con éxito!')
+    return redirect('login')
+
+    #FOMULARIO CONTACTO
+
 def signup_view(request):
     if request.method == 'POST':
         email = request.POST['email']
@@ -89,30 +113,6 @@ def signup_view(request):
             messages.error(request, 'Hubo un error al crear el usuario. Por favor, inténtalo de nuevo.')
 
     return render(request, 'signup.html')
-
-def login_view(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')  # Cambiar 'username' a 'email' para autenticación
-        password = request.POST.get('password')
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            login(request, user)
-            if user.is_superuser:
-                return redirect('admin:index')  # Redirige al panel de administrador si es superusuario
-            elif user.groups.filter(name='Empleados').exists():
-                return redirect('DashVentas')  # Redirige al dashboard de ventas si es empleado
-            elif user.groups.filter(name='Clientes').exists():
-                return redirect('carrito')  # Redirige al carrito si es cliente
-        else:
-            messages.error(request, 'Correo o contraseña incorrectos')
-    return render(request, 'login.html')
-
-def logout_view(request):
-    logout(request)
-    messages.success(request, '¡Sesión finalizada con éxito!')
-    return redirect('login')
-
-    #FOMULARIO CONTACTO
 
 def contacto(request):
     mensaje_enviado = False

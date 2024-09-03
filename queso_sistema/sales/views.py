@@ -160,3 +160,7 @@ def consultar_pedido(request,id):
     
     return render(request, 'consultas/consultar_pedido.html', {'pedido': pedido, 'detalles_pedido': detalles_pedido})
 
+def prueba(request):
+    return render(request, 'prueba.html', {
+    })
+    
