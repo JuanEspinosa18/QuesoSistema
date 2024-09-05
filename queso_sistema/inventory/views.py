@@ -91,7 +91,7 @@ def editar_producto(request, id):
     return render(request, 'deletes_edit/editarProducto.html', {'Producto': factura_producto})
 
 @group_required('Empleados')
-def MateriaPrima(request):
+def Materia_Prima(request):
     materias_primas = MateriaPrima.objects.all()
     return render(request, 'materiaPrima.html', {'materias_primas': materias_primas})
 
@@ -157,7 +157,7 @@ def editar_MateriaPrima(request, id):
 
 @group_required('Empleados')
 def mostrar_stock_bajo_productos(request):
-    productos_bajo_stock = Producto.objects.filter(cantidad_existente__lt=10)
+    productos_bajo_stock = Producto.objects.filter(stock__lt=10)
     context = {
         'productos': productos_bajo_stock,
     }
