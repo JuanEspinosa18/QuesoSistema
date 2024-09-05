@@ -10,6 +10,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from django.contrib.auth.models import Group
 from users.views import group_required
+from .forms import UserProfileForm
 
 @user_passes_test(lambda u: u.groups.filter(name='Empleados').exists())
 def export_pedidos(request):
@@ -164,3 +165,17 @@ def prueba(request):
     return render(request, 'prueba.html', {
     })
     
+@login_required
+def perfil_empleado(request):
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Tu perfil ha sido actualizado con éxito.')
+            return redirect('perfil_empleado')
+        else:
+            messages.error(request, 'Por favor corrige los errores a continuación.')
+    else:
+        form = UserProfileForm(instance=request.user)
+
+    return render(request, 'consultas/perfilEmpleado.html', {'form': form})
