@@ -8,11 +8,33 @@ from .resources import PedidoResource
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-from django.contrib.auth.models import Group
 from users.views import group_required
 from .forms import UserProfileForm
 
-@user_passes_test(lambda u: u.groups.filter(name='Empleados').exists())
+@group_required('Empleados') 
+def prueba(request):
+    # Obtener todos los pedidos
+    pedidos = Pedido.objects.all() 
+
+    # Contar pedidos por estado
+    pedidos_pendientes = Pedido.objects.filter(estado='pendiente').count()
+    pedidos_proceso = Pedido.objects.filter(estado='en_proceso').count()
+    pedidos_completados = Pedido.objects.filter(estado='completado').count()
+    pedidos_cancelados = Pedido.objects.filter(estado='cancelado').count()
+
+    # Crear el contexto para la plantilla
+    context = {
+        'pedidos': pedidos,
+        'pedidos_pendientes': pedidos_pendientes,
+        'pedidos_proceso': pedidos_proceso,
+        'pedidos_completados': pedidos_completados,
+        'pedidos_cancelados': pedidos_cancelados,
+    } 
+
+    # Renderizar la plantilla con el contexto
+    return render(request, 'prueba.html', context)
+
+@group_required('Empleados') 
 def export_pedidos(request):
     if request.method == 'POST':
         file_format = request.POST.get('file_format')
@@ -160,11 +182,7 @@ def consultar_pedido(request,id):
     detalles_pedido = DetallePedido.objects.filter(pedido=pedido)
     
     return render(request, 'consultas/consultar_pedido.html', {'pedido': pedido, 'detalles_pedido': detalles_pedido})
-
-def prueba(request):
-    return render(request, 'prueba.html', {
-    })
-    
+   
 @login_required
 def perfil_empleado(request):
     if request.method == 'POST':

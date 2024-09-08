@@ -4,26 +4,26 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Rubik", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 body {
-  background-color: #00563F !important;
+  background-color: #fff !important;
 } 
 .container-fluent {
   display: flex;
+  flex-direction: row;
   width: 100%;
   min-height: 100vh;
 }
 .sidebar {
   position: relative;
   width: 256px;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   gap: 20px;
   background-color: #00563F;
   padding: 24px;
-  border-radius: 30px;
   transition: all 0.3s;
 }
 .sidebar .head {
@@ -33,8 +33,8 @@ body {
   border-bottom: 1px solid #FFFDEF;
 }
 .user-img {
-  width: 44px;
-  height: 44px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   overflow: hidden;
 }
@@ -44,7 +44,7 @@ body {
 }
 .user-details .title,
 .menu .title  {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 500;
   color: #FFFDEF;
   text-transform: uppercase;
@@ -56,7 +56,7 @@ body {
   color: #FFFDEF;
 }
 .nav {
-  flex: 1;
+  flex: auto;
 }
 .menu ul {
   margin-left: -40px !important;
@@ -84,7 +84,7 @@ body {
   background-color: #FFFDEF;
 }
 .menu ul li .icon {
-  font-size: 20px;
+  font-size: 25px;
 }
 .menu ul li .text {
   flex: 1;
@@ -137,7 +137,7 @@ body {
   background-color: #FFFDEF;
 }
 .sidebar.active {
-  width: 92px;
+  width: 100px;
 }
 .sidebar.active .menu-btn i {
   transform: rotate(180deg);
@@ -164,8 +164,8 @@ body {
   transform: translateY(-50%);
   padding: 10px;
   border-radius: 4px;
-  color: #fff;
-  background-color: #000;
+  color: #00563F;
+  background-color: #FFFDEF;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s;
@@ -178,7 +178,7 @@ body {
   width: 20px;
   height: 20px;
   border-radius: 2px;
-  background-color: #00563F;
+  background-color: #FFFDEF;
   transform: rotate(45deg);
   z-index: -1;
 }
@@ -194,25 +194,22 @@ body {
   width: 200px;
   border-radius: 20px;
   padding: 10px 20px;
+  color: #00563F;
   border: 1px solid #f6f6f6;
-  background-color: #fff;
+  background-color: #FFFDEF;
   box-shadow: 0px 10px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Nuevo CSS para el contenido principal y el navbar */
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   margin-left: 30px;
 }
-.navbar {
-  width: 100%;
-  padding: 20px;
-}
+
 .content {
   padding: 20px 0px;
-  background-color: #f8f9fa;
+  background-color: #fff;
   flex: 1;
 }
 
@@ -220,14 +217,43 @@ body {
     margin-top: 10px;
 }
 
-.footer {
-  padding-top: 50px;
-  padding-bottom: 50px;
-  padding-left: 150px;
-  background-color: #FFF9D9;
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-.footer-content {
-  display: flex;
-  justify-content: space-between;
+.card-body i {
+  font-size: 40px;
+  margin-bottom: 10px; /* Ajusta el espacio entre el ícono y el título */
+}
+
+.card-body .card-title {
+  margin-bottom: 15px; /* Ajusta el espacio entre el título y el botón */
+}
+
+.card-body a {
+  margin-top: 10px; /* Ajusta el espacio entre el botón y el contenido de la tarjeta */
+}
+
+/* Estilo para la tabla */
+.custom-table th, .custom-table td {
+  background-color: #FFF9D9 !important; /* Color de fondo de las celdas */
+  color: #00563F !important; /* Color del texto */
+}
+
+/* Estilo para las filas de la tabla */
+.custom-table tbody tr {
+  transition: background-color 0.3s; /* Suaviza la transición del color de fondo */
+}
+
+/* Estilo para el efecto de hover en las filas */
+.custom-table tbody tr:hover {
+  background-color: #e2e6ea; /* Color de fondo cuando se pasa el mouse */
+}
+
+/* Estilo para el efecto de hover en las celdas */
+.custom-table tbody td:hover {
+  background-color: #f1f3f5; /* Color de fondo cuando se pasa el mouse sobre una celda */
 }

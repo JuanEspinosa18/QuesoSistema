@@ -9,7 +9,13 @@
 }
 
 body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
   font-family: 'Poppins', sans-serif;
+  background: linear-gradient(225deg, #00664B, #CA8D53);
+  background-size: 400% 400%;
+  animation: AnimationName 8s ease infinite;
 }
 
 .bg-image-vertical {
@@ -18,6 +24,25 @@ body {
   background-repeat: no-repeat;
   background-position: right center;
   background-size: auto 100%;
+}
+
+.btn-custom:hover {
+  background-color: #0d8265 !important;
+}
+.second_btn-custom:hover{
+  background-color: #CA8D53 !important;
+}
+
+@keyframes AnimationName {
+  0% {
+    background-position: 50% 0%;
+  }
+  50% {
+    background-position: 50% 100%;
+  }
+  100% {
+    background-position: 50% 0%;
+  }
 }
 
 @media (min-width: 1025px) {
