@@ -1,5 +1,5 @@
 {% extends "basedash.html" %}
-{% block main %}
+{% block style %}
 <style>
   .btn-group .btn, .btn-group .nav-link {
     display: flex;
@@ -15,91 +15,86 @@
       padding: 0;
       margin: 0;
   }
+
+  .row  {
+    padding-top: 20px;
+  }
+
 </style>
-<main>
-      <div class="row">
-        <div class="container-fluid px-4">
-          <h1 class="mt-4">Pedidos Completados</h1>
-          <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Panel</li>
-          </ol>
-          <div class="row">
-            <div class="col-xl-3 col-lg-6 mb-3">
-              <div class="card" style="border-color: #ffc107;">
-                <div class="card-body">
-                  <i class="ph-bold ph-hourglass"  style="color: #ffc107;"></i>
-                  <h5 class="card-title">Pendientes</h5>
-                  <a class="btn btn-warning btn-lg" href="{% url 'pedidos_pendientes' %}">{{ pedidos_pendientes }}</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 mb-3">
-              <div class="card" style="border-color: #0d6efd;">
-                <div class="card-body">
-                  <i class="ph-bold ph-clock-clockwise" style="color: #0d6efd;"></i>
-                  <h5 class="card-title">En Proceso</h5>
-                  <a class="btn btn-primary btn-lg" href="{% url 'pedidos_proceso' %}">{{ pedidos_proceso }}</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 mb-3">
-              <div class="card" style="border-color: #dc3545;">
-                <div class="card-body">
-                  <i class="ph-bold ph-x-circle" style="color: #dc3545;"></i>
-                  <h5 class="card-title">Cancelados</h5>
-                  <a class="btn btn-danger btn-lg" href="{% url 'pedidos_cancelados' %}">{{ pedidos_cancelados }}</a>
-                </div>
-              </div>
-            </div>         
-            <div class="card mb-4">
-          <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <i class="fas fa-table me-1"></i>
-                Completados
+{% endblock%}
+{% block main %}
+  <main>
+    <h1 class="mt-4 ms-3">Pedidos Completados</h1>
+    <div class="row">
+      <div class="container-fluid px-4">
+        <div class="row">
+          <div class="col-xl-3 col-lg-6 mb-3">
+            <div class="card" style="border-color: #ffc107;">
+              <div class="card-body">
+                <i class="ph-bold ph-hourglass" style="color: #ffc107;"></i>
+                <h5 class="card-title">Pendientes</h5>
+                <a class="btn btn-warning btn-lg" href="{% url 'pedidos_pendientes' %}">{{ pedidos_pendientes }}</a>
               </div>
             </div>
           </div>
-          <div class="card-body">
-            <table id="datatablesSimple">
-              <thead>
-                  <tr>
-                      <th style="width: 8%;"><a href="#">Fecha</a></th>
-                      <th style="width: 18.057720057720058%;"><a href="#">Subtotal</a></th>
-                      <th style="width: 18.057720057720058%;"><a href="#">Estado</a></th>
-                      <th style="width: 18.057720057720058%;"><a href="#">Acciones</a></th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {% for pedido in pedidos %}
-                  <tr>
-                      <td>{{ pedido.fecha_pedido }}</td>
-                      <td>{{ pedido.subtotal }}</td>
-                      <td>{{ pedido.get_estado_display }}</td>
-                      <td>
-                        <div class="btn-group" role="group" style="width: 30%;">
-                          <button class="btn btn-warning btn-sm w-50" data-toggle="modal" data-target="#editarModal" data-id="{{ pedido.id }}" data-estado="{{ pedido.estado }}">
-                              <i class="ph ph-pencil-line" style="font-size: 25px;" data-toggle="tooltip" title="Editar"></i>
-                          </button>
-                          <a class="nav-link w-50 p-0" href="{% url 'consultar_pedido' pedido.id %}">
-                            <button class="btn btn-primary btn-sm w-100" data-toggle="tooltip" title="Ver">
-                                <i class="ph ph-eye" style="font-size: 25px;" data-toggle="tooltip" title="Ver"></i>
-                            </button>
-                          </a>
-                        </div>
-                      </td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-          </table>          
+          <div class="col-xl-3 col-lg-6 mb-3">
+            <div class="card" style="border-color: #0d6efd;">
+              <div class="card-body">
+                <i class="ph-bold ph-clock-clockwise" style="color: #0d6efd;"></i>
+                <h5 class="card-title">En Proceso</h5>
+                <a class="btn btn-primary btn-lg" href="{% url 'pedidos_proceso' %}">{{ pedidos_proceso }}</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-6 mb-3">
+            <div class="card" style="border-color: #dc3545;">
+              <div class="card-body">
+                <i class="ph-bold ph-x-circle" style="color: #dc3545;"></i>
+                <h5 class="card-title">Cancelados</h5>
+                <a class="btn btn-danger btn-lg" href="{% url 'pedidos_cancelados' %}">{{ pedidos_cancelados }}</a>
+              </div>
+            </div>
           </div>
         </div>
+        <div class="card-body">
+          <table id="datatablesSimple">
+            <thead>
+              <tr>
+                <th style="width: 8%;"><a href="#">Fecha</a></th>
+                <th style="width: 18%;"><a href="#">Subtotal</a></th>
+                <th style="width: 18%;"><a href="#">Estado</a></th>
+                <th style="width: 18%;"><a href="#">Acciones</a></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for pedido in pedidos %}
+              <tr>
+                <td>{{ pedido.fecha_pedido }}</td>
+                <td>{{ pedido.subtotal }}</td>
+                <td>{{ pedido.get_estado_display }}</td>
+                <td>
+                  <div class="btn-group" role="group" style="width: 30%;">
+                    <button class="btn btn-warning btn-sm w-50" data-bs-toggle="modal" data-bs-target="#editarModal" data-id="{{ pedido.id }}" data-estado="{{ pedido.estado }}">
+                      <i class="ph ph-pencil-line" style="font-size: 25px;" title="Editar"></i>
+                    </button>
+                    <a class="nav-link w-50 p-0" href="{% url 'consultar_pedido' pedido.id %}">
+                      <button class="btn btn-primary btn-sm w-100" title="Ver">
+                        <i class="ph ph-eye" style="font-size: 25px;"></i>
+                      </button>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
+    </div>
   </main>
 {% endblock %}
 
 {% block form %}
-<!-- Modal para editar el estado -->
 <div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -131,7 +126,9 @@
       </div>
   </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
 <script>
   $('#editarModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
@@ -165,5 +162,7 @@
     });
   });
 </script>
-
 {% endblock %}
+
+
+

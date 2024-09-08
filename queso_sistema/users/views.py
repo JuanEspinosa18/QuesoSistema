@@ -38,7 +38,7 @@ def login_view(request):
             if user.is_superuser:
                 return redirect('admin:index')  # Redirige al panel de administrador si es superusuario
             elif user.groups.filter(name='Empleados').exists():
-                return redirect('DashVentas')  # Redirige al dashboard de ventas si es empleado
+                return redirect('dashboardPedidos')  # Redirige al dashboard de ventas si es empleado
             elif user.groups.filter(name='Clientes').exists():
                 return redirect('carrito')  # Redirige al carrito si es cliente
         else:
