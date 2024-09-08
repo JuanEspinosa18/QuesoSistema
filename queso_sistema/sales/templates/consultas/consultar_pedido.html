@@ -1,5 +1,5 @@
-{% extends "consultas/baseConsultas.html" %}
-{% block content %}
+{% extends "basedash.html" %}
+{% block main %}
 <style>
     /* Estilos personalizados para una apariencia más grande y cálida */
 
@@ -127,7 +127,7 @@
     </div>
 </div>
 
-<a href="{% url 'DashVentas' %}" class="btn btn-lg btn-custom second_btn-custom" type="submit">Volver</a>
+<a href="{% url 'dashboardPedidos' %}" class="btn btn-lg btn-custom second_btn-custom" type="submit">Volver</a>
 
 {% endblock %}
 

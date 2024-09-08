@@ -12,7 +12,7 @@ from users.views import group_required
 from .forms import UserProfileForm
 
 @group_required('Empleados') 
-def prueba(request):
+def dashboardPedidos(request):
     # Obtener todos los pedidos
     pedidos = Pedido.objects.all() 
 
@@ -32,7 +32,7 @@ def prueba(request):
     } 
 
     # Renderizar la plantilla con el contexto
-    return render(request, 'prueba.html', context)
+    return render(request, 'dashboardPedidos.html', context)
 
 @group_required('Empleados') 
 def export_pedidos(request):
@@ -84,14 +84,20 @@ def export_pedidos(request):
         return HttpResponseBadRequest("Método no permitido")
 
 @group_required('Empleados')   
-def DashVentas(request):
-    pedidos = Pedido.objects.all()
-    return render(request, 'DashVentas.html', {'pedidos': pedidos})
-
-@group_required('Empleados')   
 def pedidos_pendientes(request):
     pedidos = Pedido.objects.filter(estado='pendiente')
-    return render(request, 'DashPendientes.html', {'pedidos': pedidos})
+    pedidos_proceso = Pedido.objects.filter(estado='en_proceso').count()
+    pedidos_completados = Pedido.objects.filter(estado='completado').count()
+    pedidos_cancelados = Pedido.objects.filter(estado='cancelado').count()
+
+    # Crear el contexto para la plantilla
+    context = {
+        'pedidos': pedidos,
+        'pedidos_proceso': pedidos_proceso,
+        'pedidos_completados': pedidos_completados,
+        'pedidos_cancelados': pedidos_cancelados,
+    } 
+    return render(request, 'DashPendientes.html', context)
 
 @group_required('Empleados')
 def editar_pedido_pendiente(request, id):
@@ -113,7 +119,18 @@ def editar_pedido_pendiente(request, id):
 @group_required('Empleados')   
 def pedidos_proceso(request):
     pedidos = Pedido.objects.filter(estado='en_proceso')
-    return render(request, 'DashEnProceso.html', {'pedidos': pedidos})
+    pedidos_pendientes = Pedido.objects.filter(estado='pendiente').count()
+    pedidos_completados = Pedido.objects.filter(estado='completado').count()
+    pedidos_cancelados = Pedido.objects.filter(estado='cancelado').count()
+
+    # Crear el contexto para la plantilla
+    context = {
+        'pedidos': pedidos,
+        'pedidos_pendientes': pedidos_pendientes,
+        'pedidos_completados': pedidos_completados,
+        'pedidos_cancelados': pedidos_cancelados,
+    } 
+    return render(request, 'DashEnProceso.html', context)
 
 @group_required('Empleados')
 def editar_pedido_proceso(request, id):
@@ -135,7 +152,18 @@ def editar_pedido_proceso(request, id):
 @group_required('Empleados')   
 def pedidos_completados(request):
     pedidos = Pedido.objects.filter(estado='completado')
-    return render(request, 'DashCompletados.html', {'pedidos': pedidos})
+    pedidos_pendientes = Pedido.objects.filter(estado='pendiente').count()
+    pedidos_proceso = Pedido.objects.filter(estado='en_proceso').count()
+    pedidos_cancelados = Pedido.objects.filter(estado='cancelado').count()
+
+    # Crear el contexto para la plantilla
+    context = {
+        'pedidos': pedidos,
+        'pedidos_pendientes': pedidos_pendientes,
+        'pedidos_proceso': pedidos_proceso,
+        'pedidos_cancelados': pedidos_cancelados,
+    } 
+    return render(request, 'DashCompletados.html', context)
 
 @group_required('Empleados')
 def editar_pedido_completado(request, id):
@@ -157,7 +185,18 @@ def editar_pedido_completado(request, id):
 @group_required('Empleados')   
 def pedidos_cancelados(request):
     pedidos = Pedido.objects.filter(estado='cancelado')
-    return render(request, 'dashCancelados.html', {'pedidos': pedidos})
+    pedidos_pendientes = Pedido.objects.filter(estado='pendiente').count()
+    pedidos_proceso = Pedido.objects.filter(estado='en_proceso').count()
+    pedidos_completados = Pedido.objects.filter(estado='completado').count()
+
+    # Crear el contexto para la plantilla
+    context = {
+        'pedidos': pedidos,
+        'pedidos_pendientes': pedidos_pendientes,
+        'pedidos_proceso': pedidos_proceso,
+        'pedidos_completados': pedidos_completados,
+    } 
+    return render(request, 'dashCancelados.html', context)
 
 @group_required('Empleados')
 def editar_pedido_cancelado(request, id):

@@ -1,5 +1,21 @@
-{% extends "basedashVentas.html" %}
+{% extends "basedash.html" %}
 {% block main %}
+<style>
+  .btn-group .btn, .btn-group .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0; 
+    width: 100%; 
+  }
+  .btn-group .btn i {
+      font-size: 16px;
+  }
+  .btn-group .nav-link {
+      padding: 0;
+      margin: 0;
+  }
+</style>
 <main>
       <div class="row">
         <div class="container-fluid px-4">
@@ -8,33 +24,34 @@
             <li class="breadcrumb-item active">Panel</li>
           </ol>
           <div class="row">
-            <div class="col-xl-3 col-md-6">
-              <div class="card bg-warning text-white mb-4">
-                <div class="card-body">Pendientes</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                  <a class="small text-white stretched-link" href="{% url 'pedidos_pendientes'%}">Ver detalles</a>
-                  <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            <div class="col-xl-3 col-lg-6 mb-3">
+              <div class="card" style="border-color: #ffc107;">
+                <div class="card-body">
+                  <i class="ph-bold ph-hourglass"  style="color: #ffc107;"></i>
+                  <h5 class="card-title">Pendientes</h5>
+                  <a class="btn btn-warning btn-lg" href="{% url 'pedidos_pendientes' %}">{{ pedidos_pendientes }}</a>
                 </div>
               </div>
             </div>
-            <div class="col-xl-3 col-md-6">
-              <div class="card bg-primary text-white mb-4">
-                <div class="card-body">En Proceso</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                  <a class="small text-white stretched-link" href="{% url 'pedidos_proceso'%}">Ver detalles</a>
-                  <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            <div class="col-xl-3 col-lg-6 mb-3">
+              <div class="card" style="border-color: #0d6efd;">
+                <div class="card-body">
+                  <i class="ph-bold ph-clock-clockwise" style="color: #0d6efd;"></i>
+                  <h5 class="card-title">En Proceso</h5>
+                  <a class="btn btn-primary btn-lg" href="{% url 'pedidos_proceso' %}">{{ pedidos_proceso }}</a>
                 </div>
               </div>
             </div>
-            <div class="col-xl-3 col-md-6">
-              <div class="card bg-danger text-white mb-4">
-                <div class="card-body">Cancelados</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                  <a class="small text-white stretched-link" href="{% url 'pedidos_cancelados'%}">Ver detalles</a>
-                  <div class="small text-white"><i class="fas fa-angle-right" height="40"></i></div>
+            <div class="col-xl-3 col-lg-6 mb-3">
+              <div class="card" style="border-color: #dc3545;">
+                <div class="card-body">
+                  <i class="ph-bold ph-x-circle" style="color: #dc3545;"></i>
+                  <h5 class="card-title">Cancelados</h5>
+                  <a class="btn btn-danger btn-lg" href="{% url 'pedidos_cancelados' %}">{{ pedidos_cancelados }}</a>
                 </div>
               </div>
-            </div>        <div class="card mb-4">
+            </div>         
+            <div class="card mb-4">
           <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
               <div>
@@ -60,13 +77,13 @@
                       <td>{{ pedido.subtotal }}</td>
                       <td>{{ pedido.get_estado_display }}</td>
                       <td>
-                        <div class="btn-group">
-                          <button class="btn btn-warning" data-toggle="modal" data-target="#editarModal" data-id="{{ pedido.id }}" data-estado="{{ pedido.estado }}">
-                            <i class="bi bi-pencil-square" data-toggle="tooltip" title="Editar"></i>
+                        <div class="btn-group" role="group" style="width: 30%;">
+                          <button class="btn btn-warning btn-sm w-50" data-toggle="modal" data-target="#editarModal" data-id="{{ pedido.id }}" data-estado="{{ pedido.estado }}">
+                              <i class="ph ph-pencil-line" style="font-size: 25px;" data-toggle="tooltip" title="Editar"></i>
                           </button>
-                          <a class="nav-link" href="{% url 'consultar_pedido' pedido.id %}">
-                            <button class="btn btn-primary" data-toggle="tooltip" title="Ver">
-                                <i class="fa-regular fa-eye fa-lg" style="color: #FFF9D9" data-toggle="tooltip" title="Ver"></i>
+                          <a class="nav-link w-50 p-0" href="{% url 'consultar_pedido' pedido.id %}">
+                            <button class="btn btn-primary btn-sm w-100" data-toggle="tooltip" title="Ver">
+                                <i class="ph ph-eye" style="font-size: 25px;" data-toggle="tooltip" title="Ver"></i>
                             </button>
                           </a>
                         </div>
