@@ -1,15 +1,12 @@
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render, get_object_or_404
 from sales.models import Pedido, DetallePedido
-from django.contrib import messages
 from import_export.formats.base_formats import XLSX
 from .resources import PedidoResource 
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from users.views import group_required
-from .forms import UserProfileForm
 
 @group_required('Empleados') 
 def dashboardPedidos(request):
@@ -32,7 +29,7 @@ def dashboardPedidos(request):
     } 
 
     # Renderizar la plantilla con el contexto
-    return render(request, 'dashboardPedidos.html', context)
+    return render(request, 'sales/dashboardPedidos.html', context)
 
 @group_required('Empleados') 
 def export_pedidos(request):
@@ -97,7 +94,7 @@ def pedidos_pendientes(request):
         'pedidos_completados': pedidos_completados,
         'pedidos_cancelados': pedidos_cancelados,
     } 
-    return render(request, 'DashPendientes.html', context)
+    return render(request, 'sales/DashPendientes.html', context)
 
 @group_required('Empleados')
 def editar_pedido_pendiente(request, id):
@@ -114,7 +111,7 @@ def editar_pedido_pendiente(request, id):
             }
             return JsonResponse(data)
 
-    return render(request, 'DashPendientes.html', {'pedido': pedido})
+    return render(request, 'sales/DashPendientes.html', {'pedido': pedido})
 
 @group_required('Empleados')   
 def pedidos_proceso(request):
@@ -130,7 +127,7 @@ def pedidos_proceso(request):
         'pedidos_completados': pedidos_completados,
         'pedidos_cancelados': pedidos_cancelados,
     } 
-    return render(request, 'DashEnProceso.html', context)
+    return render(request, 'sales/DashEnProceso.html', context)
 
 @group_required('Empleados')
 def editar_pedido_proceso(request, id):
@@ -147,7 +144,7 @@ def editar_pedido_proceso(request, id):
             }
             return JsonResponse(data)
 
-    return render(request, 'DashEnProceso.html', {'pedido': pedido})
+    return render(request, 'sales/DashEnProceso.html', {'pedido': pedido})
 
 @group_required('Empleados')   
 def pedidos_completados(request):
@@ -163,7 +160,7 @@ def pedidos_completados(request):
         'pedidos_proceso': pedidos_proceso,
         'pedidos_cancelados': pedidos_cancelados,
     } 
-    return render(request, 'DashCompletados.html', context)
+    return render(request, 'sales/DashCompletados.html', context)
 
 @group_required('Empleados')
 def editar_pedido_completado(request, id):
@@ -180,7 +177,7 @@ def editar_pedido_completado(request, id):
             }
             return JsonResponse(data)
 
-    return render(request, 'DashCompletados.html', {'pedido': pedido})
+    return render(request, 'sales/DashCompletados.html', {'pedido': pedido})
 
 @group_required('Empleados')   
 def pedidos_cancelados(request):
@@ -196,7 +193,7 @@ def pedidos_cancelados(request):
         'pedidos_proceso': pedidos_proceso,
         'pedidos_completados': pedidos_completados,
     } 
-    return render(request, 'dashCancelados.html', context)
+    return render(request, 'sales/dashCancelados.html', context)
 
 @group_required('Empleados')
 def editar_pedido_cancelado(request, id):
@@ -214,25 +211,10 @@ def editar_pedido_cancelado(request, id):
             return JsonResponse(data)
         
 
-    return render(request, 'dashCancelados.html', {'pedido': pedido})
+    return render(request, 'sales/dashCancelados.html', {'pedido': pedido})
 
 def consultar_pedido(request,id):
     pedido = get_object_or_404(Pedido, id=id)
     detalles_pedido = DetallePedido.objects.filter(pedido=pedido)
     
-    return render(request, 'consultas/consultar_pedido.html', {'pedido': pedido, 'detalles_pedido': detalles_pedido})
-   
-@login_required
-def perfil_empleado(request):
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Tu perfil ha sido actualizado con éxito.')
-            return redirect('perfil_empleado')
-        else:
-            messages.error(request, 'Por favor corrige los errores a continuación.')
-    else:
-        form = UserProfileForm(instance=request.user)
-
-    return render(request, 'consultas/perfilEmpleado.html', {'form': form})
+    return render(request, 'sales/consultas/consultar_pedido.html', {'pedido': pedido, 'detalles_pedido': detalles_pedido})

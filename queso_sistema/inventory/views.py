@@ -7,7 +7,7 @@ from users.views import group_required
 @group_required('Empleados')
 def DashInventario(request):
     productos = Producto.objects.all()
-    return render(request, 'DashInventario.html', {'productos': productos})
+    return render(request, 'inventory/DashInventario.html', {'productos': productos})
 
 @group_required('Empleados')
 def agregar_producto(request):
@@ -49,7 +49,7 @@ def agregar_producto(request):
             return JsonResponse({'success': True})
     
     productos = Producto.objects.all()
-    return render(request, 'DashInventario.html', {'productos': productos})
+    return render(request, 'inventory/DashInventario.html', {'productos': productos})
 
 @group_required('Empleados')
 def eliminar_producto(request, id):  
@@ -88,12 +88,12 @@ def editar_producto(request, id):
         # Redirige después de editar
         return redirect('inventario')
     
-    return render(request, 'deletes_edit/editarProducto.html', {'Producto': factura_producto})
+    return render(request, 'inventory/deletes_edit/editarProducto.html', {'Producto': factura_producto})
 
 @group_required('Empleados')
 def Materia_Prima(request):
     materias_primas = MateriaPrima.objects.all()
-    return render(request, 'materiaPrima.html', {'materias_primas': materias_primas})
+    return render(request, 'inventory/materiaPrima.html', {'materias_primas': materias_primas})
 
 @group_required('Empleados')
 def agregar_MateriaPrima(request):
@@ -126,7 +126,7 @@ def agregar_MateriaPrima(request):
             return JsonResponse({'success': True})
     
     materias_primas = MateriaPrima.objects.all()
-    return render(request, 'materiaPrima.html', {'materias_primas': materias_primas})
+    return render(request, 'inventory/materiaPrima.html', {'materias_primas': materias_primas})
 
 @group_required('Empleados')
 def eliminar_MateriaPrima(request, id):
@@ -153,7 +153,7 @@ def editar_MateriaPrima(request, id):
         editar_materia.save()
         return redirect('MateriaPrima')
 
-    return render(request, 'deletes_edit/editarMateriaPrima.html', {'MateriaPrima': editar_materia})
+    return render(request, 'inventory/deletes_edit/editarMateriaPrima.html', {'MateriaPrima': editar_materia})
 
 @group_required('Empleados')
 def mostrar_stock_bajo_productos(request):
@@ -161,7 +161,7 @@ def mostrar_stock_bajo_productos(request):
     context = {
         'productos': productos_bajo_stock,
     }
-    return render(request, 'stock_bajo_productos.html', context)
+    return render(request, 'inventory/stock_bajo_productos.html', context)
 
 @group_required('Empleados')
 def mostrar_stock_bajo_materias_primas(request):
@@ -169,4 +169,4 @@ def mostrar_stock_bajo_materias_primas(request):
     context = {
         'materias_primas': materias_primas_bajo_stock,
     }
-    return render(request, 'stock_bajo_materias_primas.html', context)
+    return render(request, 'inventory/stock_bajo_materias_primas.html', context)

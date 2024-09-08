@@ -14,7 +14,7 @@ from .forms import ClienteProfileForm
 def carrito(request):
     carrito = request.session.get('carrito', {})
     total_carrito = sum(item['acumulado'] for item in carrito.values())
-    return render(request, 'carrito.html', {'total_carrito': total_carrito, 'carrito': carrito})
+    return render(request, 'cart/carrito.html', {'total_carrito': total_carrito, 'carrito': carrito})
 
 def eliminar_producto(request, producto_id):
     carrito = Carrito(request)
@@ -58,7 +58,7 @@ def procesar_pedido(request):
     carrito = request.session.get('carrito', {})
 
     if not carrito:
-        return render(request, 'carrito.html', {'error': 'No hay productos en el carrito'})
+        return render(request, 'cart/carrito.html', {'error': 'No hay productos en el carrito'})
 
     try:
         with transaction.atomic():  # Garantiza que todo se realice en una sola transacción
@@ -95,7 +95,7 @@ def procesar_pedido(request):
 @login_required
 def mis_pedidos(request):
     pedidos = Pedido.objects.filter(cliente=request.user).order_by('-fecha_pedido')
-    return render(request, 'pedidosCliente.html', {'pedidos': pedidos})
+    return render(request, 'cart/pedidosCliente.html', {'pedidos': pedidos})
 
 @login_required
 def perfil_cliente(request):
@@ -112,7 +112,7 @@ def perfil_cliente(request):
     else:
         form = ClienteProfileForm(instance=request.user)
 
-    return render(request, 'perfilCliente.html', {
+    return render(request, 'cart/perfilCliente.html', {
         'form': form,
         'user': request.user,
     })

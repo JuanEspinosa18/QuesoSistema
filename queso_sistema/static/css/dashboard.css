@@ -239,22 +239,18 @@ body {
 }
 
 /* Estilo para la tabla */
-.custom-table th, .custom-table td {
-  background-color: #FFF9D9 !important; /* Color de fondo de las celdas */
-  color: #00563F !important; /* Color del texto */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-/* Estilo para las filas de la tabla */
-.custom-table tbody tr {
-  transition: background-color 0.3s; /* Suaviza la transición del color de fondo */
+.custom-table th, .custom-table td { 
+  border: 1px solid #ddd;
+  padding: 8px;
 }
 
-/* Estilo para el efecto de hover en las filas */
-.custom-table tbody tr:hover {
-  background-color: #e2e6ea; /* Color de fondo cuando se pasa el mouse */
+.custom-table th {
+  background-color: #00563F;
+  color: white;
 }
 
-/* Estilo para el efecto de hover en las celdas */
-.custom-table tbody td:hover {
-  background-color: #f1f3f5; /* Color de fondo cuando se pasa el mouse sobre una celda */
-}

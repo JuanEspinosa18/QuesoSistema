@@ -10,6 +10,7 @@ from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
+from .forms import UserProfileForm
 
 def group_required(*group_names):
     def in_groups(user):
@@ -43,7 +44,7 @@ def login_view(request):
                 return redirect('carrito')  # Redirige al carrito si es cliente
         else:
             messages.error(request, 'Correo o contraseña incorrectos')
-    return render(request, 'login.html')
+    return render(request, 'users/login.html')
 
 def logout_view(request):
     logout(request)
@@ -112,7 +113,23 @@ def signup_view(request):
         except IntegrityError:
             messages.error(request, 'Hubo un error al crear el usuario. Por favor, inténtalo de nuevo.')
 
-    return render(request, 'signup.html')
+    return render(request, 'users/signup.html')
+
+@login_required
+def perfil_empleado(request):
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Tu perfil ha sido actualizado con éxito.')
+            return redirect('perfil_empleado')
+        else:
+            messages.error(request, 'Por favor corrige los errores a continuación.')
+    else:
+        form = UserProfileForm(instance=request.user)
+
+    return render(request, 'users/perfilEmpleado.html', {'form': form})
+
 
 def contacto(request):
     mensaje_enviado = False
@@ -135,4 +152,4 @@ def contacto(request):
     else:
         form = ContactForm()
     
-    return render(request, 'contacto.html', {'form': form, 'mensaje_enviado': mensaje_enviado})
+    return render(request, 'users/contacto.html', {'form': form, 'mensaje_enviado': mensaje_enviado})

@@ -13,6 +13,4 @@ urlpatterns = [
     path('editar_pedido_proceso/<int:id>/', views.editar_pedido_proceso, name='editar_pedido_proceso'),
     path('editar_pedido_completado/<int:id>/', views.editar_pedido_completado, name='editar_pedido_completado'),
     path('editar_pedido_cancelado/<int:id>/', views.editar_pedido_cancelado, name='editar_pedido_cancelado'),
-    path('perfil_empleado/', views.perfil_empleado, name='perfil_empleado'),
-    
 ]
