@@ -13,7 +13,7 @@ body {
   padding: 0;
   overflow: hidden;
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(225deg, #00664B, #  );
+  background: linear-gradient(225deg, #00664B, #CA8D53);
   background-size: 400% 400%;
   animation: AnimationName 8s ease infinite;
 }
