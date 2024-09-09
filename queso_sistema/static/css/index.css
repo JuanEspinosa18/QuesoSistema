@@ -24,7 +24,7 @@ body {
 .header {
   background-image: linear-gradient(rgba(0, 0, 0, 0.6),
       rgba(0, 0, 0, 0.6)),
-    url(../Imagenes/BG1.jpg);
+    url(../images/BG1.jpg);
   background-position: center bottom;
   background-repeat: no-repeat;
   background-size: cover;
@@ -184,7 +184,7 @@ body {
 .services {
   background-image: linear-gradient(rgba(0, 0, 0, 0.7),
       rgba(0, 0, 0, 0.7)),
-    url(../Imagenes/BG2.jpg);
+    url(../images/BG2.jpg);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -244,7 +244,7 @@ body {
 }
 
 .general-2 {
-  background-image: url(../Imagenes/Sabores-unicos.jpeg);
+  background-image: url(../images/Sabores-unicos.jpeg);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -252,7 +252,7 @@ body {
 }
 
 .general-3 {
-  background-image: url(../Imagenes/Materia-Prima.jpeg);
+  background-image: url(../images/Materia-Prima.jpeg);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
