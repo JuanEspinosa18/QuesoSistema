@@ -130,7 +130,6 @@ def perfil_empleado(request):
 
     return render(request, 'users/perfilEmpleado.html', {'form': form})
 
-
 def contacto(request):
     mensaje_enviado = False
     if request.method == 'POST':
@@ -153,3 +152,8 @@ def contacto(request):
         form = ContactForm()
     
     return render(request, 'users/contacto.html', {'form': form, 'mensaje_enviado': mensaje_enviado})
+
+def dash_clientes(request):
+    grupo_clientes = Group.objects.get(name="Clientes")
+    clientes = CustomUser.objects.filter(groups=grupo_clientes)
+    return render(request, 'users/dashClientes.html', {'clientes': clientes})

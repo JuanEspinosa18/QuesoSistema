@@ -112,7 +112,7 @@ def perfil_cliente(request):
     else:
         form = ClienteProfileForm(instance=request.user)
 
-    return render(request, 'cart/perfilCliente.html', {
+    return render(request, 'users/perfilCliente.html', {
         'form': form,
         'user': request.user,
     })

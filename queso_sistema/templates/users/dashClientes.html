@@ -1,0 +1,31 @@
+{% extends 'sales/basedash.html' %}
+{% block style %}
+{% endblock %}
+
+{% block main %}
+    <div class="card mb-4 card-table">
+        <div class="card-header">
+            <h1>Lista de Clientes</h1>
+            <table id="datatablesSimple">
+                <thead>
+                    <tr>
+                        <th>Documento</th>
+                        <th>Correo Electrónico</th>
+                        <th>Nombre Completo</th>
+                        <th>Teléfono</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in clientes %}
+                        <tr>
+                            <td>{{ cliente.documento }}</td>
+                            <td>{{ cliente.email }}</td>
+                            <td>{{ cliente.primer_nombre }} {{ cliente.primer_apellido }}</td>
+                            <td>{{ cliente.telefono }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
