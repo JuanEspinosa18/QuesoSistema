@@ -1,7 +1,6 @@
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect,get_object_or_404
 from sales.models import Pedido, DetallePedido
-from import_export.formats.base_formats import XLSX
 from .resources import PedidoResource 
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
@@ -101,17 +100,18 @@ def editar_pedido_pendiente(request, id):
     pedido = get_object_or_404(Pedido, id=id)
 
     if request.method == 'POST':
-        # Procesar el formulario(actualizar el estado del pedido)
+        # Procesar el formulario (actualizar el estado del pedido)
         nuevo_estado = request.POST.get('nuevo_estado')
-        pedido.estado = nuevo_estado
-        pedido.save()
-        if request.is_ajax():
-            data = {
-                'estado': pedido.get_estado_display(),
-            }
-            return JsonResponse(data)
+        if nuevo_estado:
+            pedido.estado = nuevo_estado
+            pedido.save()
 
-    return render(request, 'sales/DashPendientes.html', {'pedido': pedido})
+            # Redirigir a la misma página o a una página específica después de guardar
+            return redirect('pedidos_pendientes')  # Cambia 'pedidos_pendientes' por el nombre de tu vista o URL
+
+    # Si el formulario no se envía correctamente o el estado no está presente
+    return HttpResponseBadRequest('No se pudo actualizar el pedido')
+
 
 @group_required('Empleados')   
 def pedidos_proceso(request):
