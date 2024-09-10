@@ -38,39 +38,21 @@
             <p class="title">Panel</p>
             <ul>
               <li>
-                <a href="{% url 'perfil_empleado' %}">
+                <a href="{% url 'perfil_cliente' %}">
                   <i class="icon ph ph-user-circle"></i>
                   <span class="text">Mi Cuenta</span>
                 </a>
               </li>
               <li>
-                <a href="{% url 'tabla_clientes' %}">
-                  <i class="icon ph ph-users-three"></i>
-                  <span class="text">Clientes</span>
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'tabla_proveedores' %}">
-                  <i class="icon ph ph-user-list"></i>
-                  <span class="text">Proveedores</span>
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'inventario' %}">
-                  <i class="icon ph ph-package"></i>
-                  <span class="text">Inventario</span>
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'dashboardPedidos' %}">
+                <a href="{% url 'mis_pedidos' %}">
                   <i class="icon ph ph-clipboard"></i>
                   <span class="text">Pedidos</span>
                 </a>
               </li>
               <li>
-                <a href="#">
-                  <i class="icon ph ph-bell"></i>
-                  <span class="text">Alertas</span>
+                <a href="{% url 'catalogo' %}">
+                    <i class="icon ph ph-scroll"></i>
+                  <span class="text">Catalogo</span>
                 </a>
               </li>
             </ul>

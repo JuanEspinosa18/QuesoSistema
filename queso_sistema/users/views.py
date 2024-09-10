@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .models import CustomUser
+from .models import CustomUser, Proveedor
 from django.db import IntegrityError
 from .forms import ContactForm
 from django.core.mail import send_mail
@@ -153,7 +153,13 @@ def contacto(request):
     
     return render(request, 'users/contacto.html', {'form': form, 'mensaje_enviado': mensaje_enviado})
 
-def dash_clientes(request):
+@login_required
+def tabla_clientes(request):
     grupo_clientes = Group.objects.get(name="Clientes")
     clientes = CustomUser.objects.filter(groups=grupo_clientes)
-    return render(request, 'users/dashClientes.html', {'clientes': clientes})
+    return render(request, 'users/tablaClientes.html', {'clientes': clientes})
+
+@login_required
+def tabla_proveedores(request):
+    proveedores = Proveedor.objects.all()  # Obtén todos los registros de proveedores
+    return render(request, 'users/tablaProveedores.html', {'proveedores': proveedores})

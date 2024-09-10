@@ -10,29 +10,33 @@ from sales.models import Pedido, DetallePedido
 from django.contrib import messages
 from .forms import ClienteProfileForm
 
-
+@login_required
 def carrito(request):
     carrito = request.session.get('carrito', {})
     total_carrito = sum(item['acumulado'] for item in carrito.values())
     return render(request, 'cart/carrito.html', {'total_carrito': total_carrito, 'carrito': carrito})
 
+@login_required
 def eliminar_producto(request, producto_id):
     carrito = Carrito(request)
     producto = Producto.objects.get(id=producto_id)
     carrito.eliminar(producto)
     return redirect("carrito")
 
+@login_required
 def restar_producto(request, producto_id):
     carrito = Carrito(request)
     producto = Producto.objects.get(id=producto_id)
     carrito.restar(producto)
     return redirect("carrito")
 
+@login_required
 def limpiar_carrito(request):
     carrito = Carrito(request)
     carrito.limpiar()
     return redirect("carrito")
 
+@login_required
 def agregar_al_carrito(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
     carrito = request.session.get('carrito', {})
@@ -116,6 +120,8 @@ def perfil_cliente(request):
         'form': form,
         'user': request.user,
     })
+
+
 #EJEMPLO ENVIO DE CORREO CLIENTE 
 '''
 def correo_pedido(request):

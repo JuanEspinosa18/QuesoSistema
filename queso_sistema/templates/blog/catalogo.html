@@ -81,7 +81,6 @@
             width: 30%;  /* Ajusta el ancho para 3 tarjetas por fila */
             margin-bottom: 20px;
         }
-
         @media (max-width: 768px) {
             .product-card-wrapper {
                 width: 48%;  /* Para pantallas medianas, 2 tarjetas por fila */
@@ -93,14 +92,30 @@
                 width: 100%;  /* Para pantallas pequeñas, 1 tarjeta por fila */
             }
         }
-
         /* Estilo del encabezado */
-        h1 {
-            text-align: center;
-            font-size: 2.5rem;
-            color: #8B5A2B; 
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Centra el contenido del contenedor */
+            position: relative; /* Necesario para la posición absoluta del icono */
             margin-bottom: 30px;
         }
+    
+        h1 {
+            font-size: 2.5rem;
+            color: #8B5A2B;
+            margin: 10;
+        }
+    
+        .cart-icon {
+            font-size: 50px;
+            color: #1f6f4a;
+            position: absolute;
+            right: 0; /* Coloca el ícono en la esquina derecha */
+            top: 50%;
+            transform: translateY(-50%); /* Centra verticalmente el ícono respecto al contenedor */
+        }
+    
         .alert {
             background-color: #f8d7da;
             color: #721c24;
@@ -127,7 +142,10 @@
 </style>
 
 <div class="container my-5">
-    <h1>Catálogo de Productos</h1>  <!-- Encabezado agregado -->
+    <div class="header-container">
+        <a href="{% url 'carrito' %}" class="cart-icon"><i class="ph ph-shopping-cart"></i></a>
+        <h1>Catálogo de Productos</h1>
+    </div>
     <div class="card-container">
         {% for producto in productos %}
     <div class="product-card-wrapper">
