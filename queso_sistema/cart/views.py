@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from cart.Carrito import Carrito
@@ -73,17 +73,25 @@ def procesar_pedido(request):
             )
 
             # Crear los detalles del pedido
+            detalles = []
             for key, item in carrito.items():
                 producto = Producto.objects.get(id=item['producto_id'])
-                DetallePedido.objects.create(
+                detalle = DetallePedido.objects.create(
                     pedido=pedido,
                     producto=producto,
                     cantidad=item['cantidad'],
                     precio=producto.precio  # Se fija el precio al momento de realizar el pedido
                 )
+                detalles.append(detalle)
 
             # Limpiar el carrito después de crear el pedido
             request.session['carrito'] = {}
+
+        # Intentar enviar el correo
+        try:
+            enviar_correo_pedido_admin(pedido, detalles)
+        except Exception as email_error:
+            messages.warning(request, f'Pedido creado, pero hubo un problema al enviar el correo: {email_error}')
 
         # Agregar mensaje de éxito
         messages.success(request, '¡Pedido creado con éxito!')
@@ -93,13 +101,49 @@ def procesar_pedido(request):
 
     except Exception as e:
         # Manejar errores si ocurre algún problema durante la transacción
-        messages.error(request, 'Hubo un problema al procesar tu pedido.')
+        messages.error(request, f'Hubo un problema al procesar tu pedido: {e}')
         return redirect('carrito')
 
+def enviar_correo_pedido_admin(pedido, detalles):
+    """
+    Función para enviar un correo al administrador con los detalles del pedido.
+    """
+    subject = f'Nuevo Pedido #{pedido.id} - Cliente: {pedido.cliente.email}'
+    message = f"Detalles del Pedido #{pedido.id}\n\n"
+    
+    for detalle in detalles:
+        message += f"Producto: {detalle.producto.nombre}\n"
+        message += f"Cantidad: {detalle.cantidad}\n"
+        message += f"Precio Unitario: ${detalle.precio}\n"
+        message += "----------------------\n"
+
+    message += f"Subtotal: ${pedido.subtotal}\n"
+    message += f"Cliente: {pedido.cliente.primer_nombre} ({pedido.cliente.email})\n"
+    message += f"Fecha del pedido: {pedido.fecha_pedido}\n"
+
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = ['jadu.jair@gmail.com']  # Cambia a la dirección del administrador
+
+    # Enviar el correo
+    send_mail(subject, message, email_from, recipient_list)
+    
 @login_required
 def mis_pedidos(request):
     pedidos = Pedido.objects.filter(cliente=request.user).order_by('-fecha_pedido')
     return render(request, 'cart/pedidosCliente.html', {'pedidos': pedidos})
+
+@login_required
+def cancelar_pedido(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id, cliente=request.user)
+
+    if pedido.estado == 'pendiente':  # Solo permitir cancelar si el pedido está pendiente
+        pedido.estado = 'cancelado'
+        pedido.save()
+        messages.success(request, f'El pedido #{pedido.id} ha sido cancelado.')
+    else:
+        messages.error(request, 'No puedes cancelar este pedido.')
+
+    return redirect('mis_pedidos')  
 
 @login_required
 def perfil_cliente(request):

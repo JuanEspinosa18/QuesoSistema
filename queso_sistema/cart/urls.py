@@ -1,7 +1,7 @@
 
 from django.urls import path
 
-from cart.views import carrito, eliminar_producto, restar_producto, limpiar_carrito, agregar_al_carrito, procesar_pedido, mis_pedidos, perfil_cliente
+from cart.views import carrito, eliminar_producto, restar_producto, limpiar_carrito, agregar_al_carrito, procesar_pedido, mis_pedidos, cancelar_pedido, perfil_cliente, enviar_correo_pedido_admin
 
 urlpatterns = [
     path('carrito/', carrito, name="carrito"),
@@ -10,7 +10,9 @@ urlpatterns = [
     path('restar/<int:producto_id>/', restar_producto, name="Sub"),
     path('limpiar/', limpiar_carrito, name="CLS"),
     path('procesar_pedido/', procesar_pedido, name='procesar_pedido'),
+    path('enviar_correo_pedido_admin/', enviar_correo_pedido_admin, name='enviar_correo_pedido_admin'),
     path('mis_pedidos/', mis_pedidos, name='mis_pedidos'),
+    path('cancelar-pedido/<int:pedido_id>/', cancelar_pedido, name='cancelar_pedido'),
     path('perfil_cliente/', perfil_cliente, name='perfil_cliente'),
 ]
 

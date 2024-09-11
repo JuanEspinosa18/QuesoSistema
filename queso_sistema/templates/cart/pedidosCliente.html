@@ -41,6 +41,14 @@
                                 </tr>
                             </tfoot>
                         </table>
+
+                        <!-- Mostrar botón de cancelar si el pedido está pendiente -->
+                        {% if pedido.estado == 'pendiente' %}
+                            <form method="post" action="{% url 'cancelar_pedido' pedido.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger mt-3">Cancelar Pedido</button>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>

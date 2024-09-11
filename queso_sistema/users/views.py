@@ -163,3 +163,5 @@ def tabla_clientes(request):
 def tabla_proveedores(request):
     proveedores = Proveedor.objects.all()  # Obtén todos los registros de proveedores
     return render(request, 'users/tablaProveedores.html', {'proveedores': proveedores})
+
+
