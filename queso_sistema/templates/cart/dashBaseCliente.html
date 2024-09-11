@@ -26,7 +26,11 @@
         </div>
         <div class="head">
           <div class="user-img">
-            <img src="{{ user.imagen.url }}" alt="Imagen de usuario" />
+            {% if form.imagen.value %}
+              <img src="{{ form.imagen.value.url }}" class="rounded-circle" alt="Imagen de perfil" width="180" height="180">
+            {% else %}
+              <img src="{% static 'images/default_profile.png' %}" class="rounded-circle" alt="Imagen de perfil por defecto" width="180" height="180">
+          {% endif %}
           </div>
           <div class="user-details">
             <p class="title">{{ user.groups.first.name }}</p>
