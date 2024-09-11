@@ -104,7 +104,6 @@ def procesar_pedido(request):
         messages.error(request, f'Hubo un problema al procesar tu pedido: {e}')
         return redirect('carrito')
 
-@login_required
 def enviar_correo_pedido_admin(pedido, detalles):
     """
     Función para enviar un correo al administrador con los detalles del pedido.
