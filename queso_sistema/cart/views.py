@@ -104,6 +104,7 @@ def procesar_pedido(request):
         messages.error(request, f'Hubo un problema al procesar tu pedido: {e}')
         return redirect('carrito')
 
+@login_required
 def enviar_correo_pedido_admin(pedido, detalles):
     """
     Función para enviar un correo al administrador con los detalles del pedido.
@@ -164,17 +165,3 @@ def perfil_cliente(request):
         'form': form,
         'user': request.user,
     })
-
-
-#EJEMPLO ENVIO DE CORREO CLIENTE 
-'''
-def correo_pedido(request):
-    if request.method == 'POST':
-        subject = request.post['nombre']
-        message = request.post['cantidad'] + " "+ request.post ['total_carrito']+ " "+request.post ['email']
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = ['jadu.jair@gmail.com']
-        send_mail(subject,message,email_from,recipient_list)
-        return render(request, 'gracias.html')
-    return render(request, 'carrito.html')
-    '''
