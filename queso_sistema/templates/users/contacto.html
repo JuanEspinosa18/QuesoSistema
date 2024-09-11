@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -99,29 +100,31 @@
     </style>
 
 </head>
+
 <body>
-    
-        <nav>
-            <div class="logo">
-              <a href="{% static 'index.html' %}"><img src="{% static 'images/Logo.png' %}" alt="Logo de la empresa"></a>
-            </div>
-            <ul>
-              <li class="nav-item {%if request.path == '/' %}active {% endif %} px-lg-4"><a href="{% url 'index' %}">Inicio</a></li>
-              <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
-              <li><a href="{% url 'catalogo' %}">Productos</a></li>
-              <li><a href="{% url 'blog_informativo' %}">Blog</a></li>
-              <li><a href="{% url 'contacto' %}">Contacto</a></li>
-                {% if user.is_authenticated %}
-                  <li class="nav-item">
-                      <a class="nav-link" href="{% url 'logout' %}">Salir</a>
-                  </li>
-                {% else %}
-                  <li class="nav-item">
-                      <a class="nav-link" href="{% url 'login' %}">Ingresar</a>
-                  </li>
-                {% endif %}
-            </ul>
-          </nav>
+
+    <nav>
+        <div class="logo">
+            <a href="{% static 'index.html' %}"><img src="{% static 'images/Logo.png' %}" alt="Logo de la empresa"></a>
+        </div>
+        <ul>
+            <li class="nav-item {%if request.path == '/' %}active {% endif %} px-lg-4"><a
+                    href="{% url 'index' %}">Inicio</a></li>
+            <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
+            <li><a href="{% url 'catalogo' %}">Productos</a></li>
+            <li><a href="{% url 'blog_informativo' %}">Blog</a></li>
+            <li><a href="{% url 'contacto' %}">Contacto</a></li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Salir</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Ingresar</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
 
     <div class="contact-container">
         <h1> 🧀 Formulario de Contacto</h1>
@@ -144,7 +147,7 @@
         {% if mensaje_enviado %}
         <p class="success-message">Mensaje enviado con éxito. Nos pondremos en contacto contigo pronto.</p>
         {% endif %}
-    </div>  
+    </div>
 
     <footer class="footer">
         <div class="footer-content container">
@@ -175,7 +178,8 @@
                 <ul>
                     <li><a href="#"><img src="{% static 'images/Icon-Face.svg' %}" alt="facebook" width="30px"></a></li>
                     <li><a href="#"><img src="{% static 'images/Icon-Twitt.svg' %}" alt="twitter" width="30px"></a></li>
-                    <li><a href="#"><img src="{% static 'images/Icon-Inst.svg' %}" alt="instagram" width="30px"></a></li>
+                    <li><a href="#"><img src="{% static 'images/Icon-Inst.svg' %}" alt="instagram" width="30px"></a>
+                    </li>
                 </ul>
                 <h3>ENVÍOS</h3>
                 <ul>
@@ -193,6 +197,7 @@
                 </ul>
             </div>
         </div>
-    </footer>  
+    </footer>
 </body>
+
 </html>
