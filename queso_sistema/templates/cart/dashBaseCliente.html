@@ -27,10 +27,10 @@
         <div class="head">
           <div class="user-img">
             {% if form.imagen.value %}
-              <img src="{{ form.imagen.value.url }}" class="rounded-circle" alt="Imagen de perfil" width="180" height="180">
+              <img src="{{ form.imagen.value.url }}" alt="Imagen de perfil" />
             {% else %}
-              <img src="{% static 'images/default_profile.png' %}" class="rounded-circle" alt="Imagen de perfil por defecto" width="180" height="180">
-          {% endif %}
+              <img src="{% static 'images/default_profile.jpg' %}" alt="Imagen de perfil por defecto" />
+            {% endif %}
           </div>
           <div class="user-details">
             <p class="title">{{ user.groups.first.name }}</p>
@@ -49,19 +49,19 @@
               </li>
               <li>
                 <a href="{% url 'mis_pedidos' %}">
-                  <i class="icon ph ph-clipboard"></i>
+                  <i class="icon ph ph-scroll"></i>
                   <span class="text">Pedidos</span>
                 </a>
               </li>
               <li>
                 <a href="{% url 'catalogo' %}">
-                    <i class="icon ph ph-scroll"></i>
+                  <i class="icon ph ph-cheese"></i>
                   <span class="text">Catalogo</span>
                 </a>
               </li>
               <li>
                 <a href="{% url 'carrito' %}">
-                    <i class="icon ph ph-shopping-cart"></i>
+                  <i class="icon ph ph-shopping-cart"></i>
                   <span class="text">Carrito</span>
                 </a>
               </li>

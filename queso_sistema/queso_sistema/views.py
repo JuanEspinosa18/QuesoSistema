@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseServerError
 
-    #INDEX VIEWS
+#Vista Index
 def index(request):
     return render(request, 'core/index.html', {
     })

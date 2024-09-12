@@ -29,22 +29,51 @@ def group_required(*group_names):
         return _wrapped_view
     return decorator
 
+# core/context_processors.py
+
+def user_role_context(request):
+    is_empleado = False
+    is_cliente = False
+
+    if request.user.is_authenticated:
+        is_empleado = request.user.groups.filter(name='Empleados').exists()
+        is_cliente = request.user.groups.filter(name='Clientes').exists()
+
+    return {
+        'is_empleado': is_empleado,
+        'is_cliente': is_cliente,
+    }
+
+
 def login_view(request):
+    # Verifica si el usuario ya está autenticado
+    if request.user.is_authenticated:
+        # Redirige en función del rol del usuario
+        if request.user.is_superuser:
+            return redirect('admin:index')
+        elif request.user.groups.filter(name='Empleados').exists():
+            return redirect('dashboardPedidos')
+        elif request.user.groups.filter(name='Clientes').exists():
+            return redirect('carrito')
+
     if request.method == 'POST':
         email = request.POST.get('email')  # Cambiar 'username' a 'email' para autenticación
         password = request.POST.get('password')
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
+            # Redirige después de iniciar sesión
             if user.is_superuser:
-                return redirect('admin:index')  # Redirige al panel de administrador si es superusuario
+                return redirect('admin:index')
             elif user.groups.filter(name='Empleados').exists():
-                return redirect('dashboardPedidos')  # Redirige al dashboard de ventas si es empleado
+                return redirect('dashboardPedidos')
             elif user.groups.filter(name='Clientes').exists():
-                return redirect('carrito')  # Redirige al carrito si es cliente
+                return redirect('carrito')
         else:
             messages.error(request, 'Correo o contraseña incorrectos')
+    
     return render(request, 'users/login.html')
+
 
 def logout_view(request):
     logout(request)

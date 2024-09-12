@@ -122,7 +122,7 @@ def enviar_correo_pedido_admin(pedido, detalles):
     message += f"Fecha del pedido: {pedido.fecha_pedido}\n"
 
     email_from = settings.EMAIL_HOST_USER
-    recipient_list = ['jadu.jair@gmail.com']  # Cambia a la dirección del administrador
+    recipient_list = ['soporte.quesosistema@gmail.com']  # Cambia a la dirección del administrador
 
     # Enviar el correo
     send_mail(subject, message, email_from, recipient_list)

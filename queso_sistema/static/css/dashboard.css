@@ -165,8 +165,8 @@ body {
   transform: translateY(-50%);
   padding: 10px;
   border-radius: 4px;
-  color: #00563F;
-  background-color: #FFFDEF;
+  color: #FFFDEF;
+  background-color: #0d8265;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s;
@@ -179,7 +179,7 @@ body {
   width: 20px;
   height: 20px;
   border-radius: 2px;
-  background-color: #FFFDEF;
+  background-color: #0d8265;
   transform: rotate(45deg);
   z-index: -1;
 }

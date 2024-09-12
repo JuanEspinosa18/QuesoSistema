@@ -33,23 +33,6 @@ body {
   align-items: center;
 }
 
-.menu {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.logo img {
-  width: 20%;
-  margin-top: 20px;
-  /* Ajusta y hacia arriba hacia abajo */
-  animation: moveDown 2s ease infinite alternate;
-}
-
 @keyframes moveDown {
   from {
     transform: translateY(0);
@@ -61,17 +44,53 @@ body {
   }
 }
 
+.menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center; /* Centra verticalmente todos los elementos */
+  justify-content: space-between;
+}
+
+.logo img {
+  width: 20%;
+  margin-top: 20px;
+  animation: moveDown 2s ease infinite alternate;
+}
+
+.menu .navbar ul {
+  list-style: none;
+  display: flex; /* Hace que los elementos del navbar estén en línea */
+  align-items: center; /* Alinea verticalmente todos los items del navbar */
+  padding: 0;
+  margin: 0;
+}
+
 .menu .navbar ul li {
-  position: relative;
-  float: left;
+  margin-right: 15px; /* Añade espacio entre los elementos */
 }
 
 .menu .navbar ul li a {
   font-size: 18px;
-  padding: 20px;
   color: #fffada;
-  display: flex;
   font-weight: 600;
+  display: inline-block; /* Evita el comportamiento de flex aquí */
+  padding: 10px 15px; /* Controla el espacio dentro de los enlaces */
+}
+
+.menu .navbar ul li a img {
+  width: 40px; /* Tamaño más pequeño para mejor alineación */
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #FFF9D9; /* Define el grosor, estilo y color del borde */
+  object-fit: cover; /* Ajusta la imagen dentro del contenedor */
+  margin: 0; /* Asegura que la imagen no tenga margen adicional */
+}
+
+.nav-item {
+  align-items: center; /* Alinea el texto y la imagen de manera uniforme */
 }
 
 .menu .navbar ul li a:hover {
@@ -83,12 +102,8 @@ body {
   stroke: #0D8265;
 }
 
-#menu {
-  display: none;
-}
-
 .menu-icono {
-  width: 50px;
+  width: 40px;
 }
 
 .menu label {

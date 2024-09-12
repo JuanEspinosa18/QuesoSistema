@@ -75,6 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'users.views.user_role_context',
             ],
         },
     },
@@ -145,9 +146,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'jadu.jair@gmail.com'
-EMAIL_HOST_PASSWORD = 'thon djht juch kxue'
-DEFAULT_FROM_EMAIL = 'Soporte QuesoSistema <jadu.jair@gmail.com>'
+EMAIL_HOST_USER = 'soporte.quesosistema@gmail.com'
+EMAIL_HOST_PASSWORD = 'cngw vqbc viro hcxm'
+DEFAULT_FROM_EMAIL = 'Soporte QuesoSistema <soporte.quesosistema@gmail.com>'
 
 LOGOUT_REDIRECT_URL = '/user/logout/' 
 
