@@ -8,6 +8,8 @@
     <link rel="icon" href="{% static 'images/Icono.png' %}" />
     <link rel="stylesheet" href="{% static 'css/index.css' %}" />
     <link src="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
   </head>
 
   <style>
@@ -18,7 +20,7 @@
   </style>
   <body>
     <header class="header">
-      <div class="menu container">
+      <div id="menu" class="menu container">
         <a href="#" class="logo"><img src="{% static 'images/Logo.png' %}" alt="icono" /></a>
         <label for="menu"><img src="{% static 'images/Menu.png' %}" class="menu-icono" alt="" /></label>
 
@@ -104,25 +106,29 @@
     </section>
 
     <main class="services">
-      <div class="services-content container">
-        <h2>Instalaciones</h2>
-        <div class="services-group">
-          <div class="services-1">
-            <img src="images/i1.svg" alt="" />
-            <h3>Sala de pasteurización</h3>
+      <div class="container services-content">
+        <h2 class="text-center">Instalaciones</h2> <!-- Centrando el título -->
+        <div class="row">
+          <div class="col-4">
+            <div class="services-1">
+              <h3>Sala de pasteurización</h3>
+            </div>
           </div>
-          <div class="services-1">
-            <img src="images/i2.svg" alt="" />
-            <h3>Sala de moldeado y prensado</h3>
+          <div class="col-4">
+            <div class="services-1">
+              <h3>Sala de moldeado y prensado</h3>
+            </div>
           </div>
-          <div class="services-1">
-            <img src="images/i3.svg" alt="" />
-            <h3>Área de empaque y etiquetado</h3>
+          <div class="col-4">
+            <div class="services-1">
+              <h3>Área de empaque y etiquetado</h3>
+            </div>
           </div>
         </div>
-        <p>Estas áreas son esenciales en una fábrica de quesos, y su correcto funcionamiento y control son fundamentales para garantizar la producción de quesos de alta calidad y seguridad alimentaria.</p>
+        <p class="text-center mt-4">Estas áreas son esenciales en una fábrica de quesos, y su correcto funcionamiento y control son fundamentales para garantizar la producción de quesos de alta calidad y seguridad alimentaria.</p>
       </div>
     </main>
+    
 
     <section id="general-nosotros" class="general">
       <div class="general-1">

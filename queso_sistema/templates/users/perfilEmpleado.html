@@ -1,4 +1,5 @@
 {% extends 'sales/basedash.html' %}
+{% load static %}
 {% block style %}
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
@@ -46,7 +47,6 @@
     }
   </style>
 {% endblock %}
-{% load static %}
 {% block main %}
   <div class="container mt-5">
     <div class="card">
@@ -103,4 +103,24 @@
       {% endfor %}
     </div>
   {% endif %}
+
+  {% block extra_js %}
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'success' %}
+            Swal.fire({
+              icon: 'success',
+              title: 'Perfil actualizado',
+              text: '{{ message }}',
+              confirmButtonText: 'OK'
+            });
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    });
+  </script>
+  {% endblock %}
 {% endblock %}

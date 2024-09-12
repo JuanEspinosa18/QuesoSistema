@@ -9,22 +9,16 @@
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif !important;
 }
 
 .container {
   max-width: 1920px;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-left: 30px;
-  margin-right: 30px; 
-  
+  margin: 0 30px; 
 }
 
 .header {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.6),
-      rgba(0, 0, 0, 0.6)),
-    url(../images/BG1.jpg);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(../images/BG1.jpg);
   background-position: center bottom;
   background-repeat: no-repeat;
   background-size: cover;
@@ -37,10 +31,8 @@ body {
   from {
     transform: translateY(0);
   }
-
   to {
     transform: translateY(10px);
-    /* aqui temina el movimiento del logo */
   }
 }
 
@@ -50,9 +42,10 @@ body {
   left: 0;
   right: 0;
   display: flex;
-  align-items: center; /* Centra verticalmente todos los elementos */
+  align-items: center;
   justify-content: space-between;
 }
+
 
 .logo img {
   width: 20%;
@@ -62,35 +55,35 @@ body {
 
 .menu .navbar ul {
   list-style: none;
-  display: flex; /* Hace que los elementos del navbar estén en línea */
-  align-items: center; /* Alinea verticalmente todos los items del navbar */
+  display: flex;
+  align-items: center;
   padding: 0;
   margin: 0;
 }
 
 .menu .navbar ul li {
-  margin-right: 15px; /* Añade espacio entre los elementos */
+  margin-right: 15px;
 }
 
 .menu .navbar ul li a {
   font-size: 18px;
   color: #fffada;
   font-weight: 600;
-  display: inline-block; /* Evita el comportamiento de flex aquí */
-  padding: 10px 15px; /* Controla el espacio dentro de los enlaces */
+  display: inline-block;
+  padding: 10px 15px;
 }
 
 .menu .navbar ul li a img {
-  width: 40px; /* Tamaño más pequeño para mejor alineación */
+  width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 3px solid #FFF9D9; /* Define el grosor, estilo y color del borde */
-  object-fit: cover; /* Ajusta la imagen dentro del contenedor */
-  margin: 0; /* Asegura que la imagen no tenga margen adicional */
+  border: 3px solid #FFF9D9;
+  object-fit: cover;
+  margin: 0;
 }
 
 .nav-item {
-  align-items: center; /* Alinea el texto y la imagen de manera uniforme */
+  align-items: center;
 }
 
 .menu .navbar ul li a:hover {
@@ -154,7 +147,7 @@ body {
 }
 
 .quesos-content h2 {
-  font: 55px;
+  font-size: 55px;
   line-height: 70px;
   color: #8B5A2B;
   text-transform: uppercase;
@@ -197,9 +190,7 @@ body {
 }
 
 .services {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.7),
-      rgba(0, 0, 0, 0.7)),
-    url(../images/BG2.jpg);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(../images/BG2.jpg);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -233,7 +224,7 @@ body {
 }
 
 .services-1 {
-  padding: 0 100px;
+  padding: 0 25px;
 }
 
 .services-1 img {
@@ -244,8 +235,7 @@ body {
 .services-1 h3 {
   color: #27a082;
   font-size: 18px;
-  padding-left: 100px;
-  padding-right: 100px;
+  margin-bottom: 15px;
 }
 
 .general {
@@ -339,7 +329,7 @@ p {
   margin-bottom: 15px;
 }
 
-@media(max-width:1109px) {
+@media (max-width: 1109px) {
   .menu {
     padding: 30px;
   }
@@ -355,18 +345,20 @@ p {
     right: 0;
     background-color: #00563F;
     display: none;
+    padding: 0px 40px;
   }
 
   .menu .navbar ul li {
     width: 100%;
   }
 
-  #menu:checked~.navbar {
+  #menu:checked ~ .navbar {
     display: initial;
   }
 
   .header {
     min-height: 0vh;
+    padding: 0px 40px;
   }
 
   .header-content {
@@ -397,24 +389,7 @@ p {
   .quesos-img {
     display: none;
   }
-
-  .services {
-    padding: 30px;
-  }
-
-  .services-content p {
-    padding: 0;
-  }
-
-  .services-group {
-    flex-direction: column;
-    margin-bottom: 0;
-  }
-
-  .services-1 {
-    margin-bottom: 25px;
-  }
-
+  
   .general {
     flex-direction: column;
   }
@@ -450,4 +425,17 @@ p {
     flex-direction: column;
     text-align: center;
   }
+
+  .services-content p {
+    padding: 0 15px; 
+    margin: 0; 
+  }
+
+  .logo img {
+    width: 12%;
+    margin-top: -20px;
+    animation: moveDown 2s ease infinite alternate;
+  }
+
+
 }

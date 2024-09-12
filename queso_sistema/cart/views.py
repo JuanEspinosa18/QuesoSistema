@@ -62,10 +62,15 @@ def procesar_pedido(request):
     carrito = request.session.get('carrito', {})
 
     if not carrito:
-        return render(request, 'cart/carrito.html', {'error': 'No hay productos en el carrito'})
+        return render(request, 'cart/carrito.html', {
+            'error': 'No hay productos en el carrito',
+            'show_alert': True,
+            'alert_type': 'warning',
+            'alert_message': 'No hay productos en el carrito'
+        })
 
     try:
-        with transaction.atomic():  # Garantiza que todo se realice en una sola transacción
+        with transaction.atomic():
             # Crear el pedido
             pedido = Pedido.objects.create(
                 cliente=request.user,
@@ -80,7 +85,7 @@ def procesar_pedido(request):
                     pedido=pedido,
                     producto=producto,
                     cantidad=item['cantidad'],
-                    precio=producto.precio  # Se fija el precio al momento de realizar el pedido
+                    precio=producto.precio
                 )
                 detalles.append(detalle)
 
@@ -90,19 +95,28 @@ def procesar_pedido(request):
         # Intentar enviar el correo
         try:
             enviar_correo_pedido_admin(pedido, detalles)
+            messages.success(request, '¡Pedido creado con éxito!')
+            return render(request, 'cart/carrito.html', {
+                'show_alert': True,
+                'alert_type': 'success',
+                'alert_message': '¡Pedido creado con éxito!'
+            })
         except Exception as email_error:
             messages.warning(request, f'Pedido creado, pero hubo un problema al enviar el correo: {email_error}')
-
-        # Agregar mensaje de éxito
-        messages.success(request, '¡Pedido creado con éxito!')
-
-        # Redirigir al carrito
-        return redirect('carrito')
+            return render(request, 'cart/carrito.html', {
+                'show_alert': True,
+                'alert_type': 'warning',
+                'alert_message': f'Pedido creado, pero hubo un problema al enviar el correo: {email_error}'
+            })
 
     except Exception as e:
-        # Manejar errores si ocurre algún problema durante la transacción
         messages.error(request, f'Hubo un problema al procesar tu pedido: {e}')
-        return redirect('carrito')
+        return render(request, 'cart/carrito.html', {
+            'show_alert': True,
+            'alert_type': 'error',
+            'alert_message': f'Hubo un problema al procesar tu pedido: {e}'
+        })
+
 
 def enviar_correo_pedido_admin(pedido, detalles):
     """
