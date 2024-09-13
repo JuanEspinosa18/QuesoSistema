@@ -38,10 +38,7 @@ class LoteProducto(models.Model):
     cantidad_producto = models.IntegerField(verbose_name='Cantidad producida')
     fecha_produccion = models.DateField(verbose_name='Fecha de producción')
     fecha_vencimiento = models.DateField(verbose_name='Fecha de vencimiento')
-
-    from django.core.exceptions import ValidationError
-from django.db import models
-
+    
 class LoteProducto(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad_producto = models.IntegerField(verbose_name='Cantidad producida')
