@@ -45,7 +45,7 @@
       </div>
       <div class="card card-custom">
         <div class="table-responsive">
-          <table id="datatablesSimple">
+          <table id="datatablesSimple" class="table table-hover">
             <thead>
               <tr>
                 <th style="width: 8%;">
@@ -69,16 +69,15 @@
                   <td>{{ pedido.subtotal }}</td>
                   <td>{{ pedido.get_estado_display }}</td>
                   <td>
-                    <div class="btn-group" role="group" style="width: 30%;">
-                      <button class="btn btn-warning btn-sm w-50" data-bs-toggle="modal" data-bs-target="#editarModal" data-id="{{ pedido.id }}" data-estado="{{ pedido.estado }}">
-                        <i class="ph ph-pencil-line" style="font-size: 25px;" data-bs-toggle="tooltip" title="Editar"></i>
-                      </button>
-                      <a class="nav-link w-50 p-0" href="{% url 'consultar_pedido' pedido.id %}">
-                        <button class="btn btn-primary btn-sm w-100" data-bs-toggle="tooltip" title="Ver">
-                          <i class="ph ph-eye" style="font-size: 25px;" data-bs-toggle="tooltip" title="Ver"></i>
-                        </button>
-                      </a>
-                    </div>
+                    <!-- Enlace para editar el pedido -->
+                    <a href="#" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editarModal" data-id="{{ pedido.id }}" data-estado="{{ pedido.estado }}" data-bs-placement="top" title="Editar">
+                        <i class="ph-bold ph-pencil"></i>
+                    </a>
+                
+                    <!-- Enlace para ver el pedido -->
+                    <a href="{% url 'consultar_pedido' pedido.id %}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver">
+                        <i class="ph-bold ph-eye"></i>
+                    </a>
                   </td>
                 </tr>
               {% endfor %}
