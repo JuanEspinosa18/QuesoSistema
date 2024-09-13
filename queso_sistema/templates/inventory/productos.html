@@ -1,0 +1,154 @@
+{% extends 'sales/basedash.html' %}
+{% block main %}
+  <div class="content px-5">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active {% if active_tab == 'productos' %}active{% endif %}" aria-current="page" href="{% url 'productos' %}">Productos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'materia_prima' %}active{% endif %}" href="{% url 'materia_prima' %}">Materia Prima</a>
+      </li>
+    </ul>
+    <!-- Mensajes de retroalimentacion -->
+    {% if messages %}
+      <div>
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <!-- Tabla Productos -->
+    <div class="card mb-4 card-table mt-4">
+      <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <i class="ph-bold ph-squares-four"></i>
+            Productos
+          </div>
+          <div>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#">Agregar Producto</button>
+          </div>
+        </div>
+      </div>
+      <div class="card card-custom">
+        <div class="table-responsive">
+          <table id="datatablesSimple" class="table table-hover">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for producto in productos %}
+                <tr>
+                  <td>{{ producto.nombre }}</td>
+                  <td>{{ producto.stock }}</td>
+                  <td>$ {{ producto.precio }}</td>
+                  <td>
+                    <!-- Botón para editar el producto -->
+                    <a href="#" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="ph-bold ph-pencil"></i></a>
+
+                    <!-- Botón para eliminar el producto -->
+                    <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="ph-bold ph-trash"></i></a>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4">No hay lotes de producto disponibles.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- Tabla LoteProducto -->
+    <div class="card mb-4 card-table mt-4">
+      <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <i class="ph-bold ph-squares-four"></i>
+            Lotes de Producto
+          </div>
+          <div>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#agregarLPModal">Agregar Lote</button>
+          </div>
+        </div>
+      </div>
+      <div class="card card-custom">
+        <div class="table-responsive">
+          <table id="datatablesSimple" class="table table-hover">
+            <thead>
+              <tr>
+                <th>Nombre del Producto</th>
+                <th>Cantidad</th>
+                <th>Fecha de Producción</th>
+                <th>Fecha de Vencimiento</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for lote in lotes_producto %}
+                <tr>
+                  <td>{{ lote.producto.nombre }}</td>
+                  <td>{{ lote.cantidad_producto }}</td>
+                  <td>{{ lote.fecha_produccion }}</td>
+                  <td>{{ lote.fecha_vencimiento }}</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4">No hay lotes de producto disponibles.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block modal %}
+  <!-- Modal para agregar lote -->
+  <div class="modal fade" id="agregarLPModal" tabindex="-1" aria-labelledby="agregarLPModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="agregarLPModalLabel">Agregar Nuevo Lote de Producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="{% url 'agregar_lote_producto' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="producto" class="form-label">Producto</label>
+              <select id="producto" name="producto" class="form-select" required>
+                {% for producto in productos %}
+                  <option value="{{ producto.id }}">{{ producto.nombre }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="cantidad_producto" class="form-label">Cantidad</label>
+              <input type="number" class="form-control" id="cantidad_producto" name="cantidad_producto" required />
+            </div>
+            <div class="mb-3">
+              <label for="fecha_produccion" class="form-label">Fecha de Producción</label>
+              <input type="date" class="form-control" id="fecha_produccion" name="fecha_produccion" required />
+            </div>
+            <div class="mb-3">
+              <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento</label>
+              <input type="date" class="form-control" id="fecha_vencimiento" name="fecha_vencimiento" required />
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-success">Agregar Lote</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

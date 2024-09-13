@@ -1,159 +1,40 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Producto, MateriaPrima
-from django.contrib import messages
+from .models import Producto, MateriaPrima, LoteProducto, MateriaPrimaLote
 from django.http import JsonResponse
 from users.views import group_required
+from django.contrib import messages
+from .forms import LoteProductoForm
 
 @group_required('Empleados')
-def DashInventario(request):
+def productos(request):
     productos = Producto.objects.all()
-    return render(request, 'inventory/DashInventario.html', {'productos': productos})
+    lotes_producto = LoteProducto.objects.all()
+    
+    return render(request, 'inventory/productos.html', {'productos': productos,'lotes_producto': lotes_producto,})
 
 @group_required('Empleados')
-def agregar_producto(request):
+def agregar_lote_producto(request):
     if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        descripcion = request.POST.get('descripcion')
-        valor = request.POST.get('valor')
-        fecha_vencimiento = request.POST.get('fecha_vencimiento')
-        cantidad_existente = request.POST.get('cantidad_existente')
-        imagen = request.FILES.get('imagen')
-        
-        errors = {}
-        if not nombre:
-            errors['nombre'] = 'El nombre es requerido.'
-        if not descripcion:
-            errors['descripcion'] = 'La descripción es requerida.'
-        if not valor or float(valor) <= 0:
-            errors['valor'] = 'El valor debe ser mayor que cero.'
-        if not fecha_vencimiento:
-            errors['fecha_vencimiento'] = 'La fecha de vencimiento es requerida.'
-        if not cantidad_existente or int(cantidad_existente) <= 0:
-            errors['cantidad_existente'] = 'La cantidad existente debe ser mayor que cero.'
-        if not imagen:
-            errors['imagen'] = 'Debe seleccionar una imagen.'
-        
-        if errors:
-            return JsonResponse({'success': False, 'errors': errors})
+        form = LoteProductoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "El lote de producto se ha agregado exitosamente.")
+            return redirect('productos')
         else:
-            # Guardar el producto
-            producto_nuevo = Producto(
-                nombre=nombre, 
-                descripcion=descripcion, 
-                valor=valor, 
-                fecha_vencimiento=fecha_vencimiento, 
-                cantidad_existente=cantidad_existente,
-                imagen=imagen
-            )
-            producto_nuevo.save()
-            return JsonResponse({'success': True})
-    
-    productos = Producto.objects.all()
-    return render(request, 'inventory/DashInventario.html', {'productos': productos})
-
-@group_required('Empleados')
-def eliminar_producto(request, id):  
-    eliminar_producto = get_object_or_404(Producto, id=id)  
-    if request.method == 'POST':
-        eliminar_producto.delete()  
-        return redirect('inventario')  
-    else:
-        return render(request, 'deletes_edit/deleteProducto.html', {'producto': eliminar_producto})
-    
-@group_required('Empleados')
-def editar_producto(request, id):
-    factura_producto = get_object_or_404(Producto, id=id)
-    
-    if request.method == 'POST':
-        # Procesa el formulario enviado para editar el producto
-        nombre = request.POST.get('nombre')
-        descripcion = request.POST.get('descripcion')
-        valor = request.POST.get('valor')
-        fecha_vencimiento = request.POST.get('fecha_vencimiento')
-        cantidad_existente = request.POST.get('cantidad_existente')
-        imagen = request.FILES.get('imagen')
-        
-        # Actualiza los datos del producto con los valores enviados en el formulario
-        factura_producto.nombre = nombre
-        factura_producto.descripcion = descripcion
-        factura_producto.valor = valor
-        factura_producto.fecha_vencimiento = fecha_vencimiento
-        factura_producto.cantidad_existente = cantidad_existente
-        
-        if imagen:
-            factura_producto.imagen = imagen
-        
-        factura_producto.save()
-        
-        # Redirige después de editar
-        return redirect('inventario')
-    
-    return render(request, 'inventory/deletes_edit/editarProducto.html', {'Producto': factura_producto})
+            messages.error(request, "Hubo un error al agregar el lote de producto. Por favor, revisa los datos.")
+            productos = Producto.objects.all()
+            lotes_producto = LoteProducto.objects.all()
+            return render(request, 'inventory/productos.html', {
+                'productos': productos,
+                'lotes_producto': lotes_producto,
+                'form': form,  # Pasa el formulario con errores
+            })
+    return redirect('productos')
 
 @group_required('Empleados')
 def Materia_Prima(request):
     materias_primas = MateriaPrima.objects.all()
     return render(request, 'inventory/materiaPrima.html', {'materias_primas': materias_primas})
-
-@group_required('Empleados')
-def agregar_MateriaPrima(request):
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        descripcion = request.POST.get('descripcion')
-        fecha_vencimiento = request.POST.get('fecha_vencimiento')
-        cantidad = request.POST.get('cantidad')
-
-        errors = {}
-        if not nombre:
-            errors['nombre'] = 'El nombre es requerido.'
-        if not descripcion:
-            errors['descripcion'] = 'La descripción es requerida.'
-        if not fecha_vencimiento:
-            errors['fecha_vencimiento'] = 'La fecha de vencimiento es requerida.'
-        if not cantidad or int(cantidad) <= 0:
-            errors['cantidad'] = 'La cantidad debe ser mayor que cero.'
-
-        if errors:
-            return JsonResponse({'success': False, 'errors': errors})
-        else:
-            materia_nueva = MateriaPrima(
-                name=nombre,
-                descripcion=descripcion,
-                fecha_ven=fecha_vencimiento,
-                cantidad=cantidad
-            )
-            materia_nueva.save()
-            return JsonResponse({'success': True})
-    
-    materias_primas = MateriaPrima.objects.all()
-    return render(request, 'inventory/materiaPrima.html', {'materias_primas': materias_primas})
-
-@group_required('Empleados')
-def eliminar_MateriaPrima(request, id):
-    eliminar_materia = get_object_or_404(MateriaPrima, id=id)
-    if request.method == 'POST':
-        eliminar_materia.delete()
-        return redirect('MateriaPrima')
-    return render(request, 'deletes_edit/deleteMateriaPrima.html', {'MateriaPrima': eliminar_materia})
-
-@group_required('Empleados')
-def editar_MateriaPrima(request, id):
-    editar_materia = get_object_or_404(MateriaPrima, id=id)
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        descripcion = request.POST.get('descripcion')
-        fecha_vencimiento = request.POST.get('fecha_vencimiento')
-        cantidad = request.POST.get('cantidad')
-
-        editar_materia.name = nombre
-        editar_materia.descripcion = descripcion
-        editar_materia.fecha_ven = fecha_vencimiento
-        editar_materia.cantidad = cantidad
-
-        editar_materia.save()
-        return redirect('MateriaPrima')
-
-    return render(request, 'inventory/deletes_edit/editarMateriaPrima.html', {'MateriaPrima': editar_materia})
 
 @group_required('Empleados')
 def mostrar_stock_bajo_productos(request):

@@ -41,7 +41,7 @@ def agregar_al_carrito(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
     carrito = request.session.get('carrito', {})
 
-    id = str(producto_id)  # Asegúrate de que la clave esté en formato de cadena
+    id = str(producto_id) 
     if id not in carrito:
         carrito[id] = {
             'nombre': producto.nombre,
@@ -150,12 +150,10 @@ def mis_pedidos(request):
 def cancelar_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id, cliente=request.user)
 
-    if pedido.estado == 'pendiente':  # Solo permitir cancelar si el pedido está pendiente
+    if pedido.estado == 'pendiente':  
         pedido.estado = 'cancelado'
         pedido.save()
-        messages.success(request, f'El pedido #{pedido.id} ha sido cancelado.')
-    else:
-        messages.error(request, 'No puedes cancelar este pedido.')
+        messages.error(request, f'El pedido #{pedido.id} ha sido cancelado.')
 
     return redirect('mis_pedidos')  
 

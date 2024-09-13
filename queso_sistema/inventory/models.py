@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from users.models import Proveedor
 
 class MateriaPrima(models.Model):
@@ -38,6 +39,34 @@ class LoteProducto(models.Model):
     fecha_produccion = models.DateField(verbose_name='Fecha de producción')
     fecha_vencimiento = models.DateField(verbose_name='Fecha de vencimiento')
 
+    from django.core.exceptions import ValidationError
+from django.db import models
+
+class LoteProducto(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad_producto = models.IntegerField(verbose_name='Cantidad producida')
+    fecha_produccion = models.DateField(verbose_name='Fecha de producción')
+    fecha_vencimiento = models.DateField(verbose_name='Fecha de vencimiento')
+
+    def clean(self):
+        # Validar cantidad_producto
+        if self.cantidad_producto <= 0:
+            raise ValidationError({'cantidad_producto': "La cantidad debe ser un número positivo."})
+        
+        # Validar fecha_vencimiento
+        if self.fecha_vencimiento <= self.fecha_produccion:
+            raise ValidationError({'fecha_vencimiento': "La fecha de vencimiento debe ser posterior a la fecha de producción."})
+
+    def __str__(self):
+        return f'Lote de {self.producto.nombre} - Cantidad producida: {self.cantidad_producto}'
+
+    class Meta:
+        verbose_name = 'Lote de producción'
+        verbose_name_plural = 'Lotes de producción'
+        db_table = 'lote_produccion'
+        ordering = ['id']
+
+    
     def __str__(self):
         return f'Lote de {self.producto.nombre} - Cantidad producida: {self.cantidad_producto}'
     

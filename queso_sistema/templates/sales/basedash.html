@@ -28,7 +28,7 @@
       </div>
       <div class="head">
         <div class="user-img">
-          {% if form.imagen.value %}
+          {% if user.imagen %}
           <img src="{{ user.imagen.url }}" alt="Imagen de perfil" />
           {% else %}
           <img src="{% static 'images/default_profile.jpg' %}" alt="Imagen de perfil por defecto" />
@@ -62,14 +62,14 @@
               </a>
             </li>
             <li>
-              <a href="{% url 'inventario' %}">
+              <a href="{% url 'productos' %}">
                 <i class="icon ph ph-package"></i>
                 <span class="text">Inventario</span>
               </a>
             </li>
             <li>
               <a href="{% url 'dashboardPedidos' %}">
-                <i class="icon ph ph-clipboard"></i>
+                <i class="icon ph ph-clipboard-text"></i>
                 <span class="text">Pedidos</span>
               </a>
             </li>

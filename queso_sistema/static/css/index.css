@@ -4,7 +4,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  text-decoration: none;
+  text-decoration: none !important;
   list-style: none;
 }
 
@@ -129,7 +129,7 @@ body {
   background-color: #00563F;
   color: #FFF9D9;
   border-radius: 10px;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 .btn-1:hover {
