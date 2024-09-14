@@ -55,8 +55,10 @@ def agregar_al_carrito(request, producto_id):
 
     request.session['carrito'] = carrito
 
-    return redirect('carrito')  # Redirige al carrito o a otra página
+    # Añadir mensaje de éxito
+    messages.success(request, f'{producto.nombre} ha sido agregado al carrito.')
 
+    return redirect('catalogo')  # Redirige al catálogo o donde prefieras
 @login_required
 def procesar_pedido(request):
     carrito = request.session.get('carrito', {})

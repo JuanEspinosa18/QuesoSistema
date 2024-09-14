@@ -50,9 +50,9 @@ nav ul li a img {
   width: 40px; /* Tamaño más pequeño para mejor alineación */
   height: 40px;
   border-radius: 50%;
-  border: 3px solid #fff9d9; /* Define el grosor, estilo y color del borde */
-  object-fit: cover; /* Ajusta la imagen dentro del contenedor */
-  margin: 0; /* Asegura que la imagen no tenga margen adicional */
+  border: 3px solid #fff9d9;
+  object-fit: cover; 
+  margin: 0; 
 }
 
 nav ul li a:hover {
@@ -67,7 +67,7 @@ nav ul li a:hover {
 .footer {
   padding-top: 50px;
   padding-bottom: 50px;
-  padding-left: 150px;
+  padding-left: 250px !important;
   background-color: #fff9d9;
 }
 
@@ -109,15 +109,7 @@ nav ul li a:hover {
 
 /* Responsive*/
 @media screen and (max-width: 768px) {
-  /* .menu .navbar ul {
-    flex-direction: column;
-    align-items: center;
-  }
 
-  .menu .navbar ul li {
-    margin: 10px 0;
-  }
- */
   .footer-content {
     padding-left: 0;
     flex-direction: column;
