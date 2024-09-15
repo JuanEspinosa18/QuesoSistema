@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect,get_object_or_404
 from sales.models import Pedido, DetallePedido
 from .resources import PedidoResource 
 from io import BytesIO
+from django.contrib import messages
 from reportlab.lib.pagesizes import letter
 from django.conf import settings
 from reportlab.pdfgen import canvas
@@ -98,23 +99,24 @@ def pedidos_pendientes(request):
     } 
     return render(request, 'sales/DashPendientes.html', context)
 
-@group_required('Empleados')
-def editar_pedido_pendiente(request, id):
-    pedido = get_object_or_404(Pedido, id=id)
-
+@group_required('Empleados') 
+def editar_pedido_pendiente(request, pedido_id):
     if request.method == 'POST':
-        # Procesar el formulario (actualizar el estado del pedido)
         nuevo_estado = request.POST.get('nuevo_estado')
-        if nuevo_estado:
-            pedido.estado = nuevo_estado
-            pedido.save()
+        pedido = get_object_or_404(Pedido, id=pedido_id)
 
-            # Redirigir a la misma página o a una página específica después de guardar
-            return redirect('pedidos_pendientes')  # Cambia 'pedidos_pendientes' por el nombre de tu vista o URL
+        # Cambiar el estado del pedido
+        pedido.estado = nuevo_estado
+        pedido.save()
 
-    # Si el formulario no se envía correctamente o el estado no está presente
-    return HttpResponseBadRequest('No se pudo actualizar el pedido')
+        # Enviar correo al cliente notificando el cambio de estado
+        enviar_correo_cambio_estado(pedido)
 
+        # Mostrar un mensaje de éxito
+        messages.success(request, f'El estado del pedido #{pedido.id} ha sido actualizado a {pedido.get_estado_display()}.')
+
+        return redirect('pedidos_pendientes')  # Redirigir a la página adecuada
+    
 @group_required('Empleados')   
 def pedidos_proceso(request):
     pedidos = Pedido.objects.filter(estado='en_proceso')
@@ -131,30 +133,23 @@ def pedidos_proceso(request):
     } 
     return render(request, 'sales/DashEnProceso.html', context)
 
-def enviar_correo_cambio_estado(pedido):
-    subject = f"Tu pedido #{pedido.id} ha cambiado de estado"
-    message = render_to_string('emails/cambio_estado.html', {
-        'pedido': pedido,
-        'nuevo_estado': pedido.get_estado_display(),
-    })
-    send_mail(subject, message, 'soporte.quesosistema@gmail.com', [pedido.cliente.email])
-
-@group_required('Empleados')
-def editar_pedido_proceso(request, id):
-    pedido = get_object_or_404(Pedido, id=id)
-
+@group_required('Empleados') 
+def editar_pedido_proceso(request, pedido_id):
     if request.method == 'POST':
-        # Procesar el formulario (actualizar el estado del pedido)
         nuevo_estado = request.POST.get('nuevo_estado')
-        if nuevo_estado:
-            pedido.estado = nuevo_estado
-            pedido.save()
+        pedido = get_object_or_404(Pedido, id=pedido_id)
 
-            # Redirigir a la misma página o a una página específica después de guardar
-            return redirect('pedidos_proceso')  # Cambia 'pedidos_pendientes' por el nombre de tu vista o URL
+        # Cambiar el estado del pedido
+        pedido.estado = nuevo_estado
+        pedido.save()
 
-    # Si el formulario no se envía correctamente o el estado no está presente
-    return HttpResponseBadRequest('No se pudo actualizar el pedido')
+        # Enviar correo al cliente notificando el cambio de estado
+        enviar_correo_cambio_estado(pedido)
+
+        # Mostrar un mensaje de éxito
+        messages.success(request, f'El estado del pedido #{pedido.id} ha sido actualizado a {pedido.get_estado_display()}.')
+
+        return redirect('pedidos_proceso')  # Redirigir a la página adecuada 
 
 @group_required('Empleados')   
 def pedidos_completados(request):
@@ -173,21 +168,21 @@ def pedidos_completados(request):
     return render(request, 'sales/DashCompletados.html', context)
 
 @group_required('Empleados')
-def editar_pedido_completado(request, id):
-    pedido = get_object_or_404(Pedido, id=id)
-
+def editar_pedido_completado(request, pedido_id):
     if request.method == 'POST':
-        # Procesar el formulario (actualizar el estado del pedido)
         nuevo_estado = request.POST.get('nuevo_estado')
-        if nuevo_estado:
-            pedido.estado = nuevo_estado
-            pedido.save()
+        pedido = get_object_or_404(Pedido, id=pedido_id)
 
-            # Redirigir a la misma página o a una página específica después de guardar
-            return redirect('pedidos_completados')  # Cambia 'pedidos_pendientes' por el nombre de tu vista o URL
+        # Cambiar el estado del pedido
+        pedido.estado = nuevo_estado
+        pedido.save()
 
-    # Si el formulario no se envía correctamente o el estado no está presente
-    return HttpResponseBadRequest('No se pudo actualizar el pedido')
+        enviar_correo_cambio_estado(pedido)
+
+        # Mostrar un mensaje de éxito
+        messages.success(request, f'El estado del pedido #{pedido.id} ha sido actualizado a {pedido.get_estado_display()}.') # Cambia 'pedidos_pendientes' por el nombre de tu vista o URL
+        
+        return redirect('pedidos_proceso') 
 
 @group_required('Empleados')   
 def pedidos_cancelados(request):
@@ -205,25 +200,22 @@ def pedidos_cancelados(request):
     } 
     return render(request, 'sales/dashCancelados.html', context)
 
-@group_required('Empleados')
-def editar_pedido_cancelado(request, id):
-    pedido = get_object_or_404(Pedido, id=id)
-
-    if request.method == 'POST':
-        # Procesar el formulario (actualizar el estado del pedido)
-        nuevo_estado = request.POST.get('nuevo_estado')
-        if nuevo_estado:
-            pedido.estado = nuevo_estado
-            pedido.save()
-
-            # Redirigir a la misma página o a una página específica después de guardar
-            return redirect('pedidos_cancelados')  # Cambia 'pedidos_pendientes' por el nombre de tu vista o URL
-
-    # Si el formulario no se envía correctamente o el estado no está presente
-    return HttpResponseBadRequest('No se pudo actualizar el pedido')
-
 def consultar_pedido(request,id):
     pedido = get_object_or_404(Pedido, id=id)
     detalles_pedido = DetallePedido.objects.filter(pedido=pedido)
     
     return render(request, 'sales/consultas/consultar_pedido.html', {'pedido': pedido, 'detalles_pedido': detalles_pedido})
+
+def enviar_correo_cambio_estado(pedido):
+    subject = f"Tu pedido #{pedido.id} ha cambiado de estado"
+    message = render_to_string('emails/pedido_estado_cambiado.html', {
+        'pedido': pedido,
+        'nuevo_estado': pedido.get_estado_display(),
+    })
+    send_mail(
+        subject, 
+        '',  # Si usas un mensaje HTML, este campo puede quedar vacío
+        'soporte.quesosistema@gmail.com', 
+        [pedido.cliente.email],
+        html_message=message  # Se envía como HTML
+    )      

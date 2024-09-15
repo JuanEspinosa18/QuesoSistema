@@ -9,9 +9,8 @@ urlpatterns = [
     path('cancelados/', views.pedidos_cancelados, name='pedidos_cancelados'),
     path('export_pedidos/', views.export_pedidos, name='export_pedidos'),
     path('consultar_pedido/<int:id>/', views.consultar_pedido, name='consultar_pedido'),
-    path('editar_pedido_pendiente/<int:id>/', views.editar_pedido_pendiente, name='editar_pedido_pendiente'),
-    path('editar_pedido_proceso/<int:id>/', views.editar_pedido_proceso, name='editar_pedido_proceso'),
-    path('editar_pedido_completado/<int:id>/', views.editar_pedido_completado, name='editar_pedido_completado'),
-    path('editar_pedido_cancelado/<int:id>/', views.editar_pedido_cancelado, name='editar_pedido_cancelado'),
+    path('editar_pedido_pendiente/<int:pedido_id>/', views.editar_pedido_pendiente, name='editar_pedido_pendiente'),
+    path('editar_pedido_proceso/<int:pedido_id>/', views.editar_pedido_proceso, name='editar_pedido_proceso'),
+    path('editar_pedido_completado/<int:pedido_id>/', views.editar_pedido_completado, name='editar_pedido_completado'),
      path('enviar_correo_cambio_estado/', views.enviar_correo_cambio_estado, name='enviar_correo_cambio_estado'),
 ]

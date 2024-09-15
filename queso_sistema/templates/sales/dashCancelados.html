@@ -69,11 +69,6 @@
                   <td>{{ pedido.subtotal }}</td>
                   <td>{{ pedido.get_estado_display }}</td>
                   <td>
-                    <!-- Enlace para editar el pedido -->
-                    <a href="#" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editarModal" data-id="{{ pedido.id }}" data-estado="{{ pedido.estado }}" data-bs-placement="top" title="Editar">
-                        <i class="ph-bold ph-pencil"></i>
-                    </a>
-                
                     <!-- Enlace para ver el pedido -->
                     <a href="{% url 'consultar_pedido' pedido.id %}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver">
                         <i class="ph-bold ph-eye"></i>
@@ -87,63 +82,4 @@
       </div>
     </div>
   </div>
-{% endblock %}
-
-{% block modal %}
-  <!-- Modal para editar el estado -->
-  <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editarModalLabel">Editar Estado del Pedido</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form method="post" action="{% url 'editar_pedido_cancelado' 0 %}" id="editarForm">
-            {% csrf_token %}
-            <input type="hidden" name="pedido_id" id="pedido_id" value="" />
-            <div class="form-group">
-              <label for="nuevo_estado">Selecciona el nuevo estado:</label>
-              <select name="nuevo_estado" id="nuevo_estado" class="form-select">
-                <optgroup label="Seleccionar estado">
-                  <option value="pendiente">Pendiente</option>
-                  <option value="en_proceso">En Proceso</option>
-                  <option value="completado">Completado</option>
-                </optgroup>
-              </select>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-{% endblock %}
-
-{% block scripts %}
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var editarModal = document.getElementById('editarModal')
-
-      // Manejo de apertura del modal
-      editarModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget // Button that triggered the modal
-        var id = button.getAttribute('data-id') // Extract info from data-* attributes
-        var estado = button.getAttribute('data-estado')
-        
-        var pedidoIdInput = document.getElementById('pedido_id')
-        var nuevoEstadoSelect = document.getElementById('nuevo_estado')
-        
-        pedidoIdInput.value = id
-        nuevoEstadoSelect.value = estado
-
-        // Construct the URL for the form action
-        var action = "{% url 'editar_pedido_cancelado' id=0 %}".replace('0', id)
-        document.getElementById('editarForm').action = action
-      })
-    })
-  </script>
 {% endblock %}

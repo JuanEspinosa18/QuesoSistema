@@ -106,7 +106,6 @@
               <label for="nuevo_estado">Selecciona el nuevo estado:</label>
               <select name="nuevo_estado" id="nuevo_estado" class="form-select">
                 <optgroup label="Seleccionar estado">
-                  <option value="pendiente"> Pendiente</option>
                   <option value="completado">Completado</option>
                   <option value="cancelado">Cancelado</option>
                 </optgroup>
@@ -141,7 +140,7 @@
         nuevoEstadoSelect.value = estado
 
         // Construct the URL for the form action
-        var action = "{% url 'editar_pedido_proceso' id=0 %}".replace('0', id)
+        var action = "{% url 'editar_pedido_proceso' pedido_id=0 %}".replace('0', id)
         document.getElementById('editarForm').action = action
       })
     })
