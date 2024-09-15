@@ -112,9 +112,6 @@ def editar_pedido_pendiente(request, pedido_id):
         # Enviar correo al cliente notificando el cambio de estado
         enviar_correo_cambio_estado(pedido)
 
-        # Mostrar un mensaje de éxito
-        messages.success(request, f'El estado del pedido #{pedido.id} ha sido actualizado a {pedido.get_estado_display()}.')
-
         return redirect('pedidos_pendientes')  # Redirigir a la página adecuada
     
 @group_required('Empleados')   
@@ -146,9 +143,6 @@ def editar_pedido_proceso(request, pedido_id):
         # Enviar correo al cliente notificando el cambio de estado
         enviar_correo_cambio_estado(pedido)
 
-        # Mostrar un mensaje de éxito
-        messages.success(request, f'El estado del pedido #{pedido.id} ha sido actualizado a {pedido.get_estado_display()}.')
-
         return redirect('pedidos_proceso')  # Redirigir a la página adecuada 
 
 @group_required('Empleados')   
@@ -178,9 +172,6 @@ def editar_pedido_completado(request, pedido_id):
         pedido.save()
 
         enviar_correo_cambio_estado(pedido)
-
-        # Mostrar un mensaje de éxito
-        messages.success(request, f'El estado del pedido #{pedido.id} ha sido actualizado a {pedido.get_estado_display()}.') # Cambia 'pedidos_pendientes' por el nombre de tu vista o URL
         
         return redirect('pedidos_proceso') 
 
