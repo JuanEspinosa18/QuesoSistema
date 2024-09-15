@@ -86,48 +86,48 @@
     }
 </style>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mostrar alertas de SweetAlert2 para los mensajes del servidor
-        {% if messages %}
-            {% for message in messages %}
-                Swal.fire({
-                    title: '{{ message|escapejs }}',
-                    icon: '{% if message.tags == "success" %}success{% elif message.tags == "warning" %}warning{% elif message.tags == "error" %}error{% else %}info{% endif %}',
-                    confirmButtonText: 'Aceptar',
-                    customClass: {
-                        confirmButton: 'custom-button'
-                    }
-                }).then(() => {
-                });
-            {% endfor %}
-        {% endif %}
-
-        // Confirmación para limpiar el carrito
-        const btnLimpiar = document.getElementById('btn-limpiar');
-        if (btnLimpiar) {
-            btnLimpiar.addEventListener('click', function(event) {
-                event.preventDefault(); // Evita la redirección inmediata
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: "Esto eliminará todos los productos del carrito.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Sí, limpiar',
-                    cancelButtonText: 'No, cancelar',
-                    customClass: {
-                        confirmButton: 'custom-button',
-                        cancelButton: 'custom-button'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Redirige al URL del botón si el usuario confirma
-                        window.location.href = btnLimpiar.href;
-                    }
-                });
-            });
-        }
-    });
-</script>
+{% if messages %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mostrar alertas de SweetAlert2 para los mensajes del servidor
+            {% if messages %}
+                {% for message in messages %}
+                    Swal.fire({
+                        title: '{{ message|escapejs }}',
+                        icon: '{% if message.tags == "success" %}success{% elif message.tags == "warning" %}warning{% elif message.tags == "error" %}error{% else %}info{% endif %}',
+                        confirmButtonText: 'Aceptar',
+                        customClass: {
+                            confirmButton: 'custom-button'
+                        }
+                    }).then((result) => {
+                        // Solo mostrar la segunda alerta si el mensaje es de éxito
+                        {% if message.tags == "success" and not request.session.notificacion_enviada %}
+                            // Mostrar segunda alerta para preguntar sobre notificaciones
+                            Swal.fire({
+                                title: '¿Deseas recibir notificaciones sobre el estado de tu pedido?',
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonText: 'Sí, notificarme',
+                                cancelButtonText: 'No, gracias',
+                                customClass: {
+                                    confirmButton: 'custom-button',
+                                    cancelButton: 'custom-button'
+                                }
+                            }).then((notificationResult) => {
+                                if (notificationResult.isConfirmed) {
+                                    // Redirigir a la vista de activar notificaciones
+                                    window.location.href = '{% url "activar_notificaciones_pedido" request.session.last_order_id %}';
+                                } else {
+                                    // Redirigir a la vista de limpiar la notificación en la sesión
+                                    window.location.href = '{% url "limpiar_notificacion_flag" %}';
+                                }
+                            });
+                        {% endif %}
+                    });
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
+{% endif %}
 
 {% endblock %}

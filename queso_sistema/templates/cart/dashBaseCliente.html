@@ -30,7 +30,7 @@
         <div class="head">
           <div class="user-img">
             {% if user.imagen %}
-              <img src="{{ form.imagen.value.url }}" alt="Imagen de perfil" />
+              <img src="{{ user.imagen.url }}" alt="Imagen de perfil" />
             {% else %}
               <img src="{% static 'images/default_profile.jpg' %}" alt="Imagen de perfil por defecto" />
             {% endif %}

@@ -47,8 +47,8 @@
           {% if is_empleado %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'dashboardPedidos' %}">
-                {% if form.imagen.value %}
-                  <img src="{{ form.imagen.value.url }}" alt="Imagen de perfil" />
+                {% if user.imagen %}
+                  <img src="{{ user.imagen.url }}" alt="Imagen de perfil" />
                 {% else %}
                   <img src="{% static 'images/default_profile.jpg' %}" alt="Imagen de perfil por defecto" />
                 {% endif %}
@@ -57,8 +57,8 @@
           {% elif is_cliente %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'carrito' %}">
-                {% if form.imagen.value %}
-                  <img src="{{ form.imagen.value.url }}" alt="Imagen de perfil" />
+                {% if user.imagen %}
+                  <img src="{{ user.imagen.url }}" alt="Imagen de perfil" />
                 {% else %}
                   <img src="{% static 'images/default_profile.jpg' %}" alt="Imagen de perfil por defecto" />
                 {% endif %}

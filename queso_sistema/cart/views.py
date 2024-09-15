@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from cart.Carrito import Carrito
 from inventory.models import Producto
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from django.conf import settings
 from django.db import transaction
 from sales.models import Pedido, DetallePedido
@@ -14,7 +15,8 @@ from .forms import ClienteProfileForm
 def carrito(request):
     carrito = request.session.get('carrito', {})
     total_carrito = sum(item['acumulado'] for item in carrito.values())
-    return render(request, 'cart/carrito.html', {'total_carrito': total_carrito, 'carrito': carrito})
+    pedido_id = request.GET.get('pedido_id')  # Obtén el pedido_id desde la URL si está presente
+    return render(request, 'cart/carrito.html', {'total_carrito': total_carrito, 'pedido_id': pedido_id})
 
 @login_required
 def eliminar_producto(request, producto_id):
@@ -59,17 +61,30 @@ def agregar_al_carrito(request, producto_id):
     messages.success(request, f'{producto.nombre} ha sido agregado al carrito.')
 
     return redirect('catalogo')  # Redirige al catálogo o donde prefieras
+
+def enviar_correo_pedido_cliente(pedido, detalles):
+    try:
+        asunto = f'Tu pedido #{pedido.id} ha sido creado'
+        mensaje_html = render_to_string('emails/pedido_creado_cliente.html', {'pedido': pedido, 'detalles': detalles})
+        mensaje_texto = f"Hola {pedido.cliente.primer_nombre}, tu pedido #{pedido.id} ha sido registrado con éxito. Pronto recibirás más actualizaciones."
+
+        send_mail(
+            asunto,
+            mensaje_texto,
+            settings.DEFAULT_FROM_EMAIL,
+            [pedido.cliente.email],
+            html_message=mensaje_html
+        )
+    except Exception as e:
+        print(f'Error al enviar correo al cliente: {e}')
+
 @login_required
 def procesar_pedido(request):
     carrito = request.session.get('carrito', {})
 
     if not carrito:
-        return render(request, 'cart/carrito.html', {
-            'error': 'No hay productos en el carrito',
-            'show_alert': True,
-            'alert_type': 'warning',
-            'alert_message': 'No hay productos en el carrito'
-        })
+        messages.warning(request, 'No hay productos en el carrito')
+        return redirect('carrito')
 
     try:
         with transaction.atomic():
@@ -94,31 +109,41 @@ def procesar_pedido(request):
             # Limpiar el carrito después de crear el pedido
             request.session['carrito'] = {}
 
+            # Guardar el ID del pedido en la sesión
+            request.session['last_order_id'] = pedido.id
+
+            # Restablecer la bandera de notificación
+            if 'notificacion_enviada' in request.session:
+                del request.session['notificacion_enviada']
+
         # Intentar enviar el correo
         try:
             enviar_correo_pedido_admin(pedido, detalles)
             messages.success(request, '¡Pedido creado con éxito!')
-            return render(request, 'cart/carrito.html', {
-                'show_alert': True,
-                'alert_type': 'success',
-                'alert_message': '¡Pedido creado con éxito!'
-            })
+            return redirect('carrito')  # SIN `pedido_id`
         except Exception as email_error:
             messages.warning(request, f'Pedido creado, pero hubo un problema al enviar el correo: {email_error}')
-            return render(request, 'cart/carrito.html', {
-                'show_alert': True,
-                'alert_type': 'warning',
-                'alert_message': f'Pedido creado, pero hubo un problema al enviar el correo: {email_error}'
-            })
+            return redirect('carrito')  # SIN `pedido_id`
 
     except Exception as e:
         messages.error(request, f'Hubo un problema al procesar tu pedido: {e}')
-        return render(request, 'cart/carrito.html', {
-            'show_alert': True,
-            'alert_type': 'error',
-            'alert_message': f'Hubo un problema al procesar tu pedido: {e}'
-        })
+        return redirect('carrito')  # SIN `pedido_id`
 
+@login_required
+def activar_notificaciones_pedido(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id, cliente=request.user)
+    detalles = DetallePedido.objects.filter(pedido=pedido)  # Obtener los detalles del pedido
+    pedido.notificaciones_activas = True  # Activar notificaciones
+    pedido.save()
+
+    # Enviar el correo para este pedido si no se ha hecho ya
+    if 'notificacion_enviada' not in request.session:
+        enviar_correo_pedido_cliente(pedido, detalles)
+        # Marcar la notificación como enviada solo para este pedido
+        request.session['notificacion_enviada'] = True
+
+    messages.success(request, 'Has activado las notificaciones para tu pedido.')
+    return redirect('carrito')
 
 def enviar_correo_pedido_admin(pedido, detalles):
     """
@@ -142,7 +167,14 @@ def enviar_correo_pedido_admin(pedido, detalles):
 
     # Enviar el correo
     send_mail(subject, message, email_from, recipient_list)
-    
+   
+@login_required
+def limpiar_notificacion_flag(request):
+    if 'notificacion_enviada' in request.session:
+        del request.session['notificacion_enviada']  # Eliminar la bandera de sesión
+    messages.info(request, 'Preferencias de notificación actualizadas.')
+    return redirect('carrito')  # Redirigir al carrito
+
 @login_required
 def mis_pedidos(request):
     pedidos = Pedido.objects.filter(cliente=request.user).order_by('-fecha_pedido')

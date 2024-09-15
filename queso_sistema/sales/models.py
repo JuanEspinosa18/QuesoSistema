@@ -17,6 +17,7 @@ class Pedido(models.Model):
         limit_choices_to={'groups__name': 'Clientes'}, 
         verbose_name='Cliente'
     )
+    notificaciones_activas = models.BooleanField(default=False, verbose_name='Notificaciones Activas')
     fecha_pedido = models.DateTimeField(auto_now_add=True, verbose_name='Fecha del pedido')
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente', verbose_name='Estado del pedido')
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Subtotal', default=0.00, editable=False)
