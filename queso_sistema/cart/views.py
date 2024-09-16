@@ -110,11 +110,13 @@ def procesar_pedido(request):
             request.session['carrito'] = {}
 
             # Guardar el ID del pedido en la sesión
-            request.session['last_order_id'] = pedido.id  # Solo aquí
+            request.session['last_order_id'] = pedido.id
 
-            # Restablecer la bandera de notificación
+            # Restablecer las banderas de notificación
             if 'notificacion_enviada' in request.session:
                 del request.session['notificacion_enviada']
+            if 'notificaciones_activadas' in request.session:
+                del request.session['notificaciones_activadas']
 
         # Intentar enviar el correo
         try:
@@ -173,6 +175,8 @@ def enviar_correo_pedido_admin(pedido, detalles):
 def limpiar_notificacion_flag(request):
     if 'notificacion_enviada' in request.session:
         del request.session['notificacion_enviada']  # Eliminar la bandera de sesión
+    if 'notificaciones_activadas' in request.session:
+        del request.session['notificaciones_activadas']  # Eliminar la bandera de activación de notificaciones
     messages.info(request, 'Preferencias de notificación actualizadas.')
     return redirect('carrito')  # Redirigir al carrito
 
