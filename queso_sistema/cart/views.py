@@ -110,7 +110,7 @@ def procesar_pedido(request):
             request.session['carrito'] = {}
 
             # Guardar el ID del pedido en la sesión
-            request.session['last_order_id'] = pedido.id
+            request.session['last_order_id'] = pedido.id  # Solo aquí
 
             # Restablecer la bandera de notificación
             if 'notificacion_enviada' in request.session:
@@ -120,14 +120,14 @@ def procesar_pedido(request):
         try:
             enviar_correo_pedido_admin(pedido, detalles)
             messages.success(request, '¡Pedido creado con éxito!')
-            return redirect('carrito')  # SIN `pedido_id`
+            return redirect('carrito')
         except Exception as email_error:
             messages.warning(request, f'Pedido creado, pero hubo un problema al enviar el correo: {email_error}')
-            return redirect('carrito')  # SIN `pedido_id`
+            return redirect('carrito')
 
     except Exception as e:
         messages.error(request, f'Hubo un problema al procesar tu pedido: {e}')
-        return redirect('carrito')  # SIN `pedido_id`
+        return redirect('carrito')
 
 @login_required
 def activar_notificaciones_pedido(request, pedido_id):
@@ -141,7 +141,8 @@ def activar_notificaciones_pedido(request, pedido_id):
         enviar_correo_pedido_cliente(pedido, detalles)
         # Marcar la notificación como enviada solo para este pedido
         request.session['notificacion_enviada'] = True
-
+        
+    request.session['notificaciones_activadas'] = True
     messages.success(request, 'Has activado las notificaciones para tu pedido.')
     return redirect('carrito')
 

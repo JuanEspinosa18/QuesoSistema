@@ -89,7 +89,6 @@
 {% if messages %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Mostrar alertas de SweetAlert2 para los mensajes del servidor
             {% if messages %}
                 {% for message in messages %}
                     Swal.fire({
@@ -100,9 +99,8 @@
                             confirmButton: 'custom-button'
                         }
                     }).then((result) => {
-                        // Solo mostrar la segunda alerta si el mensaje es de éxito
-                        {% if message.tags == "success" and not request.session.notificacion_enviada %}
-                            // Mostrar segunda alerta para preguntar sobre notificaciones
+                        {% if message.tags == "success" and request.session.last_order_id and not request.session.notificaciones_activadas %}
+                            // Solo mostrar la segunda alerta si existe un pedido en la sesión y aún no se activaron las notificaciones
                             Swal.fire({
                                 title: '¿Deseas recibir notificaciones sobre el estado de tu pedido?',
                                 icon: 'question',
@@ -115,10 +113,8 @@
                                 }
                             }).then((notificationResult) => {
                                 if (notificationResult.isConfirmed) {
-                                    // Redirigir a la vista de activar notificaciones
                                     window.location.href = '{% url "activar_notificaciones_pedido" request.session.last_order_id %}';
                                 } else {
-                                    // Redirigir a la vista de limpiar la notificación en la sesión
                                     window.location.href = '{% url "limpiar_notificacion_flag" %}';
                                 }
                             });

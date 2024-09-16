@@ -87,17 +87,17 @@ def signup_view(request):
         email = request.POST['email']
         documento = request.POST['documento']
         primer_nombre = request.POST['primer_nombre']
-        segundo_nombre = request.POST['segundo_nombre']
+        segundo_nombre = request.POST.get('segundo_nombre', '')
         primer_apellido = request.POST['primer_apellido']
-        segundo_apellido = request.POST['segundo_apellido']
-        telefono = request.POST['telefono']
+        segundo_apellido = request.POST.get('segundo_apellido', '')
+        telefono = request.POST.get('telefono', '')
         password = request.POST['password']
         password2 = request.POST['password2']
 
         if password != password2:
             messages.error(request, 'Las contraseñas no coinciden')
             return redirect('signup')
-        
+
         try:
             usuario = CustomUser(
                 email=email,
@@ -117,6 +117,7 @@ def signup_view(request):
 
             usuario.save()
 
+            # Asignar grupo de clientes
             try:
                 grupo_clientes = Group.objects.get(name='Clientes')
                 usuario.groups.add(grupo_clientes)
@@ -125,8 +126,8 @@ def signup_view(request):
                 usuario.delete()
                 return redirect('signup')
 
-            login(request, usuario)
-            messages.success(request, '¡Usuario creado con éxito!')
+            # Redirigir directamente al login
+            messages.success(request, '¡Usuario creado con éxito! Por favor, inicia sesión.')
             return redirect('login')
 
         except ValidationError as e:
