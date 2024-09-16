@@ -16,9 +16,9 @@ class MateriaPrima(models.Model):
         ordering = ['id']
 
 class Producto(models.Model):
-    nombre = models.CharField(unique=True, max_length=200, verbose_name='Nombre')
-    descripcion = models.TextField(verbose_name='Descripción de producto')
-    precio = models.IntegerField(verbose_name='Precio', blank=True)
+    nombre = models.CharField(unique=True, max_length=30, verbose_name='Nombre')
+    descripcion = models.TextField(verbose_name='Descripción de producto', max_length=100)
+    precio = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Precio', default=0.00)
     stock = models.IntegerField(default=0, verbose_name='Stock')
     imagen = models.ImageField(upload_to='productos/', null=True, blank=True)
     descontinuado = models.BooleanField(default=False, verbose_name='Descontinuado')
@@ -63,12 +63,14 @@ class MateriaPrimaLote(models.Model):
 
 class EntradaMateriaPrima(models.Model):
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='entradas')
+    materia_prima = models.ForeignKey(MateriaPrima, on_delete=models.CASCADE, related_name='entradas')
+    cantidad = models.IntegerField(verbose_name='Cantidad')
     fecha_entrada = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de entrada')
     fecha_vencimiento = models.DateField(verbose_name='Fecha de vencimiento', null=True, blank=True)
-    total_costo = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Total costo', default=0.00)
+    costo_total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Costo Total', default=0.00)
 
     def __str__(self):
-        return f"Entrada #{self.id} - Proveedor: {self.proveedor.nombre} - Total Costo: {self.total_costo}"
+        return f"Entrada #{self.id} - Proveedor: {self.proveedor.nombre} - Materia Prima: {self.materia_prima.nombre} - Total Costo: {self.costo_total}"
 
     class Meta:
         verbose_name = 'Entrada de Materia Prima'

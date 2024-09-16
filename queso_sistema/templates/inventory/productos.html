@@ -10,13 +10,14 @@
       </li>
     </ul>
     <!-- Mensajes de retroalimentacion -->
-    {% if messages %}
-      <div>
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-      </div>
-    {% endif %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags == 'error' %}
+           alert-danger
+        {% elif message.tags == 'success' %}
+           alert-success
+        {% endif %}"
+        role="alert">{{ message }}</div>
+    {% endfor %}
     <!-- Tabla Productos -->
     <div class="card mb-4 card-table mt-4">
       <div class="card-header">
@@ -46,19 +47,17 @@
                 <tr>
                   <td>{{ producto.nombre }}</td>
                   {% if producto.descontinuado %}
-                    <td class="text-muted">N/A</td>
-                    <td class="text-muted">N/A</td>
-                    <td class="text-muted">Descontinuado</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>Descontinuado</td>
                   {% else %}
                     <td>{{ producto.stock }}</td>
                     <td>$ {{ producto.precio }}</td>
                     <td>
                       <!-- Botón para editar el producto -->
-                      <a href="#" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#editarProductoModal{{ producto.id }}" title="Editar">
-                        <i class="ph-bold ph-pencil-simple"></i>
-                      </a>
+                      <a href="#" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#editarProductoModal{{ producto.id }}" title="Editar"><i class="ph-bold ph-pencil-simple"></i></a>
                       <!-- Botón para descontinuar el producto -->
-                      <a href="{% url 'descontinuar_producto' producto.id %}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Descontinuar"><i class="ph-bold ph-receipt-x"></i></a>
+                      <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Descontinuar"><i class="ph-bold ph-receipt-x"></i></a>
                     </td>
                   {% endif %}
                 </tr>
@@ -106,7 +105,7 @@
                 </tr>
               {% empty %}
                 <tr>
-                  <td colspan="4">No hay lotes de producto disponibles.</td>
+                  <td colspan="4" class="text-center">No hay lotes de producto disponibles.</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -118,133 +117,38 @@
 {% endblock %}
 
 {% block modal %}
-  <!-- Modal para agregar lote -->
-  <div class="modal fade" id="agregarLPModal" tabindex="-1" aria-labelledby="agregarLPModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="agregarLPModalLabel">Agregar Nuevo Lote de Producto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form method="post" action="{% url 'agregar_lote_producto' %}">
-            {% csrf_token %}
-            <div class="mb-3">
-              <label for="producto" class="form-label">Producto</label>
-              <select id="producto" name="producto" class="form-select" required>
-                {% for producto in productos %}
-                  <option value="{{ producto.id }}">{{ producto.nombre }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="cantidad_producto" class="form-label">Cantidad</label>
-              <input type="number" class="form-control" id="cantidad_producto" name="cantidad_producto" required />
-            </div>
-            <div class="mb-3">
-              <label for="fecha_produccion" class="form-label">Fecha de Producción</label>
-              <input type="date" class="form-control" id="fecha_produccion" name="fecha_produccion" required />
-            </div>
-            <div class="mb-3">
-              <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento</label>
-              <input type="date" class="form-control" id="fecha_vencimiento" name="fecha_vencimiento" required />
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-success">Agregar Lote</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+
 {% endblock %}
 
-{% block modal2 %}
-  <!-- Modal para agregar producto -->
-  <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="agregarProductoModalLabel">Agregar Nuevo Producto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form method="post" action="{% url 'agregar_producto' %}" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="nombre" name="nombre" required />
-            </div>
-            <div class="mb-3">
-              <label for="descripcion" class="form-label">Descripción</label>
-              <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="precio" class="form-label">Precio</label>
-              <input type="number" class="form-control" id="precio" name="precio" required />
-            </div>
-            <div class="mb-3">
-              <label for="stock" class="form-label">Stock Inicial</label>
-              <input type="number" class="form-control" id="stock" name="stock" required />
-            </div>
-            <div class="mb-3">
-              <label for="imagen" class="form-label">Imagen del Producto (Opcional)</label>
-              <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*" />
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-success">Agregar Producto</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+{% block scripts %}
+  <script>
+    document.querySelectorAll('form').forEach((form) => {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault()
+        const form = this
+        const formData = new FormData(form)
+        fetch(form.action, {
+          method: 'POST',
+          body: formData
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              location.reload() // Recargar la página en caso de éxito
+            } else {
+              // Limpiar errores previos
+              const modalBody = form.querySelector('.modal-body')
+              modalBody.querySelectorAll('.error-message').forEach((error) => error.remove())
+    
+              // Insertar nuevos errores
+              const errors = Object.entries(data.errors)
+                .map(([field, error]) => `<p class="error-message text-danger">${error.join(', ')}</p>`)
+                .join('')
+              modalBody.insertAdjacentHTML('afterbegin', errors) // Insertar errores al inicio del modal
+            }
+          })
+          .catch((error) => console.error('Error:', error))
+      })
+    })
+  </script>
 {% endblock %}
-
-{% block modal3 %}
-  {% for producto in productos %}
-    <!-- Modal para editar producto -->
-    <div class="modal fade" id="editarProductoModal{{ producto.id }}" tabindex="-1" aria-labelledby="editarProductoModalLabel{{ producto.id }}" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editarProductoModalLabel{{ producto.id }}">Editar Producto</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form method="post" action="{% url 'editar_producto' producto.id %}" enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="mb-3">
-                <label for="nombre{{ producto.id }}" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre{{ producto.id }}" name="nombre" value="{{ producto.nombre }}" required />
-              </div>
-              <div class="mb-3">
-                <label for="descripcion{{ producto.id }}" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcion{{ producto.id }}" name="descripcion" rows="3" required>{{ producto.descripcion }}</textarea>
-              </div>
-              <div class="mb-3">
-                <label for="precio{{ producto.id }}" class="form-label">Precio</label>
-                <input type="number" class="form-control" id="precio{{ producto.id }}" name="precio" value="{{ producto.precio }}" required />
-              </div>
-              <div class="mb-3">
-                <label for="stock{{ producto.id }}" class="form-label">Stock</label>
-                <input type="number" class="form-control" id="stock{{ producto.id }}" name="stock" value="{{ producto.stock }}" required />
-              </div>
-              <div class="mb-3">
-                <label for="imagen{{ producto.id }}" class="form-label">Imagen del Producto (Opcional)</label>
-                <input type="file" class="form-control" id="imagen{{ producto.id }}" name="imagen" accept="image/*" />
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  {% endfor %}
-{% endblock %}
-

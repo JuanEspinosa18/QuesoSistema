@@ -11,20 +11,20 @@ class Carrito:
 
     def agregar(self, producto):
         id = str(producto.id)
+        precio = float(producto.precio)  # Convertir el precio a float
         if id not in self.carrito.keys():
             self.carrito[id] = {
                 "producto_id": producto.id,
                 "nombre": producto.nombre,
-                "acumulado": producto.precio,
+                "acumulado": precio,
                 "cantidad": 1,
             }
         else:
             self.carrito[id]["cantidad"] += 1
-            self.carrito[id]["acumulado"] += producto.precio
+            self.carrito[id]["acumulado"] += precio  # Usar el precio como float
         self.guardar_carrito()
 
     def guardar_carrito(self):
-        
         self.session["carrito"] = self.carrito
         self.session.modified = True
 
@@ -36,10 +36,13 @@ class Carrito:
 
     def restar(self, producto):
         id = str(producto.id)
+        precio = float(producto.precio)  # Convertir el precio a float
+        
         if id in self.carrito.keys():
             self.carrito[id]["cantidad"] -= 1
-            self.carrito[id]["acumulado"] -= producto.precio
-            if self.carrito[id]["cantidad"] <= 0: self.eliminar(producto)
+            self.carrito[id]["acumulado"] -= precio  # Usar el precio como float
+            if self.carrito[id]["cantidad"] <= 0:
+                self.eliminar(producto)
             self.guardar_carrito()
 
     def limpiar(self):
@@ -50,5 +53,5 @@ class Carrito:
         total = 0
         if "carrito" in self.session.keys():
             for key, value in self.session["carrito"].items():
-                total += value["acumulado"]
+                total += float(value["acumulado"])  # Asegurarse de sumar valores float
         return total

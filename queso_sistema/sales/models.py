@@ -1,7 +1,7 @@
+import uuid
 from django.db import models
 from inventory.models import Producto
 from django.conf import settings
-
 class Pedido(models.Model):
     ESTADO_CHOICES = [
         ('pendiente', 'Pendiente'),
@@ -10,6 +10,7 @@ class Pedido(models.Model):
         ('cancelado', 'Cancelado'),
     ]
 
+    id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4, editable=False)
     cliente = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
@@ -23,13 +24,14 @@ class Pedido(models.Model):
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Subtotal', default=0.00, editable=False)
 
     def __str__(self):
-        return f"Pedido #{self.id} - Estado: {self.get_estado_display()} - Subtotal: {self.subtotal}"
+        return f"Pedido {self.id} - Estado: {self.get_estado_display()} - Subtotal: {self.subtotal}"
 
     class Meta:
         verbose_name = 'Pedido'
         verbose_name_plural = 'Pedidos'
         db_table = 'pedido'
         ordering = ['-fecha_pedido']
+
 
 class DetallePedido(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name='detalles')

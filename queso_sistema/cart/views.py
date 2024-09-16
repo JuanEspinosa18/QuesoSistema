@@ -43,17 +43,19 @@ def agregar_al_carrito(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
     carrito = request.session.get('carrito', {})
 
-    id = str(producto_id) 
+    id = str(producto_id)
+    precio = float(producto.precio)  # Convertir el precio de Decimal a float
+
     if id not in carrito:
         carrito[id] = {
             'nombre': producto.nombre,
             'cantidad': 1,
-            'acumulado': producto.precio,
+            'acumulado': precio,
             'producto_id': producto_id
         }
     else:
         carrito[id]['cantidad'] += 1
-        carrito[id]['acumulado'] += producto.precio
+        carrito[id]['acumulado'] += precio  # Usar el precio convertido a float
 
     request.session['carrito'] = carrito
 
