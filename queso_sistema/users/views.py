@@ -29,8 +29,6 @@ def group_required(*group_names):
         return _wrapped_view
     return decorator
 
-# core/context_processors.py
-
 def user_role_context(request):
     is_empleado = False
     is_cliente = False
@@ -43,7 +41,6 @@ def user_role_context(request):
         'is_empleado': is_empleado,
         'is_cliente': is_cliente,
     }
-
 
 def login_view(request):
     # Verifica si el usuario ya está autenticado
@@ -73,7 +70,6 @@ def login_view(request):
             messages.error(request, 'Correo o contraseña incorrectos')
     
     return render(request, 'users/login.html')
-
 
 def logout_view(request):
     logout(request)

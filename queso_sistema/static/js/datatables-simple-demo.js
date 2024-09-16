@@ -6,4 +6,24 @@ window.addEventListener('DOMContentLoaded', event => {
     if (datatablesSimple) {
         new simpleDatatables.DataTable(datatablesSimple);
     }
+
+    const productosTable = document.getElementById('productosTable');
+    if (productosTable) {
+        new simpleDatatables.DataTable(productosTable);
+    }
+
+    const lotesProductoTable = document.getElementById('lotesProductoTable');
+    if (lotesProductoTable) {
+        new simpleDatatables.DataTable(lotesProductoTable);
+    }
+
+    const materiaPrimaTable = document.getElementById('materiaPrimaTable');
+    if (materiaPrimaTable) {
+        new simpleDatatables.DataTable(materiaPrimaTable);
+    }
+
+    const entradaMateriaPrimaTable = document.getElementById('entradaMateriaPrimaTable');
+    if (entradaMateriaPrimaTable) {
+        new simpleDatatables.DataTable(entradaMateriaPrimaTable);
+    }
 });
