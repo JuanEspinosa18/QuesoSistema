@@ -66,7 +66,7 @@ class ProductoForm(forms.ModelForm):
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Agregue el nombre del producto'}),
             'descripcion': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Agregue la descripción', 'rows': 2}),
-            'precio': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el precio', 'min': '0', 'max': '100000', 'step': '0.01'}),
+            'precio': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el precio', 'min': '0', 'max': '100000', 'step': '1000'}),
             'imagen': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
