@@ -11,21 +11,15 @@
     </ul>
     <!-- Mensajes de retroalimentacion -->
     {% for message in messages %}
-      <div class="alert {% if message.tags == 'error' %}
-           alert-danger
-        {% elif message.tags == 'success' %}
-           alert-success
-        {% endif %}"
-        role="alert">{{ message }}</div>
+      <div class="alert {% if message.tags == 'error' %} alert-danger {% elif message.tags == 'success' %} alert-success {% endif %}" role="alert">
+        {{ message }}
+      </div>
     {% endfor %}
     <!-- Tabla Productos -->
     <div class="card mb-4 card-table mt-4">
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <i class="ph-bold ph-squares-four"></i>
-            Productos
-          </div>
+          <div><i class="ph-bold ph-squares-four"></i> Productos</div>
           <div>
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#agregarProductoModal">Agregar Producto</button>
           </div>
@@ -75,10 +69,7 @@
     <div class="card mb-4 card-table mt-4">
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <i class="ph-bold ph-factory"></i>
-            Lotes de Producto
-          </div>
+          <div><i class="ph-bold ph-factory"></i> Lotes de Producto</div>
           <div>
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#agregarLPModal">Agregar Lote</button>
           </div>
@@ -117,8 +108,51 @@
 {% endblock %}
 
 {% block modal %}
+  <!-- Modal para agregar producto -->
+  <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="agregarProductoModalLabel">Agregar Producto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addProductoForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {{ producto_form.as_p }}
+                </div>
+                <input type="hidden" name="form_type" value="producto" />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
 
+  <!-- Modal para agregar lote de producto -->
+  <div class="modal fade" id="agregarLPModal" tabindex="-1" aria-labelledby="agregarLPModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title" id="agregarLPModalLabel">Agregar Lote de Producto</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="addLPForm" method="POST">
+          {% csrf_token %}
+          <div class="modal-body">{{ lote_form.as_p }}</div>
+          <input type="hidden" name="form_type" value="lote_producto" />
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 {% endblock %}
+
 
 {% block scripts %}
   <script>

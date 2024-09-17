@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from users.views import group_required
 from django.contrib import messages
 from .models import Producto, LoteProducto, MateriaPrimaLote, MateriaPrima, EntradaMateriaPrima
-from .forms import MateriaPrimaForm, EntradaMateriaPrimaForm
+from .forms import MateriaPrimaForm, EntradaMateriaPrimaForm, LoteProductoForm, ProductoForm
 
 """ Productos """
 
@@ -11,7 +11,42 @@ from .forms import MateriaPrimaForm, EntradaMateriaPrimaForm
 def productos(request):
     productos = Producto.objects.all()
     lotes_producto = LoteProducto.objects.all()
-    return render(request, 'inventory/productos.html', {'productos': productos,'lotes_producto': lotes_producto,})
+    producto_form = ProductoForm()
+    lote_form = LoteProductoForm()
+
+    if request.method == "POST":
+        form_type = request.POST.get('form_type')
+
+        if form_type == 'producto':
+            producto_form = ProductoForm(request.POST, request.FILES)  # Incluir archivos (como imágenes)
+            if producto_form.is_valid():
+                producto_form.save()
+                messages.success(request, "Producto agregado exitosamente.")
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'errors': producto_form.errors})
+
+        elif form_type == 'lote_producto':
+            lote_form = LoteProductoForm(request.POST)
+            if lote_form.is_valid():
+                lote = lote_form.save()
+
+                # Actualizar la cantidad disponible del producto
+                producto = lote.producto
+                producto.stock += lote.cantidad_producto
+                producto.save()
+
+                messages.success(request, "Lote de producto registrado exitosamente.")
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'errors': lote_form.errors})
+
+    return render(request, 'inventory/productos.html', {
+        'productos': productos,
+        'lotes_producto': lotes_producto,
+        'producto_form': producto_form,
+        'lote_form': lote_form,
+    })
 
 """ Materias Primas """
 
