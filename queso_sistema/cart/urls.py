@@ -15,7 +15,7 @@ urlpatterns = [
     path('enviar_correo_pedido_admin/', enviar_correo_pedido_admin, name='enviar_correo_pedido_admin'),
     path('limpiar_notificacion_flag/', limpiar_notificacion_flag, name='limpiar_notificacion_flag'),
     path('mis_pedidos/', mis_pedidos, name='mis_pedidos'),
-    path('cancelar-pedido/<int:pedido_id>/', cancelar_pedido, name='cancelar_pedido'),
+    path('cancelar-pedido/<uuid:pedido_id>/', cancelar_pedido, name='cancelar_pedido'),
     path('perfil_cliente/', perfil_cliente, name='perfil_cliente'),
     ]
 
