@@ -1,15 +1,10 @@
-import os
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-MYSQL = {
+DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
-				'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db',           # El nombre de tu base de datos
+        'USER': 'usuario_db',    # Tu usuario de PostgreSQL
+        'PASSWORD': 'contraseña_db',  # La contraseña de PostgreSQL
+        'HOST': 'localhost',     # O la dirección de tu servidor de PostgreSQL (por ejemplo, si estás en Render, ellos te proporcionarán esto)
+        'PORT': '5432',          # El puerto estándar de PostgreSQL (o el que uses)
     }
 }
