@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from users.views import group_required
 from django.contrib import messages
@@ -18,7 +18,7 @@ def productos(request):
         form_type = request.POST.get('form_type')
 
         if form_type == 'producto':
-            producto_form = ProductoForm(request.POST, request.FILES)  # Incluir archivos (como imágenes)
+            producto_form = ProductoForm(request.POST, request.FILES)
             if producto_form.is_valid():
                 producto_form.save()
                 messages.success(request, "Producto agregado exitosamente.")
@@ -47,6 +47,14 @@ def productos(request):
         'producto_form': producto_form,
         'lote_form': lote_form,
     })
+
+@group_required('Empleados')
+def descontinuar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    producto.descontinuado = True
+    producto.save()
+    messages.success(request, f"El producto {producto.nombre} ha sido descontinuado.")
+    return redirect('productos')
 
 """ Materias Primas """
 

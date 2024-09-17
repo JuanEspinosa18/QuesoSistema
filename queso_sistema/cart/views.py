@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from users.views import group_required
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from cart.Carrito import Carrito
 from inventory.models import Producto
 from django.core.mail import send_mail
@@ -11,42 +11,40 @@ from sales.models import Pedido, DetallePedido
 from django.contrib import messages
 from .forms import ClienteProfileForm
 
-@login_required
+@group_required('Clientes')
 def carrito(request):
     carrito = request.session.get('carrito', {})
     total_carrito = sum(item['acumulado'] for item in carrito.values())
     pedido_id = request.GET.get('pedido_id')  # Obtén el pedido_id desde la URL si está presente
     return render(request, 'cart/carrito.html', {'total_carrito': total_carrito, 'pedido_id': pedido_id})
 
-@login_required
+@group_required('Clientes')
 def eliminar_producto(request, producto_id):
     carrito = Carrito(request)
     producto = Producto.objects.get(id=producto_id)
     carrito.eliminar(producto)
     return redirect("carrito")
 
-@login_required
+@group_required('Clientes')
 def restar_producto(request, producto_id):
     carrito = Carrito(request)
     producto = Producto.objects.get(id=producto_id)
     carrito.restar(producto)
     return redirect("carrito")
 
-@login_required
+@group_required('Clientes')
 def limpiar_carrito(request):
     carrito = Carrito(request)
     carrito.limpiar()
     return redirect("carrito")
 
-from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.http import url_has_allowed_host_and_scheme  # Cambiar la importación
 
 
-@login_required
+@group_required('Clientes')
 def agregar_al_carrito(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
     carrito = request.session.get('carrito', {})
@@ -101,7 +99,7 @@ def enviar_correo_pedido_cliente(pedido, detalles):
     except Exception as e:
         print(f'Error al enviar correo al cliente: {e}')
 
-@login_required
+@group_required('Clientes')
 def procesar_pedido(request):
     carrito = request.session.get('carrito', {})
 
@@ -155,7 +153,7 @@ def procesar_pedido(request):
         return redirect('carrito')
 
 
-@login_required
+@group_required('Clientes')
 def activar_notificaciones_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id, cliente=request.user)
     detalles = DetallePedido.objects.filter(pedido=pedido)  # Obtener los detalles del pedido
@@ -195,7 +193,7 @@ def enviar_correo_pedido_admin(pedido, detalles):
     # Enviar el correo
     send_mail(subject, message, email_from, recipient_list)
    
-@login_required
+@group_required('Clientes')
 def limpiar_notificacion_flag(request):
     if 'notificacion_enviada' in request.session:
         del request.session['notificacion_enviada']  # Eliminar la bandera de sesión
@@ -204,12 +202,12 @@ def limpiar_notificacion_flag(request):
     messages.info(request, 'Preferencias de notificación actualizadas.')
     return redirect('carrito')  # Redirigir al carrito
 
-@login_required
+@group_required('Clientes')
 def mis_pedidos(request):
     pedidos = Pedido.objects.filter(cliente=request.user).order_by('-fecha_pedido')
     return render(request, 'cart/pedidosCliente.html', {'pedidos': pedidos})
 
-@login_required
+@group_required('Clientes')
 def cancelar_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id, cliente=request.user)
 
@@ -220,7 +218,7 @@ def cancelar_pedido(request, pedido_id):
 
     return redirect('mis_pedidos')  
 
-@login_required
+@group_required('Clientes')
 def perfil_cliente(request):
     if request.method == 'POST':
         form = ClienteProfileForm(request.POST, request.FILES, instance=request.user)

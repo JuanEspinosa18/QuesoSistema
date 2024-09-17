@@ -7,10 +7,9 @@ def nosotros(request):
     })
     
 def catalogo(request):
-    productos = Producto.objects.all()  
+    productos = Producto.objects.filter(descontinuado=False)  
     return render(request, 'blog/catalogo.html', {'productos': productos})
- 
-    
+
 def nuestros_quesos(request):
     return render(request, 'blog/nuestros_quesos.html', {
     })

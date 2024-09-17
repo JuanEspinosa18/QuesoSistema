@@ -1,5 +1,8 @@
 from django import forms
+from django.utils import timezone
 from .models import MateriaPrima, EntradaMateriaPrima, Producto, LoteProducto
+
+""" Formularios y validaciones Materia Prima """
 class MateriaPrimaForm(forms.ModelForm):
     class Meta:
         model = MateriaPrima
@@ -15,7 +18,6 @@ class MateriaPrimaForm(forms.ModelForm):
         if len(descripcion) > max_length:
             raise forms.ValidationError(f"La descripción no puede exceder los {max_length} caracteres.")
         return descripcion
-
 class EntradaMateriaPrimaForm(forms.ModelForm):
     class Meta:
         model = EntradaMateriaPrima
@@ -40,6 +42,19 @@ class EntradaMateriaPrimaForm(forms.ModelForm):
             raise forms.ValidationError("El costo total debe ser mayor que cero.")
         return costo_total
 
+    def clean_fecha_vencimiento(self):
+        fecha_vencimiento = self.cleaned_data.get('fecha_vencimiento')
+        fecha_actual = timezone.localtime(timezone.now()).date()  
+        if fecha_vencimiento:
+            if isinstance(fecha_vencimiento, timezone.datetime):
+                fecha_vencimiento = fecha_vencimiento.date()
+
+            if fecha_vencimiento <= fecha_actual:
+                raise forms.ValidationError("La fecha de vencimiento debe ser mayor a la fecha actual.")
+        
+        return fecha_vencimiento
+
+""" Formularios y validaciones Productos"""
 class ProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
@@ -56,8 +71,6 @@ class ProductoForm(forms.ModelForm):
         if precio is not None and precio <= 0:
             raise forms.ValidationError("El precio debe ser mayor que cero.")
         return precio
-
-
 class LoteProductoForm(forms.ModelForm):
     class Meta:
         model = LoteProducto
@@ -69,15 +82,33 @@ class LoteProductoForm(forms.ModelForm):
             'fecha_vencimiento': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super(LoteProductoForm, self).__init__(*args, **kwargs)
+        self.fields['producto'].queryset = Producto.objects.filter(descontinuado=False)
+
     def clean_cantidad_producto(self):
         cantidad_producto = self.cleaned_data.get('cantidad_producto')
         if cantidad_producto is not None and cantidad_producto <= 0:
             raise forms.ValidationError("La cantidad del lote debe ser mayor que cero.")
         return cantidad_producto
 
+    def clean_fecha_produccion(self):
+        fecha_produccion = self.cleaned_data.get('fecha_produccion')
+        fecha_actual = timezone.localtime(timezone.now()).date()
+
+        if fecha_produccion:
+            if fecha_produccion < fecha_actual:
+                raise forms.ValidationError("La fecha de producción no puede ser anterior a la fecha actual.")
+        
+        return fecha_produccion
+
     def clean_fecha_vencimiento(self):
         fecha_vencimiento = self.cleaned_data.get('fecha_vencimiento')
         fecha_produccion = self.cleaned_data.get('fecha_produccion')
-        if fecha_vencimiento and fecha_produccion and fecha_vencimiento <= fecha_produccion:
-            raise forms.ValidationError("La fecha de vencimiento debe ser posterior a la fecha de producción.")
+
+        if fecha_vencimiento:
+            if fecha_produccion and fecha_vencimiento <= fecha_produccion:
+                raise forms.ValidationError("La fecha de vencimiento debe ser posterior a la fecha de producción.")
+        
         return fecha_vencimiento
+
