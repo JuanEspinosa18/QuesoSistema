@@ -99,7 +99,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form method="post" action="{% url 'editar_pedido_pendiente' 0 %}" id="editarForm">
+          <form method="post" action="{% url 'editar_pedido_pendiente' pedido_id='00000000-0000-0000-0000-000000000000' %}" id="editarForm">
             {% csrf_token %}
             <input type="hidden" name="pedido_id" id="pedido_id" value="" />
             <div class="form-group">
@@ -141,7 +141,7 @@
         nuevoEstadoSelect.value = estado
 
         // Construct the URL for the form action
-        var action = "{% url 'editar_pedido_pendiente' pedido_id=0 %}".replace('0', id)
+        var action = "{% url 'editar_pedido_pendiente' pedido_id='00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', id)
         document.getElementById('editarForm').action = action
       })
     })
