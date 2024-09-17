@@ -11,8 +11,11 @@ from .forms import MateriaPrimaForm, EntradaMateriaPrimaForm, LoteProductoForm, 
 def productos(request):
     productos = Producto.objects.all()
     lotes_producto = LoteProducto.objects.all()
-    producto_form = ProductoForm()
+    producto_form = ProductoForm()  # Para el modal de agregar
     lote_form = LoteProductoForm()
+
+    # Crear un diccionario con formularios prellenados para cada producto
+    producto_forms = {producto.id: ProductoForm(instance=producto) for producto in productos}
 
     if request.method == "POST":
         form_type = request.POST.get('form_type')
@@ -30,8 +33,6 @@ def productos(request):
             lote_form = LoteProductoForm(request.POST)
             if lote_form.is_valid():
                 lote = lote_form.save()
-
-                # Actualizar la cantidad disponible del producto
                 producto = lote.producto
                 producto.stock += lote.cantidad_producto
                 producto.save()
@@ -41,10 +42,22 @@ def productos(request):
             else:
                 return JsonResponse({'success': False, 'errors': lote_form.errors})
 
+        elif form_type == 'editar_producto':
+            producto_id = request.POST.get('producto_id')
+            producto = Producto.objects.get(id=producto_id)
+            producto_form = ProductoForm(request.POST, request.FILES, instance=producto)
+            if producto_form.is_valid():
+                producto_form.save()
+                messages.success(request, "Producto editado exitosamente.")
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'errors': producto_form.errors})
+
     return render(request, 'inventory/productos.html', {
         'productos': productos,
         'lotes_producto': lotes_producto,
-        'producto_form': producto_form,
+        'producto_form': producto_form,  # Para el modal de agregar
+        'producto_forms': producto_forms,  # Diccionario de formularios de edición
         'lote_form': lote_form,
     })
 
