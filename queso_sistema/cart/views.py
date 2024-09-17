@@ -38,6 +38,14 @@ def limpiar_carrito(request):
     carrito.limpiar()
     return redirect("carrito")
 
+from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.utils.http import url_has_allowed_host_and_scheme  # Cambiar la importación
+
+
 @login_required
 def agregar_al_carrito(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
@@ -59,10 +67,23 @@ def agregar_al_carrito(request, producto_id):
 
     request.session['carrito'] = carrito
 
-    # Añadir mensaje de éxito
     messages.success(request, f'{producto.nombre} ha sido agregado al carrito.')
 
-    return redirect('catalogo')  # Redirige al catálogo o donde prefieras
+    # Obtener la URL referer para determinar desde qué página proviene la solicitud
+    referer = request.META.get('HTTP_REFERER', '')
+    
+    # Verificar si la URL referer es segura
+    if referer and url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}):
+        # Si estás en el template de catálogo, la URL referer será probablemente la del catálogo
+        if 'catalogo' in referer:
+            return HttpResponseRedirect(referer)  # Mantenerse en el catálogo
+
+        # Si estás en el template de carrito, la URL referer será probablemente la del carrito
+        if 'carrito' in referer:
+            return redirect('carrito')  # Redirigir al carrito
+
+    # Redirigir al catálogo si no hay referer
+    return redirect('catalogo')
 
 def enviar_correo_pedido_cliente(pedido, detalles):
     try:
@@ -111,8 +132,8 @@ def procesar_pedido(request):
             # Limpiar el carrito después de crear el pedido
             request.session['carrito'] = {}
 
-            # Guardar el ID del pedido en la sesión
-            request.session['last_order_id'] = pedido.id
+            # Guardar el ID del pedido en la sesión (convertido a string)
+            request.session['last_order_id'] = str(pedido.id)
 
             # Restablecer las banderas de notificación
             if 'notificacion_enviada' in request.session:
@@ -132,6 +153,7 @@ def procesar_pedido(request):
     except Exception as e:
         messages.error(request, f'Hubo un problema al procesar tu pedido: {e}')
         return redirect('carrito')
+
 
 @login_required
 def activar_notificaciones_pedido(request, pedido_id):
