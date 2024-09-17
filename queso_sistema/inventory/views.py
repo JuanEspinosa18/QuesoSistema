@@ -120,5 +120,15 @@ def descontinuar_materia(request, materia_id):
     messages.success(request, f"El materia {materia.nombre} ha sido descontinuado.")
     return redirect('materia_prima')
 
+""" Alertas """
 
+@group_required('Empleados')
+def mostrar_alertas(request):
+    productos_bajo_stock = Producto.objects.filter(stock__lt=100, descontinuado=False)
+    materias_primas_bajo_stock = MateriaPrima.objects.filter(stock__lt=100, descontinuado=False)
+    context = {
+        'productos': productos_bajo_stock,
+        'materias_primas': materias_primas_bajo_stock,
+    }
+    return render(request, 'inventory/alertas.html', context)
 
