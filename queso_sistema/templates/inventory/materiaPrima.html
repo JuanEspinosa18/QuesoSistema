@@ -40,17 +40,24 @@
               {% for materia in materias_primas %}
                 <tr>
                   <td>{{ materia.nombre }}</td>
-                  <td>
-                    {% if materia.descripcion|length > 60 %}
-                      {{ materia.descripcion|slice:':60' }}...
-                    {% else %}
-                      {{ materia.descripcion }}
-                    {% endif %}
-                  </td>
-                  <td>{{ materia.stock }}</td>
-                  <td>
-                    
-                  </td>
+                  {% if materia.descontinuado %}
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>Descontinuado</td>
+                  {% else %}
+                    <td>
+                      {% if materia.descripcion|length > 60 %}
+                        {{ materia.descripcion|slice:':60' }}...
+                      {% else %}
+                        {{ materia.descripcion }}
+                      {% endif %}
+                    </td>
+                    <td>{{ materia.stock }}</td>
+                    <td>
+                      <!-- Botón para descontinuar la materia prima -->
+                      <a href="{% url 'descontinuar_materia' materia.id %}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Descontinuar"><i class="ph-bold ph-receipt-x"></i></a>
+                    </td>
+                  {% endif %}
                 </tr>
               {% empty %}
                 <tr>
@@ -62,6 +69,7 @@
         </div>
       </div>
     </div>
+
     <!-- Tabla Entradas Materia Prima -->
     <div class="card mb-4 card-table mt-4">
       <div class="card-header">

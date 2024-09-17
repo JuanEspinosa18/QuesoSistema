@@ -5,6 +5,7 @@ class MateriaPrima(models.Model):
     nombre = models.CharField(unique=True, max_length=200, verbose_name='Nombre')
     descripcion = models.TextField(verbose_name='Descripción de materia prima')
     stock = models.IntegerField(default=0, verbose_name='Stock')
+    descontinuado = models.BooleanField(default=False, verbose_name='Descontinuado')
 
     def __str__(self):
         return self.nombre

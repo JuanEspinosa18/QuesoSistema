@@ -30,6 +30,10 @@ class EntradaMateriaPrimaForm(forms.ModelForm):
             'costo_total': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el costo total', 'min': '0', 'max': '10000000', 'step': '1000'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super(EntradaMateriaPrimaForm, self).__init__(*args, **kwargs)
+        self.fields['materia_prima'].queryset = MateriaPrima.objects.filter(descontinuado=False)
+
     def clean_cantidad(self):
         cantidad = self.cleaned_data.get('cantidad')
         if cantidad is not None and cantidad <= 0:

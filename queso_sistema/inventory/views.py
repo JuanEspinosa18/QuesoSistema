@@ -99,7 +99,13 @@ def materiaPrima(request):
         'entrada_form': entrada_form,
     })
 
-
+@group_required('Empleados')
+def descontinuar_materia(request, materia_id):
+    materia = get_object_or_404(MateriaPrima, id=materia_id)
+    materia.descontinuado = True
+    materia.save()
+    messages.success(request, f"El materia {materia.nombre} ha sido descontinuado.")
+    return redirect('materia_prima')
 
 
 
